@@ -15,8 +15,23 @@ void gameboard::removePiece(int x, int y) {
     board[x][y] = nullptr;
 }
 
-void gameboard::addPiece(piece* newPiece) {
-    board[newPiece->getx()][newPiece->gety()] = newPiece;
+void gameboard::addPiece(int x, int y, piece* newPiece) {
+    board[x][y] = newPiece;
+}
+
+void gameboard::movePiece(int oldx, int oldy, int newx, int newy) {
+    if (!(board[oldx][oldy] == nullptr)) {
+        piece* piece = board[oldx][oldy];
+
+        if (piece->checkMoveValidity(oldx,oldy,newx,newy)) {
+            addPiece(newx,newy,piece);
+            removePiece(oldx,oldy);
+        } else {
+            // Do nothing (error message?)
+        }
+
+    }
+
 }
 
 void gameboard::visualiseTextBoard() {
