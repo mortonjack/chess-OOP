@@ -2,11 +2,25 @@
 #include "piece.h"
 #include "rook.h"
 
-rook::rook(): rook('W') {}; // Peices are white by default
+rook::rook(): rook('W') {}; // Pieces are white by default
 
 rook::rook(char color) {
     _color = color;
-    _name = color == 'W' ? 'R' : 'r'; // If the passed color is not 'W', the piece must be black
+
+    switch (color) {
+        case 'W':
+            _name = 'R';
+            break;
+
+        case 'B':
+            _name = 'r';
+            break;
+
+        default:
+            // Uncolored rooks are white by default
+            _name = 'R';
+            break;
+    }
 }
 
 bool rook::checkMoveValidity(int oldx, int oldy, int newx, int newy) {
