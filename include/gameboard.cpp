@@ -22,8 +22,11 @@ void gameboard::addPiece(int x, int y, piece* newPiece) {
 void gameboard::movePiece(int oldx, int oldy, int newx, int newy) {
     if (!(board[oldx][oldy] == nullptr)) {
         piece* piece = board[oldx][oldy];
+        bool validMove = true;
 
-        if (piece->checkMoveValidity(oldx,oldy, newx,newy)) { // If the proposed move is valid for the piece...
+        if (!(piece->checkMoveValidity(oldx,oldy, newx,newy))) validMove = false;
+
+        if (validMove) { // If the proposed move is valid for the piece...
             addPiece(newx,newy,piece); // Add the piece in the target location
             removePiece(oldx,oldy); // Remove the piece from the original location
         } else {

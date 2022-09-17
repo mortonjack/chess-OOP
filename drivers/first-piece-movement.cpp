@@ -31,5 +31,12 @@ int main() {
     // Check to ensure our moves were successful
     board.visualiseTextBoard();
 
+    // Move the rooks to their own positions
+    board.movePiece(0,3, 0,3);
+    board.movePiece(7,7, 7,7);
+
+    // Check to see nothing happens
+    board.visualiseTextBoard();
+
     return 0;
 }
