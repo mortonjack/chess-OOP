@@ -12,3 +12,6 @@ queen-driver:
 
 knight-driver:
 	@g++ include/piece.cpp include/knight.cpp include/gameboard.cpp drivers/knight-movement.cpp -o drivers/knightTest.out
+
+king-driver:
+	@g++ include/piece.cpp include/king.cpp include/gameboard.cpp drivers/king-movement.cpp -o drivers/kingTest.out
