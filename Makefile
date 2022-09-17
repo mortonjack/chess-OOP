@@ -15,3 +15,6 @@ knight-driver:
 
 king-driver:
 	@g++ include/piece.cpp include/king.cpp include/gameboard.cpp drivers/king-movement.cpp -o drivers/kingTest.out
+
+pawn-driver:
+	@g++ include/piece.cpp include/pawn.cpp include/gameboard.cpp drivers/pawn-movement.cpp -o drivers/pawnTest.out
