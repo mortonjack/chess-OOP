@@ -8,15 +8,15 @@ using namespace std;
 int main() {
     // Create the game board and two rooks & two bishops
     gameboard board;
-    rook white_a_rook = rook('W');
-    rook black_a_rook = rook('B');
-    bishop white_a_bishop = bishop();
-    bishop black_a_bishop = bishop('B');
+    rook whiteARook = rook('W');
+    rook blackARook = rook('B');
+    bishop whiteCBishop = bishop();
+    bishop blackCBishop = bishop('B');
 
 
     // Add the rooks to the game board
-    board.addPiece(0,0,&white_a_rook);
-    board.addPiece(7,0,&black_a_rook);
+    board.addPiece(0,0,&whiteARook);
+    board.addPiece(7,0,&blackARook);
     
     // Check to ensure our rooks were added properly
     board.visualiseTextBoard();
@@ -37,8 +37,8 @@ int main() {
 
     
     // Add the bishops to the board
-    board.addPiece(0,2,&white_a_bishop);
-    board.addPiece(7,2,&black_a_bishop);
+    board.addPiece(0,2,&whiteCBishop);
+    board.addPiece(7,2,&blackCBishop);
 
     // Check to ensure bishops were added properly
     board.visualiseTextBoard();

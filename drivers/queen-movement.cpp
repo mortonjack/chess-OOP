@@ -7,13 +7,13 @@ using namespace std;
 int main() {
     // Create the game board and two queens.
     gameboard board;
-    queen white_a_queen = queen();
-    queen black_a_queen = queen('B');
+    queen whiteAQueen = queen();
+    queen blackAQueen = queen('B');
 
 
     // Add the quenes to the game board
-    board.addPiece(0,0,&white_a_queen);
-    board.addPiece(7,0,&black_a_queen);
+    board.addPiece(0,0,&whiteAQueen);
+    board.addPiece(7,0,&blackAQueen);
     
     // Check to ensure our queens were added properly
     board.visualiseTextBoard();

@@ -5,7 +5,7 @@
 using namespace std;
 
 int main() {
-    // Create the game board and two kings.
+    // Create the game board a white king.
     gameboard board;
     king testKing = king();
 

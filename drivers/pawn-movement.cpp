@@ -7,13 +7,13 @@ using namespace std;
 int main() {
     // Create the game board and two pawns.
     gameboard board;
-    pawn white_a_pawn = pawn();
-    pawn black_a_pawn = pawn('B');
+    pawn whiteCpawn = pawn();
+    pawn blackFPawn = pawn('B');
 
 
     // Add the pawns to the game board
-    board.addPiece(6,2,&white_a_pawn);
-    board.addPiece(1,5,&black_a_pawn);
+    board.addPiece(6,2,&whiteCpawn);
+    board.addPiece(1,5,&blackFPawn);
     
     // Check to ensure our pawns were added properly
     board.visualiseTextBoard();
