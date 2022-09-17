@@ -5,7 +5,7 @@
 using namespace std;
 
 int main() {
-    // Create the game board and four queens.
+    // Create the game board and two queens.
     gameboard board;
     queen white_a_queen = queen();
     queen black_a_queen = queen('B');
@@ -15,7 +15,7 @@ int main() {
     board.addPiece(0,0,&white_a_queen);
     board.addPiece(7,0,&black_a_queen);
     
-    // Check to ensure our quenes were added properly
+    // Check to ensure our queens were added properly
     board.visualiseTextBoard();
 
     // Move the queens to illegal positions
