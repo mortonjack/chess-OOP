@@ -19,20 +19,20 @@ void gameboard::addPiece(int x, int y, piece* newPiece) {
     board[x][y] = newPiece;
 }
 
-void gameboard::movePiece(int oldx, int oldy, int newx, int newy) {
+bool gameboard::movePiece(int oldx, int oldy, int newx, int newy) {
     if (board[oldx][oldy] != nullptr) { // check a piece exists at oldx, oldy
         piece* piece = board[oldx][oldy];
-        bool validMove = true;
 
-        if (!(piece->checkMoveValidity(oldx,oldy, newx,newy))) validMove = false;
-        if (oldx == newx && oldy == newy) validMove = false;
+        // Validity Checks
+        if (oldx == newx && oldy == newy) return false; 
+        if (!(piece->checkMoveValidity(oldx,oldy, newx,newy))) return false;
 
-        if (validMove) { // If the proposed move is valid for the piece...
-            addPiece(newx,newy,piece); // Add the piece in the target location
-            removePiece(oldx,oldy); // Remove the piece from the original location
-        } else {
-            // Do nothing (error message?)
-        }
+        // If the proposed move is valid for the piece...
+        addPiece(newx,newy,piece); // Add the piece in the target location
+        removePiece(oldx,oldy); // Remove the piece from the original location
+
+        // report successful move
+        return true;
     }
 }
 

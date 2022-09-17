@@ -11,7 +11,7 @@ class gameboard {
         void visualiseTextBoard(); // print text-based visualisation of the board
         void removePiece(int x, int y);
         void addPiece(int x, int y, piece* newPiece);
-        void movePiece(int oldx, int oldy, int newx, int newy);
+        bool movePiece(int oldx, int oldy, int newx, int newy);
 };
 
 #endif//GAMEBOARD_H
