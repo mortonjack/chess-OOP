@@ -1,5 +1,3 @@
-
-#include "piece.h"
 #include "rook.h"
 
 rook::rook(): rook('W') {}; // Pieces are white by default

@@ -1,5 +1,3 @@
-
-#include "piece.h"
 #include "bishop.h"
 
 bishop::bishop(): bishop('W') {}; // Pieces are white by default
