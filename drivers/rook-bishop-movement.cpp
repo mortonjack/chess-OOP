@@ -6,7 +6,7 @@
 using namespace std;
 
 int main() {
-    // Create the game board and two rooks
+    // Create the game board and two rooks & two bishops
     gameboard board;
     rook white_a_rook = rook('W');
     rook black_a_rook = rook('B');
