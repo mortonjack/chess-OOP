@@ -9,3 +9,6 @@ rook-bishop-driver:
 
 queen-driver:
 	@g++ include/piece.cpp include/queen.cpp include/gameboard.cpp drivers/queen-movement.cpp -o drivers/queenTest.out
+
+knight-driver:
+	@g++ include/piece.cpp include/knight.cpp include/gameboard.cpp drivers/knight-movement.cpp -o drivers/knightTest.out
