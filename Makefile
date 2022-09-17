@@ -18,3 +18,6 @@ king-driver:
 
 pawn-driver:
 	@g++ include/piece.cpp include/pawn.cpp include/gameboard.cpp drivers/pawn-movement.cpp -o drivers/pawnTest.out
+
+piece-drivers:
+	@make rook-bishop-driver queen-driver knight-driver king-driver pawn-driver
