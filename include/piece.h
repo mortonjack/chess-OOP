@@ -3,19 +3,13 @@
 
 class piece {
     protected:
-        int _x;
-        int _y;
         bool _captured;
+        char _color;
         char _name;
     public:
         piece();
-        piece(int x, int y, char name);
-        void move(int x, int y);
-        //virtual bool checkMoveValidity(int x, int y) = 0;
-        //virtual bool checkTake(int x, int y) = 0;
-        //virtual bool checkPathClear(int x, int y) = 0; 
-        int getx();
-        int gety();
+        piece(char name, char color);
+        virtual bool checkMoveValidity(int oldx, int oldy, int newx, int newy) = 0;
         char getName();
 };
 

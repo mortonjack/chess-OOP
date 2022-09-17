@@ -1,13 +1,6 @@
 #include "piece.h"
 
-piece::piece() {_name = 'x';}
-piece::piece(int x, int y, char name) : _x(x), _y(y), _name(name) {};
+piece::piece(): piece('x','W') {};
+piece::piece(char name, char color) : _name(name), _color(color) {};
 
-void piece::move(int x, int y) {
-    this->_x = x;
-    this->_y = y;
-} 
-
-int piece::getx() {return this->_x;}
-int piece::gety() {return this->_y;}
 char piece::getName() {return this->_name;}
