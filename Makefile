@@ -21,3 +21,6 @@ pawn-driver:
 
 piece-drivers:
 	@make rook-bishop-driver queen-driver knight-driver king-driver pawn-driver
+
+rank-and-file-driver:
+	@g++ include/gameboard.cpp include/piece.cpp include/pawn.cpp include/knight.cpp include/bishop.cpp include/rook.cpp include/queen.cpp include/king.cpp drivers/example-board-setup.cpp -o drivers/rankFileTest.out

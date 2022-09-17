@@ -13,7 +13,6 @@ int main() {
     bishop white_a_bishop = bishop();
     bishop black_a_bishop = bishop('B');
 
-
     // Add the rooks to the game board
     board.addPiece(0,0,&white_a_rook);
     board.addPiece(7,0,&black_a_rook);
