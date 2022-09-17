@@ -38,5 +38,14 @@ int main() {
     // Check to see nothing happens
     board.visualiseTextBoard();
 
+    // Move the rooks outside the game board
+    board.movePiece(0,3, -1,3);
+    board.movePiece(7,7, 7,8);
+    board.movePiece(0,32, 1,3);
+    board.movePiece(-7,7, 8,7);
+
+    // Check to see nothing happens
+    board.visualiseTextBoard();
+
     return 0;
 }
