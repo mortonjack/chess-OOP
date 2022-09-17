@@ -21,9 +21,9 @@ king::king(char color) {
     }
 }
 
-bool king::checkMoveValidity(int oldx, int oldy, int newx, int newy) {
+bool king::checkMoveValidity(int oldRank, int oldFile, int newRank, int newFile) {
     // check the king isn't moving more than one space
-    bool valid = (newx-oldx <= 1 && newx-oldx >= -1) &&
-                 (newy-oldy <= 1 && newy-oldy >=-1);
+    bool valid = (newRank-oldRank <= 1 && newRank-oldRank >= -1) &&
+                 (newFile-oldFile <= 1 && newFile-oldFile >=-1);
     return valid;
 }

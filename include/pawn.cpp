@@ -21,12 +21,13 @@ pawn::pawn(char color) {
     }
 }
 
-bool pawn::checkMoveValidity(int oldx, int oldy, int newx, int newy) {
+bool pawn::checkMoveValidity(int oldRank, int oldFile, int newRank, int newFile) {
     bool valid;
+    // check pawns are moving up one space
     if (this->_color == 'B') {
-        valid = (oldy == newy) && (newx-oldx == 1);
+        valid = (oldFile == newFile) && (newRank-oldRank == 1);
     } else { // Uncolored pawns are white by default
-        valid = (oldy == newy) && (oldx-newx == 1);
+        valid = (oldFile == newFile) && (oldRank-newRank == 1);
     }
     return valid;
 }

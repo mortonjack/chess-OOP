@@ -21,10 +21,11 @@ knight::knight(char color) {
     }
 }
 
-bool knight::checkMoveValidity(int oldx, int oldy, int newx, int newy) {
-    // check the absolute value of the relative movement in the x or y direction is 1,
-    // and the absolute value of the relative movement in the other direction is 2.
-    bool valid = ((newx-oldx == 2 || newx-oldx == -2) && (newy-oldy == 1 || newy-oldy == -1))
-               ||((newx-oldx == 1 || newx-oldx == -1) && (newy-oldy == 2 || newy-oldy == -2));
+bool knight::checkMoveValidity(int oldRank, int oldFile, int newRank, int newFile) {
+    // Check the knight is moving 2 tiles in one direction, and 1 tile in the other
+    bool valid = ((newRank-oldRank == 2 || newRank-oldRank == -2) && 
+                  (newFile-oldFile == 1 || newFile-oldFile == -1))
+               ||((newRank-oldRank == 1 || newRank-oldRank == -1) && 
+                  (newFile-oldFile == 2 || newFile-oldFile == -2));
     return valid;
 }
