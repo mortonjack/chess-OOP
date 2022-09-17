@@ -7,7 +7,7 @@ class queen : public piece {
     public:
         queen(); // Default constructor (pieces are white by default)
         queen(char color); // Colored constructor
-        bool checkMoveValidity(int oldx, int oldy, int newx, int newy);
+        bool checkMoveValidity(int oldRank, int oldFile, int newRank, int newFile);
 };
 
 #endif//QUEEN_H

@@ -7,13 +7,13 @@ using namespace std;
 int main() {
     // Create the game board and two knights.
     gameboard board;
-    knight white_a_knight = knight();
-    knight black_a_knight = knight('B');
+    knight whiteAknight = knight();
+    knight blackAknight = knight('B');
 
 
     // Add the quenes to the game board
-    board.addPiece(0,0,&white_a_knight);
-    board.addPiece(7,0,&black_a_knight);
+    board.addPiece(0,0,&whiteAknight);
+    board.addPiece(7,0,&blackAknight);
     
     // Check to ensure our quenes were added properly
     board.visualiseTextBoard();
