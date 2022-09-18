@@ -13,6 +13,7 @@ class gameboard {
         void removePiece(int rank, int file);
         void addPiece(int rank, int file, piece* newPiece);
         bool movePiece(int oldRank, int oldFile, int newRank, int newFile); // attempt to move a piece
+        bool checkPathClear(int oldRank, int oldFile, int newRank, int newFile);
 };
 
 #endif//GAMEBOARD_H

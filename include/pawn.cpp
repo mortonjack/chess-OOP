@@ -25,9 +25,9 @@ bool pawn::checkMoveValidity(int oldRank, int oldFile, int newRank, int newFile)
     bool valid;
     // check pawns are moving up one space
     if (this->_color == 'B') {
-        valid = (oldFile == newFile) && (newRank-oldRank == 1);
-    } else { // Uncolored pawns are white by default
         valid = (oldFile == newFile) && (oldRank-newRank == 1);
+    } else { // Uncolored pawns are white by default
+        valid = (oldFile == newFile) && (newRank-oldRank == 1);
     }
     return valid;
 }
