@@ -1,5 +1,3 @@
-
-#include "piece.h"
 #include "rook.h"
 
 rook::rook(): rook('W') {}; // Pieces are white by default
@@ -23,8 +21,8 @@ rook::rook(char color) {
     }
 }
 
-bool rook::checkMoveValidity(int oldx, int oldy, int newx, int newy) {
-    // Check if the new move is on the same rank or file. If so, the move is valid.
-    bool valid = (oldx == newx) || (oldy == newy);
+bool rook::checkMoveValidity(int oldRank, int oldFile, int newRank, int newFile) {
+    // Check if the new move is on the same rank or file.
+    bool valid = (oldRank == newRank) || (oldFile == newFile);
     return valid;
 }
