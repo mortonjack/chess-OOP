@@ -32,6 +32,7 @@ bool gameboard::movePiece(int oldRank, int oldFile, int newRank, int newFile) {
         // Validity Checks
         if (oldRank == newRank && oldFile == newFile) return false; 
         if (!(piece->checkMoveValidity(oldRank,oldFile, newRank,newFile))) return false;
+        if (!(checkPathClear(oldRank,oldFile, newRank,newFile))) return false;
 
         // If the proposed move is valid for the piece...
         addPiece(newRank,newFile,piece); // Add the piece in the target location
@@ -44,7 +45,25 @@ bool gameboard::movePiece(int oldRank, int oldFile, int newRank, int newFile) {
     }
 }
 
-void gameboard::visualiseTextBoard() {visualiseTextBoard('W');};
+// CURRENTLY ONLY DETECTS VERTICAL COLLISIONS
+bool gameboard::checkPathClear(int oldRank, int oldFile, int newRank, int newFile) {
+    bool pathClear = true; // Stores if the path is clear. True by default, but can be falsified by a piece detection.
+
+
+    if (oldFile == newFile) { // If the old file equals the new file, then we are considering a vertical motion.
+        int increment = (newRank > oldRank) ? 1 : -1; // Determines whether we are searching left (-1) or right (1) of the old file.
+
+        for (int i = oldRank + increment; i != newRank; i+= increment) {
+            pathClear = board[i][oldFile] == nullptr ? pathClear : false;
+        }
+    }
+
+    return pathClear;
+}
+
+
+
+void gameboard::visualiseTextBoard() { visualiseTextBoard('W'); };
 
 void gameboard::visualiseTextBoard(char color) {
     if (color == 'B') {
