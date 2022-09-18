@@ -19,16 +19,28 @@ void gameboard::addPiece(int rank, int file, piece* newPiece) {
     board[rank][file] = newPiece;
 }
 
-void gameboard::movePiece(int oldx, int oldy, int newx, int newy) {
-    if (!(board[oldx][oldy] == nullptr)) {
-        piece* piece = board[oldx][oldy];
+bool gameboard::movePiece(int oldRank, int oldFile, int newRank, int newFile) {
+    // Ensure all coordinates are valid
+    if (oldRank < 0 || oldRank > 7 || oldFile < 0 || oldFile > 7 ||
+        newRank < 0 || newRank > 7 || newFile < 0 || newFile > 7) {
+        return false;
+    }
 
-        if (piece->checkMoveValidity(oldx,oldy, newx,newy)) { // If the proposed move is valid for the piece...
-            addPiece(newx,newy,piece); // Add the piece in the target location
-            removePiece(oldx,oldy); // Remove the piece from the original location
-        } else {
-            // Do nothing (error message?)
-        }
+    if (board[oldRank][oldFile] != nullptr) { // check a piece exists at oldRank, oldFile
+        piece* piece = board[oldRank][oldFile];
+
+        // Validity Checks
+        if (oldRank == newRank && oldFile == newFile) return false; 
+        if (!(piece->checkMoveValidity(oldRank,oldFile, newRank,newFile))) return false;
+
+        // If the proposed move is valid for the piece...
+        addPiece(newRank,newFile,piece); // Add the piece in the target location
+        removePiece(oldRank,oldFile); // Remove the piece from the original location
+
+        // report successful move
+        return true;
+    } else { // if no piece exists at oldRank, oldFile
+        return false;
     }
 }
 

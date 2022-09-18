@@ -12,7 +12,7 @@ class gameboard {
         void visualiseTextBoard(char color); // print text-based visualisation of the board
         void removePiece(int rank, int file);
         void addPiece(int rank, int file, piece* newPiece);
-        void movePiece(int oldRank, int oldFile, int newRank, int newFile);
+        bool movePiece(int oldRank, int oldFile, int newRank, int newFile); // attempt to move a piece
 };
 
 #endif//GAMEBOARD_H

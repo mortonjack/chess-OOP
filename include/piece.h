@@ -4,8 +4,8 @@
 class piece {
     protected:
         bool _captured;
-        char _color;
         char _name;
+        char _color;
     public:
         piece();
         piece(char name, char color);
