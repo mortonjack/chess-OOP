@@ -35,7 +35,7 @@ bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
         // Validity Checks
         if (oldRank == newRank && oldFile == newFile) return false; 
         if (!(piece->checkMoveValidity(oldFile,oldRank, newFile,newRank))) return false;
-        //if (!(checkPathClear(oldFile,oldRank, newFile,newRank))) return false;
+        if (!(checkPathClear(oldFile,oldRank, newFile,newRank))) return false;
 
         // If the proposed move is valid for the piece...
         if (board[newFile][newRank] != nullptr) { // If there is a piece at the new location
@@ -72,7 +72,7 @@ bool gameboard::checkPathClear(int oldFile, int oldRank, int newFile, int newRan
 
         // Check every sqaure horizontally, vertically or diagonally along the path 
         for (int i = 0; i < searchSquares - 1; i++) {
-            pathClear = board[oldRank + (i+1)*rankIncrement][oldFile + (i+1)*fileIncrement] == nullptr ? pathClear : false;
+            pathClear = board[oldFile + (i+1)*fileIncrement][oldRank + (i+1)*rankIncrement] == nullptr ? pathClear : false;
         }
     }
     return pathClear;
