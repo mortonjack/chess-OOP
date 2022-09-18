@@ -19,6 +19,9 @@ pawn-driver:
 piece-drivers:
 	@make rook-bishop-driver queen-driver knight-driver king-driver pawn-driver
 
+capture-driver:
+	@g++ -Wall -std=c++11 include/piece.cpp include/pawn.cpp include/rook.cpp include/knight.cpp include/bishop.cpp include/queen.cpp include/king.cpp include/gameboard.cpp drivers/capture.cpp -o drivers/captureTest.out
+
 rank-and-file-driver:
 	@g++ -Wall -std=c++11 include/gameboard.cpp include/piece.cpp include/pawn.cpp include/knight.cpp include/bishop.cpp include/rook.cpp include/queen.cpp include/king.cpp drivers/example-board-setup.cpp -o drivers/rankFileTest.out
 
@@ -27,3 +30,6 @@ vertical-collision-driver:
 
 collision-driver:
 	@g++ -Wall -std=c++11 include/gameboard.cpp include/piece.cpp include/pawn.cpp include/knight.cpp include/bishop.cpp include/rook.cpp include/queen.cpp include/king.cpp drivers/collision-detection.cpp -o drivers/collisionTest.out
+
+clear-drivers:
+	@rm drivers/*.out
