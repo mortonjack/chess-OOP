@@ -1,6 +1,6 @@
 #include "gameboard.h"
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 using namespace std;
 
 gameboard::gameboard() {
@@ -33,6 +33,7 @@ bool gameboard::movePiece(int oldRank, int oldFile, int newRank, int newFile) {
         // Validity Checks
         if (oldRank == newRank && oldFile == newFile) return false; 
         if (!(piece->checkMoveValidity(oldRank,oldFile, newRank,newFile))) return false;
+
         if (!(checkPathClear(oldRank,oldFile, newRank,newFile))) return false;
 
         // If the proposed move is valid for the piece...
@@ -46,32 +47,33 @@ bool gameboard::movePiece(int oldRank, int oldFile, int newRank, int newFile) {
     }
 }
 
-// CURRENTLY ONLY DETECTS VERTICAL COLLISIONS
 bool gameboard::checkPathClear(int oldRank, int oldFile, int newRank, int newFile) {
     bool pathClear = true; // Stores if the path is clear. True by default, but can be falsified by a piece detection.
 
-    // If the motion is horizontal, vertical or diagonal (e.g. non-knight)...
+    // If the path is horizontal, vertical or diagonal (non-knight)...
     if (oldFile == newFile || oldRank == newRank || abs(oldRank - newRank) == abs(oldFile - newFile)) {
-        // Determines if we should be searching above (1), below (-1) or in the same rank (0)
+        // Determines if we should be searching above (1), below (-1) or at the same rank (0)
         int rankIncrement = 0;
         if (newRank > oldRank) rankIncrement = 1;
         else if (newRank < oldRank) rankIncrement = -1;
 
-        // Determines if we should be searching left (1), right (-1) or in the same file (0)
+        // Determines if we should be searching left (1), right (-1) or on the same file (0)
         int fileIncrement = 0;
         if (newFile > oldFile) fileIncrement = 1;
         else if (newFile < oldFile) fileIncrement = -1;
 
         // Stores how many squares horizontally, vertically or diagonally to search
-        int searchSquares = rankIncrement != 0 ? abs(newRank - oldRank) : abs(newFile - oldFile);
+        int searchSquares = abs(newRank - oldRank) > abs(newFile - oldFile) ? abs(newRank - oldRank) : abs(newFile - oldFile);
 
         // Check every sqaure horizontally, vertically or diagonally along the path 
-        for (int i = 0; i < searchSquares - 1; i += 1) {
-            pathClear = board[oldRank + i*rankIncrement][oldFile + i*fileIncrement] == nullptr ? pathClear : false;
+        for (int i = 0; i < searchSquares - 1; i++) {
+            pathClear = board[oldRank + (i+1)*rankIncrement][oldFile + (i+1)*fileIncrement] == nullptr ? pathClear : false;
         }
     }
     return pathClear;
 }
+
+
 
 void gameboard::visualiseTextBoard() { visualiseTextBoard('W'); };
 
