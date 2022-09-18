@@ -42,9 +42,8 @@ bool kingtest::movementTest(bool display) {
     if (display) board.visualiseTextBoard();
     
     // Run second test
-    coords[0] = 3;
-    coords[1] = 3;
-    bool test2 = board.testDriver(pieces, coords, 1);
+    int coords2[2] = {3,3};
+    bool test2 = board.testDriver(pieces, coords2, 1);
 
     // Test invalid move directions
     board.movePiece(3,3, 1,3);
@@ -66,11 +65,11 @@ bool kingtest::movementTest(bool display) {
         if (test2) {
             cout << "Test passed: King moved in all 8 directions" << endl;
         } else {
-            cout << "Test failed: King failed to move in all directions" << endl;
+            cout << "Test failed: King failed to move in all 8 directions" << endl;
         }
 
         if (test3) {
-            cout << "Test passed: King didn't move" << endl;
+            cout << "Test passed: King didn't make illegal moves" << endl;
         } else {
             cout << "Test failed: King made illegal move" << endl;
         }

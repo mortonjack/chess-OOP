@@ -64,27 +64,27 @@ bool pawntest::movementTest(bool display) {
 
     if (display) {
         if (test1) {
-            cout << "Test passed: Pawns didn't move" << endl;
+            cout << "Test passed: Pawns didn't move backwards, sideways, and/or up 3 tiles" << endl;
         } else {
             cout << "Test failed: Pawns moved backwards, sideways, and/or up 3 tiles" << endl;
         }
 
         if (test2) {
-            cout << "Test passed: Pawns moved up" << endl;
+            cout << "Test passed: Pawns moved up one and/or two tiles" << endl;
         } else {
             cout << "Test failed: Pawns failed to move up one and/or two tiles" << endl;
         }
 
         if (test3) {
-            cout << "Test passed: Pawns didn't move" << endl;
+            cout << "Test passed: Pawns didn't move up two tiles on the second move" << endl;
         } else {
-            cout << "Test failed: Pawns moved up twice on second move" << endl;
+            cout << "Test failed: Pawns moved up two tiles on second move" << endl;
         }
 
         if (test4) {
-            cout << "Test passed: Pawns moved up" << endl;
+            cout << "Test passed: Pawns moved up one tile" << endl;
         } else {
-            cout << "Test failed: Pawns didn't move" << endl;
+            cout << "Test failed: Pawns didn't move up one tile" << endl;
         }
     }
 

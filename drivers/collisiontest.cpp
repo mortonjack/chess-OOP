@@ -127,19 +127,19 @@ bool collisiontest::baseTest(bool display) {
         }
 
         if (test5) {
-            cout << "Test passed: Captures taken place succesfully" << endl;
+            cout << "Test passed: Captures succesful" << endl;
         } else {
             cout << "Test failed: Captures failed to succeed" << endl;
         }
 
         if (test6) {
-            cout << "Test passed: Correct pieces successfuly captured" << endl;
+            cout << "Test passed: Correct pieces successfully captured" << endl;
         } else {
             cout << "Test failed: Some pieces not captured" << endl;
         }
 
         if (test7) {
-            cout << "Test passed: Correct pieces not captured" << endl;
+            cout << "Test passed: Correct pieces uncaptured" << endl;
         } else {
             cout << "Test failed: Some pieces incorrectly captured" << endl;
         }

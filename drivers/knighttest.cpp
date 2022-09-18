@@ -55,21 +55,21 @@ bool knighttest::movementTest(bool display) {
 
     if (display) {
         if (test1) {
-            cout << "Test passed: Knights didn't move" << endl;
+            cout << "Test passed: Knights didn't make illegal moves" << endl;
         } else {
-            cout << "Test failed: Knights made illegal moves" << endl;
+            cout << "Test failed: Knights made illegal move" << endl;
         }
 
         if (test2) {
             cout << "Test passed: Knights moved properly" << endl;
         } else {
-            cout << "Test failed: Knights failed to move" << endl;
+            cout << "Test failed: Knights failed to move properly" << endl;
         }
 
         if (test3) {
             cout << "Test passed: Knights moved properly" << endl;
         } else {
-            cout << "Test failed: Knights failed to move" << endl;
+            cout << "Test failed: Knights failed to move properly" << endl;
         }
     }
 

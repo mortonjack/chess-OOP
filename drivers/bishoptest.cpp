@@ -47,13 +47,13 @@ bool bishoptest::movementTest(bool display) {
         if (test) {
             cout << "Test passed: Bishops moved properly" << endl;
         } else {
-            cout << "Test failed: Bishops failed to move" << endl;
+            cout << "Test failed: Bishops failed to move properly" << endl;
         }
 
         if (test2) {
-            cout << "Test passed: Bishops didn't move" << endl;
+            cout << "Test passed: Bishops didn't make illegal moves" << endl;
         } else {
-            cout << "Test failed: Bishops made illegal moves" << endl;
+            cout << "Test failed: Bishops made illegal move" << endl;
         }
     }
 

@@ -54,15 +54,15 @@ bool queentest::movementTest(bool display) {
 
     if (display) {
         if (test1) {
-            cout << "Test passed: Queens didn't move" << endl;
+            cout << "Test passed: Queens didn't move to illegak positions" << endl;
         } else {
             cout << "Test failed: Queens moved to illegal positions" << endl;
         }
 
         if (test2) {
-            cout << "Test passed: Queens successfuly moved straight" << endl;
+            cout << "Test passed: Queens successfuly moved horizontally and vertically" << endl;
         } else {
-            cout << "Test failed: Queens failed to move straight" << endl;
+            cout << "Test failed: Queens failed to move horizontally or vertically" << endl;
         }
 
         if (test3) {

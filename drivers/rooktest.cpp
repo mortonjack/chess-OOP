@@ -60,7 +60,7 @@ bool rooktest::movementTest(bool display) {
         }
 
         if (test2) {
-            cout << "Test passed: Rooks didn't move" << endl;
+            cout << "Test passed: Rooks didn't make illegal moves" << endl;
         } else {
             cout << "Test failed: Rooks made illegal moves" << endl;
         }

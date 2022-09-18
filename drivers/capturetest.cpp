@@ -65,33 +65,33 @@ bool capturetest::basicTest(bool display) {
 
     if (display) {
         if (test1) {
-            cout << "Test passed: Black queen captured." << endl;
+            cout << "Test passed: Black queen captured" << endl;
         } else {
-            cout << "Test failed: Black queen not captured." << endl;
+            cout << "Test failed: Black queen not captured" << endl;
         }
 
         if (test2) {
-            cout << "Test passed: Black rook captured." << endl;
+            cout << "Test passed: Black rook captured" << endl;
         } else {
-            cout << "Test failed: Black rook not captured." << endl;
+            cout << "Test failed: Black rook not captured" << endl;
         }
         
         if (test3) {
-            cout << "Test passed: White knight not captured." << endl;
+            cout << "Test passed: White knight not captured" << endl;
         } else {
-            cout << "Test failed: White knight captured." << endl;
+            cout << "Test failed: White knight captured" << endl;
         }
 
         if (test4) {
-            cout << "Test passed: White rook not captured." << endl;
+            cout << "Test passed: White rook not captured" << endl;
         } else {
-            cout << "Test failed: White rook captured." << endl;
+            cout << "Test failed: White rook captured" << endl;
         }
 
         if(test5) {
-            cout << "Test passed: All pieces in correct position." << endl;
+            cout << "Test passed: All pieces in correct position" << endl;
         } else {
-            cout << "Test failed: Pieces not in correct position." << endl;
+            cout << "Test failed: Pieces not in correct position" << endl;
         }
     }
 
