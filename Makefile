@@ -24,3 +24,6 @@ rank-and-file-driver:
 
 vertical-collision-driver:
 	@g++ -Wall -std=c++11 include/piece.cpp include/pawn.cpp include/rook.cpp include/gameboard.cpp drivers/vertical-collision-detection.cpp -o drivers/verticalCollisionTest.out	
+
+collision-driver:
+	@g++ -Wall -std=c++11 include/gameboard.cpp include/piece.cpp include/pawn.cpp include/knight.cpp include/bishop.cpp include/rook.cpp include/queen.cpp include/king.cpp drivers/collision-detection.cpp -o drivers/collisionTest.out

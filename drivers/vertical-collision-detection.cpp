@@ -10,11 +10,13 @@ int main() {
     gameboard board;
     rook blackARook = rook('B');
     pawn whiteCPawn = pawn();
+    pawn whiteDPawn = pawn();
 
     // Add the pieces to the game board
     board.addPiece(7,0,&blackARook);
     board.addPiece(1,2,&whiteCPawn);
-    
+    board.addPiece(1,3,&whiteDPawn);
+
     // Check to ensure our pieces were added properly
     board.visualiseTextBoard();
 
@@ -42,6 +44,12 @@ int main() {
 
     // Check to ensure this move was unsuccessful
     board.visualiseTextBoard();
+
+    // Try to move the d-pawn forward
+    board.movePiece(1,3, 3,2);
+
+    // Check to ensure this move was successful
+    board.visualiseTextBoard();   
 
     return 0;
 }
