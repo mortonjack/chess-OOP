@@ -31,5 +31,12 @@ vertical-collision-driver:
 collision-driver:
 	@g++ -Wall -std=c++11 include/gameboard.cpp include/piece.cpp include/pawn.cpp include/knight.cpp include/bishop.cpp include/rook.cpp include/queen.cpp include/king.cpp drivers/collision-detection.cpp -o drivers/collisionTest.out
 
+CD-2:
+	@g++ -Wall -std=c++11 gameCore.o drivers/collision-detection.cpp -o drivers/collisionTest.out
+
+
+compile-game-core:
+	@g++ -Wall -std=c++11 include/gameboard.cpp include/piece.cpp include/pawn.cpp include/knight.cpp include/bishop.cpp include/rook.cpp include/queen.cpp include/king.cpp null-program.cpp -o gameCore.o
+
 clear-drivers:
 	@rm drivers/*.out

@@ -154,3 +154,6 @@ bool gameboard::testDriver(piece* pieces[], int* coords, int length) {
 
     return true;
 }
+
+// Destructor frees all memeory allocated to the game board
+gameboard::~gameboard() { delete[] board; }

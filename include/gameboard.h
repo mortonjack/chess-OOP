@@ -15,6 +15,7 @@ class gameboard {
         bool movePiece(int oldRank, int oldFile, int newRank, int newFile); // attempt to move a piece
         bool checkPathClear(int oldRank, int oldFile, int newRank, int newFile);
         bool testDriver(piece* pieces[], int* coords, int length); // For test drivers: ensure board is set up correctly
+        ~gameboard(); // properly destroy the game board
 };
 
 #endif//GAMEBOARD_H
