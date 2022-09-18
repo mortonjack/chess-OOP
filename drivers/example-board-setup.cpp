@@ -74,6 +74,7 @@ int main() {
     
     // Check to ensure the board was setup properly
     board.visualiseTextBoard();
+    board.visualiseTextBoard('B');
 
     return 0;
 }
