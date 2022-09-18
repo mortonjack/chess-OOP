@@ -12,7 +12,7 @@ class piece {
         piece(char name, char color);
         void capture();
         bool captured();
-        virtual bool checkMoveValidity(int oldRank, int oldFile, int newRank, int newFile) = 0;
+        virtual bool checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank) = 0;
         char getName();
         void move();
 };

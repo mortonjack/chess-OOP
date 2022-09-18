@@ -21,7 +21,7 @@ bishop::bishop(char color) {
     }
 }
 
-bool bishop::checkMoveValidity(int oldRank, int oldFile, int newRank, int newFile) {
+bool bishop::checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank) {
     // check the the relative distance moved is equal in both rank and file
     bool valid = (newRank-oldRank) == (newFile-oldFile) || 
               -1*(newRank-oldRank) == (newFile-oldFile);

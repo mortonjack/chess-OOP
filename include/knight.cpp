@@ -21,7 +21,7 @@ knight::knight(char color) {
     }
 }
 
-bool knight::checkMoveValidity(int oldRank, int oldFile, int newRank, int newFile) {
+bool knight::checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank) {
     // Check the knight is moving 2 tiles in one direction, and 1 tile in the other
     bool valid = ((newRank-oldRank == 2 || newRank-oldRank == -2) && 
                   (newFile-oldFile == 1 || newFile-oldFile == -1))

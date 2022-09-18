@@ -20,23 +20,23 @@ bool bishoptest::movementTest(bool display) {
     bishop blackCBishop = bishop('B');
 
     // Add the bishops to the board
-    board.addPiece(0,2,&whiteCBishop);
-    board.addPiece(7,2,&blackCBishop);
+    board.addPiece(2,0,&whiteCBishop);
+    board.addPiece(2,7,&blackCBishop);
     piece* pieces[] = {&whiteCBishop, &blackCBishop};
     if (display) board.visualiseTextBoard();
 
     // Move the bishops to legal positions
-    board.movePiece(0,2,1,3);
-    board.movePiece(7,2,5,4);
+    board.movePiece(2,0, 3,1);
+    board.movePiece(2,7, 4,5);
 
     // Check to ensure our moves were successful
-    int coords[] = {1,3, 5,4};
+    int coords[] = {3,1, 4,5};
     bool test = board.testDriver(pieces, coords, 2);
     if (display) board.visualiseTextBoard();
 
     // Move the bishops to illegal positions
-    board.movePiece(1,3, 1,1);
-    board.movePiece(7,2, 4,6);
+    board.movePiece(3,1, 1,1);
+    board.movePiece(2,7, 6,4);
 
     // Check to ensure our nothing has happened
     bool test2 = board.testDriver(pieces, coords, 2);

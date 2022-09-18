@@ -21,7 +21,7 @@ rook::rook(char color) {
     }
 }
 
-bool rook::checkMoveValidity(int oldRank, int oldFile, int newRank, int newFile) {
+bool rook::checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank) {
     // Check if the new move is on the same rank or file.
     bool valid = (oldRank == newRank) || (oldFile == newFile);
     return valid;

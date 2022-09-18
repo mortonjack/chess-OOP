@@ -7,43 +7,42 @@ gameboard::gameboard() {
     // initialise empty board
     for (int rank = 0; rank < 8; rank++) {
         for (int file = 0; file < 8; file++) {
-            this->board[rank][file] = nullptr;
+            this->board[file][rank] = nullptr;
         }
     }
 }
 
-void gameboard::removePiece(int rank, int file) {
+void gameboard::removePiece(int file, int rank) {
     // remove piece from the board
-    board[rank][file] = nullptr;
+    board[file][rank] = nullptr;
 }
 
-void gameboard::addPiece(int rank, int file, piece* newPiece) {
+void gameboard::addPiece(int file, int rank, piece* newPiece) {
     // add piece to the board
-    board[rank][file] = newPiece;
+    board[file][rank] = newPiece;
 }
 
-bool gameboard::movePiece(int oldRank, int oldFile, int newRank, int newFile) {
+bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
     // Ensure all coordinates are valid
     if (oldRank < 0 || oldRank > 7 || oldFile < 0 || oldFile > 7 ||
         newRank < 0 || newRank > 7 || newFile < 0 || newFile > 7) {
         return false;
     }
 
-    if (board[oldRank][oldFile] != nullptr) { // check a piece exists at oldRank, oldFile
-        piece* piece = board[oldRank][oldFile];
+    if (board[oldFile][oldRank] != nullptr) { // check a piece exists at oldRank, oldFile
+        piece* piece = board[oldFile][oldRank];
 
         // Validity Checks
         if (oldRank == newRank && oldFile == newFile) return false; 
-        if (!(piece->checkMoveValidity(oldRank,oldFile, newRank,newFile))) return false;
-
-        if (!(checkPathClear(oldRank,oldFile, newRank,newFile))) return false;
+        if (!(piece->checkMoveValidity(oldFile,oldRank, newFile,newRank))) return false;
+        //if (!(checkPathClear(oldFile,oldRank, newFile,newRank))) return false;
 
         // If the proposed move is valid for the piece...
-        if (board[newRank][newFile] != nullptr) { // If there is a piece at the new location
-            board[newRank][newFile]->capture(); //   then capture it
+        if (board[newFile][newRank] != nullptr) { // If there is a piece at the new location
+            board[newFile][newRank]->capture(); //   then capture it
         }
-        addPiece(newRank,newFile,piece); // Add the piece in the target location
-        removePiece(oldRank,oldFile); // Remove the piece from the original location
+        addPiece(newFile,newRank,piece); // Add the piece in the target location
+        removePiece(oldFile,oldRank); // Remove the piece from the original location
         piece->move(); // increment piece's move count
 
         // report successful move
@@ -53,7 +52,7 @@ bool gameboard::movePiece(int oldRank, int oldFile, int newRank, int newFile) {
     }
 }
 
-bool gameboard::checkPathClear(int oldRank, int oldFile, int newRank, int newFile) {
+bool gameboard::checkPathClear(int oldFile, int oldRank, int newFile, int newRank) {
     bool pathClear = true; // Stores if the path is clear. True by default, but can be falsified by a piece detection.
 
     // If the path is horizontal, vertical or diagonal (non-knight)...
@@ -88,10 +87,10 @@ void gameboard::visualiseTextBoard(char color) {
         for (int rank = 0; rank < 8; rank++) {
             cout << rank + 1 << " "; // display rank
             for (int file = 7; file >= 0; file--) {
-                if (this->board[rank][file] == nullptr) { 
+                if (this->board[file][rank] == nullptr) { 
                     cout << ". "; // display empty tile
                 } else { // display piece
-                    cout << this->board[rank][file]->getName() << " ";
+                    cout << this->board[file][rank]->getName() << " ";
                 }
             }
             cout << rank + 1 << endl; // display rank
@@ -102,10 +101,10 @@ void gameboard::visualiseTextBoard(char color) {
         for (int rank = 7; rank >= 0; rank--) {
             cout << rank + 1 << " "; // display rank
             for (int file = 0; file < 8; file++) {
-                if (this->board[rank][file] == nullptr) {
+                if (this->board[file][rank] == nullptr) {
                     cout << ". "; // display empty tile
                 } else { // display piece
-                    cout << this->board[rank][file]->getName() << " ";
+                    cout << this->board[file][rank]->getName() << " ";
                 }
             }
             cout << rank + 1 << endl; // display rank
@@ -139,11 +138,11 @@ bool gameboard::testDriver(piece* pieces[], int* coords, int length) {
     // Check rest of board is empty:
     for (int rank = 0; rank < 8; rank++) {
         for (int file = 0; file < 8; file++) {
-            if (this->board[rank][file] != nullptr) { 
+            if (this->board[file][rank] != nullptr) { 
                 // If not nullptr, check if piece is supposed to be here
                 success = false;
                 for (int i = 0; i < length && !success; i++) {
-                    if (rank == coords[i*2] && file == coords[i*2+1]) {
+                    if (file == coords[i*2] && rank == coords[i*2+1]) {
                         success = true;
                     }
                 }

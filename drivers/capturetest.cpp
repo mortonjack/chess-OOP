@@ -27,25 +27,25 @@ bool capturetest::basicTest(bool display) {
 
     // Add the white pieces
     board.addPiece(0,0,&whiteARook);
-    board.addPiece(0,6,&whiteGKnight);
+    board.addPiece(6,0,&whiteGKnight);
 
     // Add the black pieces
-    board.addPiece(7,0,&blackARook);
-    board.addPiece(7,3,&blackQueen);
+    board.addPiece(0,7,&blackARook);
+    board.addPiece(3,7,&blackQueen);
     
     // Display initial board setup
     if (display) board.visualiseTextBoard();
 
     // White rook take black rook
-    board.movePiece(0,0, 7,0);
+    board.movePiece(0,0, 0,7);
     if (display) board.visualiseTextBoard();
 
     // Knight take Queen
-    board.movePiece(0,6, 2,7);
-    board.movePiece(2,7, 4,6);
-    board.movePiece(4,6, 5,4);
+    board.movePiece(6,0, 7,2);
+    board.movePiece(7,2, 6,4);
+    board.movePiece(6,4, 4,5);
     if (display) board.visualiseTextBoard();
-    board.movePiece(5,4, 7,3);
+    board.movePiece(4,5, 3,7);
 
     // Display final board
     if (display) board.visualiseTextBoard();
@@ -60,7 +60,7 @@ bool capturetest::basicTest(bool display) {
 
     // Check all pieces in correct spot
     piece* pieces[2] = {&whiteGKnight, &whiteARook};
-    int coords[4] = {7,3, 7,0};
+    int coords[4] = {3,7, 0,7};
     bool test5 = board.testDriver(pieces, coords, 2);
 
     if (display) {

@@ -21,34 +21,34 @@ bool rooktest::movementTest(bool display) {
 
     // Add the rooks to the board
     board.addPiece(0,0,&whiteARook);
-    board.addPiece(7,0,&blackARook);
+    board.addPiece(0,7,&blackARook);
     piece* pieces[] = {&whiteARook, &blackARook};
     if (display) board.visualiseTextBoard();
 
     // Move the rooks to legal positions
-    board.movePiece(0,0,3,0);
-    board.movePiece(7,0,4,0);
+    board.movePiece(0,0,0,3);
+    board.movePiece(0,7,0,4);
     
     // Check to ensure the moves were made
     if (display) board.visualiseTextBoard();
-    int coords[] = {3,0, 4,0};
+    int coords[] = {0,3, 0,4};
     bool test1 = board.testDriver(pieces, coords, 2);
 
     // Move the rooks to illegal positions
-    board.movePiece(3,0, 1,1);
-    board.movePiece(4,0, 6,2);
+    board.movePiece(0,3, 1,1);
+    board.movePiece(0,4, 2,6);
 
     // Check to ensure our nothing has happened
     if (display) board.visualiseTextBoard();
     bool test2 = board.testDriver(pieces, coords, 2);
 
     // Move the rooks to legal positions
-    board.movePiece(3,0, 3,3);
-    board.movePiece(4,0, 2,0);
+    board.movePiece(0,3, 3,3);
+    board.movePiece(0,4, 0,2);
 
     // Check to ensure our moves were successful
     if (display) board.visualiseTextBoard();
-    int coords2[] = {3,3, 2,0};
+    int coords2[] = {3,3, 0,2};
     bool test3 = board.testDriver(pieces, coords2, 2);
 
     // Check results
