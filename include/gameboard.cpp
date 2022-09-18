@@ -42,6 +42,7 @@ bool gameboard::movePiece(int oldRank, int oldFile, int newRank, int newFile) {
         }
         addPiece(newRank,newFile,piece); // Add the piece in the target location
         removePiece(oldRank,oldFile); // Remove the piece from the original location
+        piece->move(); // increment piece's move count
 
         // report successful move
         return true;
