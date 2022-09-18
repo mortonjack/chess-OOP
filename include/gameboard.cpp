@@ -34,6 +34,9 @@ bool gameboard::movePiece(int oldRank, int oldFile, int newRank, int newFile) {
         if (!(piece->checkMoveValidity(oldRank,oldFile, newRank,newFile))) return false;
 
         // If the proposed move is valid for the piece...
+        if (board[newRank][newFile] != nullptr) { // If there is a piece at the new location
+            board[newRank][newFile]->capture(); //   then capture it
+        }
         addPiece(newRank,newFile,piece); // Add the piece in the target location
         removePiece(oldRank,oldFile); // Remove the piece from the original location
 
