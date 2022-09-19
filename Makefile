@@ -1,3 +1,6 @@
+driver:
+	@g++ -Wall -std=c++11 include/piece.cpp include/gameboard.cpp include/rook.cpp include/bishop.cpp include/knight.cpp include/pawn.cpp include/queen.cpp include/king.cpp drivers/include/testcase.cpp drivers/include/driver.cpp drivers/driver-test.cpp -o drivers/test.out
+
 first-movement-driver:
 	@g++ -Wall -std=c++11 include/piece.cpp include/rook.cpp include/gameboard.cpp drivers/first-piece-movement.cpp -o drivers/moveTest.out
 
