@@ -74,6 +74,7 @@ int main() {
     
     // Check to ensure the board was setup properly
     board.visualiseTextBoard();
+    cout << "Please manually ensure the board has been flipped correctly." << endl;
     board.visualiseTextBoard('B');
 
     return 0;

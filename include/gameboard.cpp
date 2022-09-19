@@ -13,10 +13,12 @@ gameboard::gameboard() {
 }
 
 void gameboard::removePiece(int rank, int file) {
+    // remove piece from the board
     board[rank][file] = nullptr;
 }
 
 void gameboard::addPiece(int rank, int file, piece* newPiece) {
+    // add piece to the board
     board[rank][file] = newPiece;
 }
 
@@ -77,38 +79,78 @@ bool gameboard::checkPathClear(int oldRank, int oldFile, int newRank, int newFil
     return pathClear;
 }
 
-
-
 void gameboard::visualiseTextBoard() { visualiseTextBoard('W'); };
 
 void gameboard::visualiseTextBoard(char color) {
+    // display the board as ASCII art in stdout
     if (color == 'B') {
-        cout << "  H G F E D C B A" << endl;
+        cout << "  H G F E D C B A" << endl; // display file
         for (int rank = 0; rank < 8; rank++) {
-            cout << rank + 1 << " ";
+            cout << rank + 1 << " "; // display rank
             for (int file = 7; file >= 0; file--) {
-                if (this->board[rank][file] == nullptr) {
-                    cout << ". ";
-                } else {
+                if (this->board[rank][file] == nullptr) { 
+                    cout << ". "; // display empty tile
+                } else { // display piece
                     cout << this->board[rank][file]->getName() << " ";
                 }
             }
-            cout << rank + 1 << endl;
+            cout << rank + 1 << endl; // display rank
         }
-        cout << "  H G F E D C B A" << endl;
-    } else {
-        cout << "  A B C D E F G H" << endl;
+        cout << "  H G F E D C B A" << endl; // display file
+    } else { // display white by default
+        cout << "  A B C D E F G H" << endl; // display file
         for (int rank = 7; rank >= 0; rank--) {
-            cout << rank + 1 << " ";
+            cout << rank + 1 << " "; // display rank
             for (int file = 0; file < 8; file++) {
                 if (this->board[rank][file] == nullptr) {
-                    cout << ". ";
-                } else {
+                    cout << ". "; // display empty tile
+                } else { // display piece
                     cout << this->board[rank][file]->getName() << " ";
                 }
             }
-            cout << rank + 1 << endl;
+            cout << rank + 1 << endl; // display rank
         }
-        cout << "  A B C D E F G H" << endl;
+        cout << "  A B C D E F G H" << endl; // display file
     }
+}
+
+bool gameboard::testDriver(piece* pieces[], int* coords, int length) {
+    /* 
+        Test the board is set up correctly.
+
+        Format: 
+        piece* pieces[] = {&piece1, &piece2};
+        int coords[] = {0,0, 1,1};
+        testDriver(pieces, coords, 2);
+
+        Checks piece1 is located at 0,0, piece2 is located at 1,1
+        Then ensures all other points are nullptr
+    */
+
+    bool success = false;
+    // Check pieces in correct positions:
+    for (int i = 0; i < length; i++) {
+        if (board[coords[i*2]][coords[i*2+1]] == pieces[i]) {
+            success = true;
+        }
+    }
+    if (!success) {return false;}
+
+    // Check rest of board is empty:
+    for (int rank = 0; rank < 8; rank++) {
+        for (int file = 0; file < 8; file++) {
+            if (this->board[rank][file] != nullptr) { 
+                // If not nullptr, check if piece is supposed to be here
+                success = false;
+                for (int i = 0; i < length && !success; i++) {
+                    if (rank == coords[i*2] && file == coords[i*2+1]) {
+                        success = true;
+                    }
+                }
+                if (!success) {return false;}
+            }
+        }
+    }
+
+    return true;
 }
