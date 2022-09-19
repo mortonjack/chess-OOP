@@ -6,6 +6,7 @@
 #include "kingtest.h"
 #include "queentest.h"
 #include "capturetest.h"
+#include "collisiontest.h"
 
 int main() {
     driver tests(6);
@@ -26,6 +27,8 @@ int main() {
 
     capturetest case7;
     tests.addCase(&case7);
+    collisiontest case8;
+    tests.addCase(&case8);
 
     tests.runTests();
     return 0;
