@@ -4,9 +4,6 @@ driver:
 first-movement-driver:
 	@g++ -Wall -std=c++11 include/piece.cpp include/rook.cpp include/gameboard.cpp drivers/first-piece-movement.cpp -o drivers/moveTest.out
 
-rook-bishop-driver:
-	@g++ -Wall -std=c++11 include/piece.cpp include/rook.cpp include/bishop.cpp include/gameboard.cpp drivers/rook-bishop-movement.cpp -o drivers/rookBishopTest.out
-
 queen-driver:
 	@g++ -Wall -std=c++11 include/piece.cpp include/queen.cpp include/gameboard.cpp drivers/queen-movement.cpp -o drivers/queenTest.out
 
