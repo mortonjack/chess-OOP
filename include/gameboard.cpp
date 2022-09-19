@@ -13,10 +13,12 @@ gameboard::gameboard() {
 }
 
 void gameboard::removePiece(int rank, int file) {
+    // remove piece from the board
     board[rank][file] = nullptr;
 }
 
 void gameboard::addPiece(int rank, int file, piece* newPiece) {
+    // add piece to the board
     board[rank][file] = newPiece;
 }
 
@@ -82,33 +84,34 @@ bool gameboard::checkPathClear(int oldRank, int oldFile, int newRank, int newFil
 void gameboard::visualiseTextBoard() { visualiseTextBoard('W'); };
 
 void gameboard::visualiseTextBoard(char color) {
+    // display the board as ASCII art in stdout
     if (color == 'B') {
-        cout << "  H G F E D C B A" << endl;
+        cout << "  H G F E D C B A" << endl; // display file
         for (int rank = 0; rank < 8; rank++) {
-            cout << rank + 1 << " ";
+            cout << rank + 1 << " "; // display rank
             for (int file = 7; file >= 0; file--) {
-                if (this->board[rank][file] == nullptr) {
-                    cout << ". ";
-                } else {
+                if (this->board[rank][file] == nullptr) { 
+                    cout << ". "; // display empty tile
+                } else { // display piece
                     cout << this->board[rank][file]->getName() << " ";
                 }
             }
-            cout << rank + 1 << endl;
+            cout << rank + 1 << endl; // display rank
         }
-        cout << "  H G F E D C B A" << endl;
-    } else {
-        cout << "  A B C D E F G H" << endl;
+        cout << "  H G F E D C B A" << endl; // display file
+    } else { // display white by default
+        cout << "  A B C D E F G H" << endl; // display file
         for (int rank = 7; rank >= 0; rank--) {
-            cout << rank + 1 << " ";
+            cout << rank + 1 << " "; // display rank
             for (int file = 0; file < 8; file++) {
                 if (this->board[rank][file] == nullptr) {
-                    cout << ". ";
-                } else {
+                    cout << ". "; // display empty tile
+                } else { // display piece
                     cout << this->board[rank][file]->getName() << " ";
                 }
             }
-            cout << rank + 1 << endl;
+            cout << rank + 1 << endl; // display rank
         }
-        cout << "  A B C D E F G H" << endl;
+        cout << "  A B C D E F G H" << endl; // display file
     }
 }
