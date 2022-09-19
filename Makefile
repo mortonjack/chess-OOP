@@ -1,17 +1,11 @@
 driver:
-	@g++ -Wall -std=c++11 include/piece.cpp include/gameboard.cpp include/rook.cpp include/bishop.cpp include/knight.cpp include/pawn.cpp include/queen.cpp include/king.cpp drivers/testcase.cpp drivers/driver.cpp drivers/bishoptest.cpp drivers/rooktest.cpp drivers/knighttest.cpp drivers/pawntest.cpp drivers/driver-test.cpp -o drivers/test.out
+	@g++ -Wall -std=c++11 include/piece.cpp include/gameboard.cpp include/rook.cpp include/bishop.cpp include/knight.cpp include/pawn.cpp include/queen.cpp include/king.cpp drivers/testcase.cpp drivers/driver.cpp drivers/bishoptest.cpp drivers/rooktest.cpp drivers/knighttest.cpp drivers/pawntest.cpp drivers/kingtest.cpp drivers/driver-test.cpp -o drivers/test.out
 
 first-movement-driver:
 	@g++ -Wall -std=c++11 include/piece.cpp include/rook.cpp include/gameboard.cpp drivers/first-piece-movement.cpp -o drivers/moveTest.out
 
 queen-driver:
 	@g++ -Wall -std=c++11 include/piece.cpp include/queen.cpp include/gameboard.cpp drivers/queen-movement.cpp -o drivers/queenTest.out
-
-king-driver:
-	@g++ -Wall -std=c++11 include/piece.cpp include/king.cpp include/gameboard.cpp drivers/king-movement.cpp -o drivers/kingTest.out
-
-pawn-driver:
-	@g++ -Wall -std=c++11 include/piece.cpp include/pawn.cpp include/gameboard.cpp drivers/pawn-movement.cpp -o drivers/pawnTest.out
 
 piece-drivers:
 	@make queen-driver king-driver pawn-driver

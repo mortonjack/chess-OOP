@@ -3,11 +3,12 @@
 #include "rooktest.h"
 #include "knighttest.h"
 #include "pawntest.h"
+#include "kingtest.h"
 #include <iostream>
 using namespace std;
 
 int main() {
-    driver tests;
+    driver tests(6);
 
     // Piece tests
     bishoptest case1;
@@ -18,6 +19,8 @@ int main() {
     tests.addCase(&case3);
     pawntest case4;
     tests.addCase(&case4);
+    kingtest case5;
+    tests.addCase(&case5);
 
     tests.runTests();
     return 0;
