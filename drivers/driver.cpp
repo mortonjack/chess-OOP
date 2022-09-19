@@ -37,12 +37,21 @@ void driver::addCase(testcase* newCase) {
 }
 
 void driver::runTests() {
+    // Run through tests
     for (int i = 0; i < this->_length; i++) {
         this->_results[i] = this->_cases[i]->runTests(false);
         if (this->_results[i]) {
-            cout << "Test " << i << " passed: " << endl; // add messages
+            cout << "Test " << i << " passed: " << 
+            this->_cases[i]->getMessage(true) << endl;
         } else {
-            cout << "Test " << i << " failed: " << endl; // add messages
+            cout << "Test " << i << " failed: " <<
+            this->_cases[i]->getMessage(false) << endl; 
+        }
+    }
+    // Specific feedback for failed tests
+    for (int i = 0; i < this->_length; i++) {
+        if (!this->_results[i]) {
+            this->_cases[i]->runTests(true);
         }
     }
 }

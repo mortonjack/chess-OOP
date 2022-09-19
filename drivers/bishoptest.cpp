@@ -4,6 +4,12 @@
 #include <iostream>
 using namespace std;
 
+bishoptest::bishoptest(): bishoptest(1) {}
+bishoptest::bishoptest(int length) {
+    this->_failMessage = "Bishop test failed";
+    this->_passMessage = "Bishop test succeeded";
+}
+
 bool bishoptest::movementTest(bool display) {
     // Test bishop movement
     bool success = true;
@@ -59,4 +65,9 @@ bool bishoptest::runTests(bool display) {
     bool success = true;
     success = success && this->movementTest(display);
     return success;
+}
+
+string bishoptest::getMessage(bool pass) {
+    if (pass) return _passMessage;
+    else return _failMessage;
 }
