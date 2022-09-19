@@ -5,8 +5,7 @@
 #include "pawntest.h"
 #include "kingtest.h"
 #include "queentest.h"
-#include <iostream>
-using namespace std;
+#include "capturetest.h"
 
 int main() {
     driver tests(6);
@@ -24,6 +23,9 @@ int main() {
     tests.addCase(&case5);
     queentest case6;
     tests.addCase(&case6);
+
+    capturetest case7;
+    tests.addCase(&case7);
 
     tests.runTests();
     return 0;
