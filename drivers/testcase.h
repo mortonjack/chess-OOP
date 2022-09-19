@@ -10,8 +10,7 @@ class testcase {
         testcase(int length);
         ~testcase();
 
-        //virtual bool runTests() = 0;
-        bool runTests();
+        virtual bool runTests() = 0;
 };
 
 #endif//TESTCASE_H

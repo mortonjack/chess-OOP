@@ -8,5 +8,3 @@ testcase::testcase(int length): _length(length) {
 testcase::~testcase() {
     delete [] _results;
 }
-
-bool testcase::runTests() {return true;}
