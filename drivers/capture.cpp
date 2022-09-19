@@ -14,81 +14,67 @@ int main() {
     // Create the game board
     gameboard board;
 
-    // Create kings
-    king whiteKing = king();
-    king blackKing = king('B');
-
-    // Create queens
-    queen whiteQueen = queen();
+    // Create pieces
     queen blackQueen = queen('B');
-
-    // Create bishops
-    bishop whiteCBishop = bishop();
-    bishop whiteFBishop = bishop();
-    bishop blackCBishop = bishop('B');
-    bishop blackFBishop = bishop('B');
-
-    // Create knights
-    knight whiteBKnight = knight();
     knight whiteGKnight = knight();
-    knight blackBKnight = knight('B');
-    knight blackGKnight = knight('B');
-
-    // Create rooks
     rook whiteARook = rook();
-    rook whiteHRook = rook();
     rook blackARook = rook('B');
-    rook blackHRook = rook('B');
-
-    // Create e-file and d-file pawns
-    pawn whiteEPawn = pawn();
-    pawn whiteDPawn = pawn();
-    pawn blackEPawn = pawn('B');
-    pawn blackDPawn = pawn('B');
 
     // Add the white pieces
     board.addPiece(0,0,&whiteARook);
-    board.addPiece(0,1,&whiteBKnight);
-    board.addPiece(0,2,&whiteCBishop);
-    board.addPiece(0,3,&whiteQueen);
-    board.addPiece(0,4,&whiteKing);
-    board.addPiece(0,5,&whiteFBishop);
     board.addPiece(0,6,&whiteGKnight);
-    board.addPiece(0,7,&whiteHRook);
-
-    board.addPiece(1,3,&whiteDPawn);
-    board.addPiece(1,4,&whiteEPawn);
 
     // Add the black pieces
     board.addPiece(7,0,&blackARook);
-    board.addPiece(7,1,&blackBKnight);
-    board.addPiece(7,2,&blackCBishop);
     board.addPiece(7,3,&blackQueen);
-    board.addPiece(7,4,&blackKing);
-    board.addPiece(7,5,&blackFBishop);
-    board.addPiece(7,6,&blackGKnight);
-    board.addPiece(7,7,&blackHRook);
-
-    board.addPiece(6,3,&blackDPawn);
-    board.addPiece(6,4,&blackEPawn);
     
-    // Check to ensure the board was setup properly
+    // Display initial board setup
     board.visualiseTextBoard();
 
     // White rook take black rook
     board.movePiece(0,0, 7,0);
-
-    // Check to ensure the rook was taken
-    if (blackARook.captured() && !whiteARook.captured()) board.visualiseTextBoard();
-    else return 0;
 
     // Knight take Queen
     board.movePiece(0,6, 2,7);
     board.movePiece(2,7, 4,6);
     board.movePiece(4,6, 5,4);
     board.movePiece(5,4, 7,3);
-    if (blackQueen.captured() && !whiteGKnight.captured()) board.visualiseTextBoard();
-    else return 0;
+
+    // Display final board
+    board.visualiseTextBoard();
+
+    // Test: Black pieces captured
+    if (blackQueen.captured()) {
+        cout << "Test passed: Black queen captured." << endl;
+    } else {
+        cout << "Test failed: Black queen not captured." << endl;
+    }
+    if (blackARook.captured()) {
+        cout << "Test passed: Black rook captured." << endl;
+    } else {
+        cout << "Test failed: Black rook not captured." << endl;
+    }
+
+    // Test: White pieces not captured
+    if (!whiteGKnight.captured()) {
+        cout << "Test passed: White knight not captured." << endl;
+    } else {
+        cout << "Test failed: White knight captured." << endl;
+    }
+    if (!whiteARook.captured()) {
+        cout << "Test passed: White rook not captured." << endl;
+    } else {
+        cout << "Test failed: White rook captured." << endl;
+    }
+
+    // Check all pieces in correct spot
+    piece* pieces[2] = {&whiteGKnight, &whiteARook};
+    int coords[4] = {7,3, 7,0};
+    if(board.testDriver(pieces, coords, 2)) {
+        cout << "Test passed: All pieces in correct position." << endl;
+    } else {
+        cout << "Test failed: Pieces not in correct position." << endl;
+    }
 
     return 0;
 }
