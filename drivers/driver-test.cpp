@@ -4,6 +4,7 @@
 #include "knighttest.h"
 #include "pawntest.h"
 #include "kingtest.h"
+#include "queentest.h"
 #include <iostream>
 using namespace std;
 
@@ -21,6 +22,8 @@ int main() {
     tests.addCase(&case4);
     kingtest case5;
     tests.addCase(&case5);
+    queentest case6;
+    tests.addCase(&case6);
 
     tests.runTests();
     return 0;
