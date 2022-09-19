@@ -38,7 +38,7 @@ void driver::addCase(testcase* newCase) {
 
 void driver::runTests() {
     for (int i = 0; i < this->_length; i++) {
-        this->_results[i] = this->_cases[i]->runTests();
+        this->_results[i] = this->_cases[i]->runTests(false);
         if (this->_results[i]) {
             cout << "Test " << i << " passed: " << endl; // add messages
         } else {
