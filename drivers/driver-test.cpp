@@ -25,6 +25,7 @@ int main() {
     queentest case6;
     tests.addCase(&case6);
 
+    // Mechanics tests
     capturetest case7;
     tests.addCase(&case7);
     collisiontest case8;
