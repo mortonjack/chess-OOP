@@ -81,8 +81,3 @@ bool rooktest::runTests(bool display) {
     success = success && this->movementTest(display);
     return success;
 }
-
-string rooktest::getMessage(bool pass) {
-    if (pass) return _passMessage;
-    else return _failMessage;
-}

@@ -66,8 +66,3 @@ bool bishoptest::runTests(bool display) {
     success = success && this->movementTest(display);
     return success;
 }
-
-string bishoptest::getMessage(bool pass) {
-    if (pass) return _passMessage;
-    else return _failMessage;
-}

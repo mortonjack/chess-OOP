@@ -10,7 +10,6 @@ class rooktest : public testcase {
         rooktest(int length);
         bool movementTest(bool display); // display determines whether 
         bool runTests(bool display); // or not to output to stdout
-        string getMessage(bool pass);
 };
 
 #endif//ROOKTEST_H

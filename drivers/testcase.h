@@ -13,7 +13,7 @@ class testcase {
         testcase(int length);
 
         virtual bool runTests(bool display) = 0;
-        virtual string getMessage(bool pass) = 0;
+        string getMessage(bool pass);
 };
 
 #endif//TESTCASE_H
