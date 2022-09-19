@@ -127,11 +127,11 @@ bool gameboard::testDriver(piece* pieces[], int* coords, int length) {
         Then ensures all other points are nullptr
     */
 
-    bool success = false;
+    bool success = true;
     // Check pieces in correct positions:
     for (int i = 0; i < length; i++) {
-        if (board[coords[i*2]][coords[i*2+1]] == pieces[i]) {
-            success = true;
+        if (board[coords[i*2]][coords[i*2+1]] != pieces[i]) {
+            success = false;
         }
     }
     if (!success) {return false;}
