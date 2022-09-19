@@ -4,12 +4,6 @@ driver:
 first-movement-driver:
 	@g++ -Wall -std=c++11 include/piece.cpp include/rook.cpp include/gameboard.cpp drivers/first-piece-movement.cpp -o drivers/moveTest.out
 
-queen-driver:
-	@g++ -Wall -std=c++11 include/piece.cpp include/queen.cpp include/gameboard.cpp drivers/queen-movement.cpp -o drivers/queenTest.out
-
-piece-drivers:
-	@make queen-driver king-driver pawn-driver
-
 capture-driver:
 	@g++ -Wall -std=c++11 include/piece.cpp include/pawn.cpp include/rook.cpp include/knight.cpp include/bishop.cpp include/queen.cpp include/king.cpp include/gameboard.cpp drivers/capture.cpp -o drivers/captureTest.out
 
