@@ -21,7 +21,7 @@ queen::queen(char color) {
     }
 }
 
-bool queen::checkMoveValidity(int oldRank, int oldFile, int newRank, int newFile) {
+bool queen::checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank) {
     // check the the relative distance moved is equal in both rank and file
     // OR
     // check if the new move is on the same rank or file

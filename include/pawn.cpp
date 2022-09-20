@@ -21,7 +21,7 @@ pawn::pawn(char color) {
     }
 }
 
-bool pawn::checkMoveValidity(int oldRank, int oldFile, int newRank, int newFile) {
+bool pawn::checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank) {
     bool valid;
     // check pawns are moving up one space
     if (this->_color == 'B') {

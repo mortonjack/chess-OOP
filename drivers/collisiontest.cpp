@@ -32,62 +32,62 @@ bool collisiontest::baseTest(bool display) {
     piece* pieces[] = {&whiteQueen, &whiteGKnight, &whiteDPawn, &blackARook, &blackFBishop, &blackEPawn};
 
     // Add the white pieces
-    board.addPiece(0,3,&whiteQueen);
-    board.addPiece(0,6,&whiteGKnight);
-    board.addPiece(1,3,&whiteDPawn);
+    board.addPiece(3,0,&whiteQueen);
+    board.addPiece(6,0,&whiteGKnight);
+    board.addPiece(3,1,&whiteDPawn);
 
     // Add the black pieces
-    board.addPiece(7,0,&blackARook);
-    board.addPiece(7,5,&blackFBishop);
-    board.addPiece(6,4,&blackEPawn);
+    board.addPiece(0,7,&blackARook);
+    board.addPiece(5,7,&blackFBishop);
+    board.addPiece(4,6,&blackEPawn);
 
     // Check to ensure the board was setup properly
     if (display) board.visualiseTextBoard();
-    int coords0[] = {0,3, 0,6, 1,3, 7,0, 7,5, 6,4};
+    int coords0[] = {3,0, 6,0, 3,1, 0,7, 5,7, 4,6};
     bool test0 = board.testDriver(pieces, coords0, 6);
 
     // Make legal moves with some of the pieces
     // According to the line 1. Pd4 pe5 2. Nf3 bc5 3. Qa4 ra5
 
     // 1. Testing the pawns
-    board.movePiece(1,3, 3,3);
-    board.movePiece(6,4, 5,4);
-    int coords1[] = {0,3, 0,6, 3,3, 7,0, 7,5, 5,4};
+    board.movePiece(3,1, 3,3);
+    board.movePiece(4,6, 4,5);
+    int coords1[] = {3,0, 6,0, 3,3, 0,7, 5,7, 4,5};
     bool test1 = board.testDriver(pieces, coords1, 6);
     if (display) board.visualiseTextBoard();
 
     // 2. Testing the knight and bishop
-    board.movePiece(0,6, 2,5);
-    board.movePiece(7,5, 4,2);
-    int coords2[] = {0,3, 2,5, 3,3, 7,0, 4,2, 5,4};
+    board.movePiece(6,0, 5,2);
+    board.movePiece(5,7, 2,4);
+    int coords2[] = {3,0, 5,2, 3,3, 0,7, 2,4, 4,5};
     bool test2 = board.testDriver(pieces, coords2, 6);
     if (display) board.visualiseTextBoard();
 
     // 3. Testing the queen and rook
-    board.movePiece(0,3, 3,0);
-    board.movePiece(7,0, 4,0);
-    int coords3[] = {3,0, 2,5, 3,3, 4,0, 4,2, 5,4};
+    board.movePiece(3,0, 0,3);
+    board.movePiece(0,7, 0,4);
+    int coords3[] = {0,3, 5,2, 3,3, 0,4, 2,4, 4,5};
     bool test3 = board.testDriver(pieces, coords3, 6);
     if (display) board.visualiseTextBoard();
 
     // Try to move the rook through the queen, the queen through the d-pawn 
     // and the bishop through the d-pawn
-    board.movePiece(4,0, 2,0);
-    board.movePiece(3,0, 3,5);
-    board.movePiece(4,2, 2,4);
+    board.movePiece(0,4, 0,2);
+    board.movePiece(0,3, 5,3);
+    board.movePiece(2,4, 4,2);
 
     if (display) board.visualiseTextBoard();
     bool test4 = board.testDriver(pieces, coords3, 6);
 
     // Have the bishop capture the pawn, the knight capture the bishop, 
     // and the queen capture the rook
-    board.movePiece(4,2, 3,3);
-    board.movePiece(2,5, 3,3);
-    board.movePiece(3,0, 4,0);
+    board.movePiece(2,4, 3,3);
+    board.movePiece(5,2, 3,3);
+    board.movePiece(0,3, 0,4);
 
     if (display) board.visualiseTextBoard();
     piece* pieces2[] = {&whiteQueen, &whiteGKnight, &blackEPawn};
-    int coords4[] = {4,0, 3,3, 5,4};
+    int coords4[] = {0,4, 3,3, 4,5};
     bool test5 = board.testDriver(pieces2, coords4, 3);
 
     // Ensure correct pieces captured
@@ -160,49 +160,49 @@ bool collisiontest::vertTest(bool display) {
     piece* pieces[] = {&blackARook, &whiteCPawn, &whiteDPawn};
 
     // Add the pieces to the game board
-    board.addPiece(7,0,&blackARook);
-    board.addPiece(1,2,&whiteCPawn);
-    board.addPiece(1,3,&whiteDPawn);
+    board.addPiece(0,7,&blackARook);
+    board.addPiece(2,1,&whiteCPawn);
+    board.addPiece(3,1,&whiteDPawn);
 
     if (display) board.visualiseTextBoard();
 
     // Move the rook to a legal position
-    board.movePiece(7,0, 7,2);
-    board.movePiece(7,2, 4,2);
+    board.movePiece(0,7, 2,7);
+    board.movePiece(2,7, 2,4);
 
     // Check to ensure these moves worked
     if (display) board.visualiseTextBoard();
-    int coords[] = {4,2, 1,2, 1,3};
+    int coords[] = {2,4, 2,1, 3,1};
     bool test1 = board.testDriver(pieces, coords, 3);
 
     // Try to move our rook through our pawn
-    board.movePiece(4,2, 0,2);
+    board.movePiece(2,4, 2,0);
 
     // Check to ensure this move was unsuccessful
     if (display) board.visualiseTextBoard();
     bool test2 = board.testDriver(pieces, coords, 3);
 
     // Move our rook in front of the pawn
-    board.movePiece(4,2, 2,2);
+    board.movePiece(2,4, 2,2);
 
     // Check to ensure this move worked
     if (display) board.visualiseTextBoard();
-    int coords2[] = {2,2, 1,2, 1,3};
+    int coords2[] = {2,2, 2,1, 3,1};
     bool test3 = board.testDriver(pieces, coords2, 3);
 
     // Try to move the pawn through the rook
-    board.movePiece(1,2, 3,2);
+    board.movePiece(2,1, 2,3);
 
     // Check to ensure this move was unsuccessful
     if (display) board.visualiseTextBoard();
     bool test4 = board.testDriver(pieces, coords2, 3);
 
     // Try to move the d-pawn forward
-    board.movePiece(1,3, 3,3);
+    board.movePiece(3,1, 3,3);
 
     // Check to ensure this move was successful
     if (display) board.visualiseTextBoard();
-    int coords3[] = {2,2, 1,2, 3,3};
+    int coords3[] = {2,2, 2,1, 3,3};
     bool test5 = board.testDriver(pieces, coords3, 3);
 
     if (display) {

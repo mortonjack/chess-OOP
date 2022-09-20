@@ -22,35 +22,35 @@ bool knighttest::movementTest(bool display) {
 
     // Add the knights to the game board
     board.addPiece(0,0,&whiteAknight);
-    board.addPiece(7,0,&blackAknight);
+    board.addPiece(0,7,&blackAknight);
     
     if (display) board.visualiseTextBoard();
 
     // Move the knights to illegal positions
     board.movePiece(0,0, 2,2);
-    board.movePiece(7,0, 4,0);
+    board.movePiece(0,7, 0,4);
 
     // Check to ensure our nothing has happened
     if (display) board.visualiseTextBoard();
-    int coords[] = {0,0, 7,0};
+    int coords[] = {0,0, 0,7};
     bool test1 = board.testDriver(pieces, coords, 2);
 
     // Move the knights to legal positions 
-    board.movePiece(0,0, 1,2);
-    board.movePiece(7,0, 5,1);
+    board.movePiece(0,0, 2,1);
+    board.movePiece(0,7, 1,5);
 
     // Check to ensure our moves were successful
     if (display) board.visualiseTextBoard();
-    int coords2[] = {1,2, 5,1};
+    int coords2[] = {2,1, 1,5};
     bool test2 = board.testDriver(pieces, coords2, 2);
 
     // Move the knights to legal positions 
-    board.movePiece(1,2, 3,1);
-    board.movePiece(5,1, 7,2);
+    board.movePiece(2,1, 1,3);
+    board.movePiece(1,5, 2,7);
 
     // Check to ensure our moves were successful
     if (display) board.visualiseTextBoard();
-    int coords3[] = {3,1, 7,2};
+    int coords3[] = {1,3, 2,7};
     bool test3 = board.testDriver(pieces, coords3, 2);
 
     if (display) {

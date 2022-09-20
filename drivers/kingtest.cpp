@@ -42,8 +42,9 @@ bool kingtest::movementTest(bool display) {
     if (display) board.visualiseTextBoard();
     
     // Run second test
-    int coords2[2] = {3,3};
-    bool test2 = board.testDriver(pieces, coords2, 1);
+    coords[0] = 3;
+    coords[1] = 3;
+    bool test2 = board.testDriver(pieces, coords, 1);
 
     // Test invalid move directions
     board.movePiece(3,3, 1,3);
