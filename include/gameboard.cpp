@@ -37,10 +37,16 @@ bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
         if (!(piece->checkMoveValidity(oldFile,oldRank, newFile,newRank))) return false;
         if (!(checkPathClear(oldFile,oldRank, newFile,newRank))) return false;
 
-        // If the proposed move is valid for the piece...
+        // Check for capture
         if (board[newFile][newRank] != nullptr) { // If there is a piece at the new location
-            board[newFile][newRank]->capture(); //   then capture it
+            if (board[newFile][newRank]->getColor() != board[oldFile][oldRank]->getColor()) {
+                board[newFile][newRank]->capture(); // capture it if its a different colour
+            } else {
+                return false; // and don't move if it's the same colour
+            }
         }
+
+        // Successfully move piece:
         addPiece(newFile,newRank,piece); // Add the piece in the target location
         removePiece(oldFile,oldRank); // Remove the piece from the original location
         piece->move(); // increment piece's move count

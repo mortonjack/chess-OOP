@@ -8,7 +8,8 @@ class capturetest : public testcase {
     public:
         capturetest();
         capturetest(int length);
-        bool basicTest(bool display); // display determines whether 
+        bool basicTest(bool display);
+        bool teamCapture(bool display); // display determines whether 
         bool runTests(bool display); // or not to output to stdout
 };
 

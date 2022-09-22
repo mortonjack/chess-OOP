@@ -7,4 +7,5 @@ piece::piece(char name, char color) : _captured(false), _name(name),
 void piece::capture() {this->_captured = true;}
 bool piece::captured() {return this->_captured;}
 char piece::getName() {return this->_name;}
+char piece::getColor() {return this->_color;}
 void piece::move() {_moveCount++;}
