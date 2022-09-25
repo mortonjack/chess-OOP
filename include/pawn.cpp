@@ -33,3 +33,12 @@ bool pawn::checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank)
     }
     return valid;
 }
+
+bool pawn::checkCaptureValidity(int oldFile, int oldRank, int newFile, int newRank) {
+    bool valid;
+    
+    // Check if the pawn is moving diagonally left or diagonally right
+    valid = (newRank == oldRank + 1) && ((newFile == oldFile + 1) || (newFile == oldFile - 1));
+
+    return valid;
+}

@@ -8,6 +8,7 @@ class pawn : public piece {
         pawn(); // Default constructor (pieces are white by default)
         pawn(char color); // Colored constructor
         bool checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank);
+        bool checkCaptureValidity(int oldFile, int oldRank, int newFile, int newRank);
 };
 
 #endif//PAWN_H
