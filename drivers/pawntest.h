@@ -9,7 +9,8 @@ class pawntest : public testcase {
         pawntest();
         pawntest(int length);
         bool movementTest(bool display); // display determines whether 
-        bool runTests(bool display); // or not to output to stdout
+        bool captureTest(bool display); // or not to output to stdout
+        bool runTests(bool display); 
 };
 
 #endif//PAWNTEST_H
