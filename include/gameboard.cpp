@@ -33,20 +33,25 @@ bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
         piece* piece = board[oldFile][oldRank];
 
         // Validity Checks
-        if (oldRank == newRank && oldFile == newFile) return false; 
-        if (!(piece->checkMoveValidity(oldFile,oldRank, newFile,newRank))) return false;
-        if (!(checkPathClear(oldFile,oldRank, newFile,newRank))) return false;
+        if (oldRank == newRank && oldFile == newFile) return false; // Ensure that the piece has moved
+        if (!(checkPathClear(oldFile,oldRank, newFile,newRank))) return false; // Check if the piece's path is clear
 
-        // Check for capture
-        if (board[newFile][newRank] != nullptr) { // If there is a piece at the new location
+        // If there is not a piece at the new location...
+        if (board[newFile][newRank] == nullptr) {
+            if (!(piece->checkMoveValidity(oldFile,oldRank, newFile,newRank))) return false; // Check if the move is valid
+
+        // If there is a piece at the new location...
+        } else {
+            // If the piece is a different color...
             if (board[newFile][newRank]->getColor() != board[oldFile][oldRank]->getColor()) {
-                board[newFile][newRank]->capture(); // capture it if its a different colour
+                if (!(piece->checkCaptureValidity(oldFile,oldRank, newFile,newRank))) return false; // Check if the capture is valid
+                board[newFile][newRank]->capture(); // Capture it
             } else {
-                return false; // and don't move if it's the same colour
+                return false; // Don't move
             }
         }
 
-        // Successfully move piece:
+        // Successfully move piece
         addPiece(newFile,newRank,piece); // Add the piece in the target location
         removePiece(oldFile,oldRank); // Remove the piece from the original location
         piece->move(); // increment piece's move count
