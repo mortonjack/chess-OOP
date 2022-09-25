@@ -22,6 +22,36 @@ void gameboard::addPiece(int file, int rank, piece* newPiece) {
     board[file][rank] = newPiece;
 }
 
+bool gameboard::enPassant(int oldFile, int oldRank, int newFile, int newRank) {
+    // Locate the peice being moved
+    piece* source_piece = board[oldFile][oldRank];
+
+    // Used to store the difference in rank between where the pawn moves, and where the pawn is captured
+    int targetRankModifier;
+
+    // Validate white en passant
+    if (source_piece->getName() == 'P') {
+        targetRankModifier = 1;
+        
+    // Validate black en passant
+    } else if (source_piece->getName() == 'p') {
+        targetRankModifier = -1;
+
+    // En passant does not apply
+    } else {
+        return false;
+    }
+
+    // If the pawn is capturing a piece...
+    if (!(source_piece->checkCaptureValidity(oldFile,oldRank, newFile,newRank))) return false;
+
+    // Locate the piece being captured via en passant, and capture
+    piece* target_piece = board[newFile][newRank+targetRankModifier];
+    target_piece->capture();
+
+    return true;
+}
+
 bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
     // Ensure all coordinates are valid
     if (oldRank < 0 || oldRank > 7 || oldFile < 0 || oldFile > 7 ||
@@ -38,12 +68,13 @@ bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
 
         // If there is not a piece at the new location...
         if (board[newFile][newRank] == nullptr) {
+            enPassant(oldFile,oldRank, newFile,newRank);
             if (!(piece->checkMoveValidity(oldFile,oldRank, newFile,newRank))) return false; // Check if the move is valid
 
         // If there is a piece at the new location...
         } else {
             // If the piece is a different color...
-            if (board[newFile][newRank]->getColor() != board[oldFile][oldRank]->getColor()) {
+            if (piece->getColor() != board[newFile][newRank]->getColor()) {
                 if (!(piece->checkCaptureValidity(oldFile,oldRank, newFile,newRank))) return false; // Check if the capture is valid
                 board[newFile][newRank]->capture(); // Capture it
             } else {

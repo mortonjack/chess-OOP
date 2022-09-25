@@ -14,6 +14,7 @@ class gameboard {
         void addPiece(int rank, int file, piece* newPiece);
         bool movePiece(int oldFile, int oldRank, int newFile, int newRank); // attempt to move a piece
         bool checkPathClear(int oldFile, int oldRank, int newFile, int newRank);
+        bool enPassant(int oldFile, int oldRank, int newFile, int newRank);
         bool testDriver(piece* pieces[], int* coords, int length); // For test drivers: ensure board is set up correctly
 };
 
