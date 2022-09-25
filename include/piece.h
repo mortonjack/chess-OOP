@@ -13,7 +13,7 @@ class piece {
         void capture();
         bool captured();
         virtual bool checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank) = 0;
-        bool checkCaptureValidity(int oldFile, int oldRank, int newFile, int newRank); // A piece's valid captures is the same as their valid moves, by default
+        virtual bool checkCaptureValidity(int oldFile, int oldRank, int newFile, int newRank); // A piece's valid captures is the same as their valid moves, by default
         char getName();
         char getColor();
         void move();
