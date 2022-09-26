@@ -50,11 +50,11 @@ bool queentest::movementTest(bool display) {
     // Check to ensure our moves were successful
     if (display) board.visualiseTextBoard();
     int coords3[] = {3,0, 3,3};
-    bool test3 = board.testDriver(pieces, coords3, 3);
+    bool test3 = board.testDriver(pieces, coords3, 2);
 
     if (display) {
         if (test1) {
-            cout << "Test passed: Queens didn't move to illegak positions" << endl;
+            cout << "Test passed: Queens didn't move to illegal positions" << endl;
         } else {
             cout << "Test failed: Queens moved to illegal positions" << endl;
         }

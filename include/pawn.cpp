@@ -15,3 +15,17 @@ bool pawn::checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank)
     }
     return valid;
 }
+
+bool pawn::checkCaptureValidity(int oldFile, int oldRank, int newFile, int newRank) {
+    bool valid;
+    
+    // Check pawns are moving diagonally left or diagonally right
+    if (this->_color == 'B') {
+        valid = (newRank == oldRank - 1) && ((newFile == oldFile + 1) || (newFile == oldFile - 1));
+    } else { // Uncolored pawns are white by default
+        valid = (newRank == oldRank + 1) && ((newFile == oldFile + 1) || (newFile == oldFile - 1));
+    }
+
+
+    return valid;
+}

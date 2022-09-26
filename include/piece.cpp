@@ -16,5 +16,6 @@ bool piece::checkCaptureValidity(int oldFile, int oldRank, int newFile, int newR
 void piece::capture() {this->_captured = true;}
 bool piece::captured() {return this->_captured;}
 char piece::getName() {return this->_name;}
+char piece::getType() {return this->_type;}
 char piece::getColor() {return this->_color;}
 void piece::move() {_moveCount++;}

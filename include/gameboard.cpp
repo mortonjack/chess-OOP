@@ -33,20 +33,25 @@ bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
         piece* piece = board[oldFile][oldRank];
 
         // Validity Checks
-        if (oldRank == newRank && oldFile == newFile) return false; 
-        if (!(piece->checkMoveValidity(oldFile,oldRank, newFile,newRank))) return false;
-        if (!(checkPathClear(oldFile,oldRank, newFile,newRank))) return false;
+        if (oldRank == newRank && oldFile == newFile) return false; // Ensure that the piece has moved
+        if (!(checkPathClear(oldFile,oldRank, newFile,newRank))) return false; // Check if the piece's path is clear
 
-        // Check for capture
-        if (board[newFile][newRank] != nullptr) { // If there is a piece at the new location
+        // If there is not a piece at the new location...
+        if (board[newFile][newRank] == nullptr) {
+            if (!(piece->checkMoveValidity(oldFile,oldRank, newFile,newRank))) return false; // Check if the move is valid
+
+        // If there is a piece at the new location...
+        } else {
+            // If the piece is a different color...
             if (board[newFile][newRank]->getColor() != board[oldFile][oldRank]->getColor()) {
-                board[newFile][newRank]->capture(); // capture it if its a different colour
+                if (!(piece->checkCaptureValidity(oldFile,oldRank, newFile,newRank))) return false; // Check if the capture is valid
+                board[newFile][newRank]->capture(); // Capture it
             } else {
-                return false; // and don't move if it's the same colour
+                return false; // Don't move
             }
         }
 
-        // Successfully move piece:
+        // Successfully move piece
         addPiece(newFile,newRank,piece); // Add the piece in the target location
         removePiece(oldFile,oldRank); // Remove the piece from the original location
         piece->move(); // increment piece's move count
@@ -117,6 +122,53 @@ void gameboard::visualiseTextBoard(char color) {
         }
         cout << "  A B C D E F G H" << endl; // display file
     }
+}
+
+bool gameboard::isInCheck() {return isInCheck('W');}
+
+bool gameboard::isInCheck(char color) {
+    // Check if king of color is in check
+    int file;
+    int rank;
+    bool foundKing = false;
+    // Find the king
+    for (file = 0; file < 8 && !foundKing; file++) {
+        for (rank = 0; rank < 8 && !foundKing; rank++) {
+            // if there's a piece
+            if (board[file][rank] != nullptr) {
+                // if its a king of the correct color
+                if (board[file][rank]->getColor() == color
+                && board[file][rank]->getType() == 'k') {
+                    foundKing = true; // will break out of loop
+                }
+            }
+        }
+    }
+    file--;
+    rank--;
+    if (!foundKing) return false; // no king exists
+
+    // Check all enemy pieces
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            // Check if piece exists at location
+            if (board[i][j] != nullptr) {
+                // Check if piece is enemy
+                if (board[i][j]->getColor() != color) {
+                    // Check if enemy piece can take king
+                    if (board[i][j]->checkCaptureValidity(i,j, file,rank)) {
+                        // Check if path is clear to take the king
+                        if (checkPathClear(i,j, file,rank)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Not in check
+    return false;
 }
 
 bool gameboard::testDriver(piece* pieces[], int* coords, int length) {
