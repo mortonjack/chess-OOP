@@ -120,6 +120,7 @@ bool checkmatetest::basicTest(bool display) {
 bool checkmatetest::anarchyTest(bool display) {
     // Testing a really cool case I saw on twitter last week!
     // No idea if this does anything important :3
+    // + a quick little back-rank test
     bool success = false;
 
     // Initialise objects
@@ -133,6 +134,7 @@ bool checkmatetest::anarchyTest(bool display) {
     bishop whiteBishop;
 
     king blackKing('B');
+    rook blackRook('B');
     queen blackQueenOne('B');
     queen blackQueenTwo('B');
     queen blackQueenThree('B');
@@ -151,6 +153,7 @@ bool checkmatetest::anarchyTest(bool display) {
     board.addPiece(6, 2, &whiteBishop);
 
     board.addPiece(3, 5, &blackKing);
+    board.addPiece(7, 0, &blackRook);
     board.addPiece(4, 4, &blackQueenOne);
     board.addPiece(3, 4, &blackQueenTwo);
     board.addPiece(2, 4, &blackQueenThree);
@@ -171,6 +174,13 @@ bool checkmatetest::anarchyTest(bool display) {
     bool test2 = board.isInCheckmate('B');
     bool test3 = !board.isInCheckmate('W');
 
+    // Test 3: Knight to F6, black rook takes D1 (checkmate)
+    board.movePiece(4,3, 5,5);
+    board.movePiece(7,0, 3,0);
+    if (display) board.visualiseTextBoard('B');
+    bool test4 = board.isInCheckmate('W');
+    bool test5 = !board.isInCheckmate('B');
+
     // Display results
     if (display) {
         if (test1) {
@@ -190,9 +200,21 @@ bool checkmatetest::anarchyTest(bool display) {
         } else {
             cout << "Test failed: White in checkmate" << endl;
         }
+
+        if (test4) {
+            cout << "Test passed: White in checkmate" << endl;
+        } else {
+            cout << "Test failed: White not in checkmate" << endl;
+        }
+
+        if (test5) {
+            cout << "Test passed: Black not in checkmate" << endl;
+        } else {
+            cout << "Test failed: Black in checkmate" << endl;
+        }
     }
 
-    success = test1 && test2 && test3;
+    success = test1 && test2 && test3 & test4 && test5;
     return success;
 }
 
