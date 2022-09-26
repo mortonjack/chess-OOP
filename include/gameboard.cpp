@@ -27,12 +27,12 @@ piece* gameboard::targetWithEnPassant(int oldFile, int oldRank, int newFile, int
     piece* sourcePiece = board[oldFile][oldRank];
     piece* targetPiece = board[newFile][newRank];
 
-    // Used to store the difference in rank between where the sourcetarget  pawn moves, and where the pawn is captured
-    int rankModifier;
+    // Used to store the rank of the target pawn
+    int captureRank;
 
     // If we are moving a white pawn, potential target pawns are ±1 rank up from the source pawn's destination
     if (board[oldFile][oldRank]->getType() == 'p') {
-        rankModifier = newRank - oldRank;
+        captureRank = oldRank;
 
     // If we are not moving a pawn, en passant does not apply
     } else {
@@ -40,13 +40,13 @@ piece* gameboard::targetWithEnPassant(int oldFile, int oldRank, int newFile, int
     }
 
     // Locate the piece that could be targeted via en passant
-    piece* enPassantTarget = board[newFile][newRank+rankModifier];
+    piece* enPassantTarget = board[newFile][captureRank];
 
     // Is the piece being captured via en passant an opposite-colored pawn?
     if (enPassantTarget == nullptr) return targetPiece;
     if (!(enPassantTarget->getType() == 'p')) return targetPiece;
-    if (!(enPassantTarget->getColor() != sourcePiece->getColor())) return targetPiece;
-    if (!(enPassantTarget->getMoveCount() == 1)) return targetPiece;
+    if (enPassantTarget->getColor() == sourcePiece->getColor()) return targetPiece;
+    if (!(enPassantTarget->getMoveCount() == 2)) return targetPiece;
 
     // If so, target that pawn to be captured
     return enPassantTarget;
@@ -95,15 +95,26 @@ bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
                 // Check if the capture is valid
                 if (!(sourcePiece->checkCaptureValidity(oldFile,oldRank, newFile,newRank))) return false;
 
+                // EXCEPTION: If en passant applies, capture via en passant
+                if (targetPiece != board[newFile][newRank]) {
+                    removePiece(newFile, oldRank);
+                }
+
                 // Move piece
                 addPiece(newFile, newRank, board[oldFile][oldRank]);
                 removePiece(oldFile, oldRank);
-
+            
                 // Check if king is in check
                 if (isInCheck(sourcePiece->getColor())) {
                     // Undo move
                     addPiece(oldFile, oldRank, sourcePiece);
                     addPiece(newFile, newRank, targetPiece);
+
+                    // EXCEPTION: If en passant applies, capture via en passant
+                    if (targetPiece != board[newFile][newRank]) {
+                        addPiece(newFile, oldRank, targetPiece);
+                    }
+
                     return false;
                 } else {
                     // increment move counter
