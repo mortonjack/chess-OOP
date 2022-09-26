@@ -4,6 +4,7 @@ knight::knight(): knight('W') {}; // Pieces are white by default
 
 knight::knight(char color) {
     _color = color;
+    _type = 'n';
 
     switch (color) {
         case 'W':

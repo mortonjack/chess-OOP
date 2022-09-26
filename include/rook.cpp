@@ -4,6 +4,7 @@ rook::rook(): rook('W') {}; // Pieces are white by default
 
 rook::rook(char color) {
     _color = color;
+    _type = 'r';
 
     switch (color) {
         case 'W':

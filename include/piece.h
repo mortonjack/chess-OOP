@@ -5,6 +5,7 @@ class piece {
     protected:
         bool _captured;
         char _name;
+        char _type;
         char _color;
         int _moveCount;
     public:
@@ -15,6 +16,7 @@ class piece {
         virtual bool checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank) = 0;
         virtual bool checkCaptureValidity(int oldFile, int oldRank, int newFile, int newRank); // A piece's valid captures is the same as their valid moves, by default
         char getName();
+        char getType();
         char getColor();
         void move();
 };
