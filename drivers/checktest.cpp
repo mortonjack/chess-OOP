@@ -129,7 +129,7 @@ bool checktest::diagonalTest(bool display) {
             cout << "Test failed: Board finished incorrectly" << endl;
         }
     }
-    return true;
+
     success = test1 && test2 && test3 && test4 && test5 && test6 && test7;
     return success;
 }
@@ -143,7 +143,6 @@ bool checktest::straightTest(bool display) {
     gameboard board;
     king whiteKing;
     rook whiteRook;
-    cout << "hi\n";
 
     rook blackRook('B');
     queen blackQueen('B');
@@ -236,25 +235,104 @@ bool checktest::straightTest(bool display) {
     }
     
     success = test1 && test2 && test3 && test4 && test5 && test6 && test7;
-    return false;
     return success;
 }
 
 bool checktest::knightTest(bool display) {
     // Ensure check works for knights
-    bool success = true;
+    bool success;
 
+    // Intiialise gameboard & pieces
+    gameboard board;
+    king whiteKing;
+    knight blackKnight;
+    queen blackQueen;
+    pawn blackPawn;
+
+    // Check king isn't in check on empty board
+    board.addPiece(3, 3, &whiteKing);
+    if (display) board.visualiseTextBoard();
+    bool test0 = !board.isInCheck('W');
+
+    // Have knight check king in all 8 positions
+    bool test1[8];
+    int files[] = {1, 2, 4, 5, 5, 4, 2, 1};
+    int ranks[] = {2, 1, 1, 2, 4, 5, 5, 4};
+    bool test1total = true;
+
+    for (int i = 0; i < 8; i++) {
+        // add knight to board
+        board.addPiece(files[i], ranks[i], &blackKnight);
+        // see if white is in check
+        test1[i] = board.isInCheck('W');
+        if (!test1[i] && display) board.visualiseTextBoard();
+        // remove knight from board
+        board.removePiece(files[i], ranks[i]);
+        bool test1total = test1total && test1[i];
+    }
+
+    // Ensure knight doesn't check king diagonally or forward
+    board.addPiece(1, 5, &blackKnight);
+    bool test2 = !board.isInCheck();
+    if (display) board.visualiseTextBoard();
+    board.movePiece(1,5, 3,6);
+    bool test3 = !board.isInCheck();
+    if (display) board.visualiseTextBoard();
+
+    // Ensure non-knight pieces can't check king from knight position
+    board.addPiece(2, 1, &blackQueen);
+    board.addPiece(4, 5, &blackPawn);
+    bool test4 = !board.isInCheck();
+    if (display) board.visualiseTextBoard();
+
+    // Output test results
+    if (display) {
+        if (test0) {
+            cout << "Test passed: King not in check in empty board" << endl;
+        } else {
+            cout << "Test failed: King in check in empty board" << endl;
+        }
+
+        if (test1total) {
+            cout << "Test passed: Knights check king in all possible positions" << endl;
+        } else {
+            cout << "Test failed: Knight fails to check king in above position" << endl;
+            // note: gameboard only displayed if test failed earlier
+        }
+
+        if (test2) {
+            cout << "Test passed: Knight doesn't check king diagonally" << endl;
+        } else {
+            cout << "Test failed: Knight checks king diagonally" << endl;
+        }
+
+        if (test3) {
+            cout << "Test passed: Knight doesn't check king vertically" << endl;
+        } else {
+            cout << "Test failed: Knight checks king vertically" << endl;
+        }
+
+        if (test4) {
+            cout << "Test passed: Non-Knight pieces can't check king like knights" << endl;
+        } else {
+            cout << "Test failed: Non-Knight pieces check king like knights" << endl;
+        }
+    }
     
+    success = test0 && test1total && test2 && test3 && test4;
     return success;
 }
 
 bool checktest::runTests(bool display) {
     bool success = true;
     success = success && this->diagonalTest(display);
-    cout << "Straight\n";
+    
+    // idk why this works, but it fixes a bug
     bool test = this->straightTest(display);
     success = success && test;
-    cout << "Straight\n";
-    success = success && this->knightTest(display);
+
+    test = this->knightTest(display);
+    success = success && test;
+
     return success;
 }
