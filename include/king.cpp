@@ -4,7 +4,7 @@ king::king(): king('W') {}; // Pieces are white by default
 
 king::king(char color) {
     _color = color;
-    _type = 'k'
+    _type = 'k';
 
     switch (color) {
         case 'W':
