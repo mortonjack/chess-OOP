@@ -4,6 +4,7 @@ pawn::pawn(): pawn('W') {}; // Pieces are white by default
 
 pawn::pawn(char color) {
     _color = color;
+    _type = 'p';
 
     switch (color) {
         case 'W':

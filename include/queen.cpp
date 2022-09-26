@@ -4,6 +4,7 @@ queen::queen(): queen('W') {}; // Pieces are white by default
 
 queen::queen(char color) {
     _color = color;
+    _type = 'q';
 
     switch (color) {
         case 'W':

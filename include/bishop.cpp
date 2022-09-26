@@ -4,6 +4,7 @@ bishop::bishop(): bishop('W') {}; // Pieces are white by default
 
 bishop::bishop(char color) {
     _color = color;
+    _type = 'b';
 
     switch (color) {
         case 'W':
