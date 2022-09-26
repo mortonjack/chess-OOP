@@ -124,6 +124,8 @@ void gameboard::visualiseTextBoard(char color) {
     }
 }
 
+bool gameboard::isInCheck() {return isInCheck('W');}
+
 bool gameboard::isInCheck(char color) {
     return true;
 }
