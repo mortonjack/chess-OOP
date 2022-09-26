@@ -1,7 +1,7 @@
 #include "queen.h"
 
 queen::queen(): queen('W') {}; // Pieces are white by default
-queen::queen(char color): piece('r',color) {};
+queen::queen(char color): piece('q',color) {};
 
 bool queen::checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank) {
     // check the the relative distance moved is equal in both rank and file
