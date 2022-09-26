@@ -41,7 +41,7 @@ bool checktest::movementTest(bool display) {
 
     // Test king doesn't take piece when it fails to make a move due to check
     board.movePiece(6,2, 7,1);
-    bool test2 = board.testDriver(pieces, coords, 4) || whiteKnight.captured();
+    bool test2 = board.testDriver(pieces, coords, 4) && !whiteKnight.captured();
     if (display) board.visualiseTextBoard();
 
     // Ensure, when king is in check, it can't make a move that keeps it in check
@@ -141,8 +141,8 @@ bool checktest::diagonalTest(bool display) {
     board.movePiece(4,5, 3,6);
     bool test5 = !board.isInCheck('B');
     if (display) board.visualiseTextBoard();
-    board.movePiece(3,6, 4,5);
     board.movePiece(5,4, 5,5);
+    board.movePiece(3,6, 4,5);
     
     // Test pawn doesn't check king from behind
     board.movePiece(5,5, 5,6);
@@ -324,9 +324,9 @@ bool checktest::knightTest(bool display) {
     // Intiialise gameboard & pieces
     gameboard board;
     king whiteKing;
-    knight blackKnight;
-    queen blackQueen;
-    pawn blackPawn;
+    knight blackKnight('B');
+    queen blackQueen('B');
+    pawn blackPawn('B');
 
     // Check king isn't in check on empty board
     board.addPiece(3, 3, &whiteKing);
@@ -347,7 +347,7 @@ bool checktest::knightTest(bool display) {
         if (!test1[i] && display) board.visualiseTextBoard();
         // remove knight from board
         board.removePiece(files[i], ranks[i]);
-        bool test1total = test1total && test1[i];
+        test1total = test1total && test1[i];
     }
 
     // Ensure knight doesn't check king diagonally or forward
