@@ -50,13 +50,15 @@ bool checktest::movementTest(bool display) {
     if (display) board.visualiseTextBoard();
 
     // Test pinned pieces can't move
-    board.movePiece(6,2, 5,1);
     bool test4 = !board.movePiece(5,5, 3,5);
     if (display) board.visualiseTextBoard();
 
+    board.movePiece(6,2, 5,1);
+    bool test5 = board.movePiece(5,5, 3,5);
+
     // Ensure all pieces in correct position
-    int coords2[] = {5,1, 6,7, 7,1, 5,5};
-    bool test5 = board.testDriver(pieces, coords2, 4);
+    int coords2[] = {5,1, 6,7, 7,1, 3,5};
+    bool test6 = board.testDriver(pieces, coords2, 4);
 
     if (display) {
         if (test1) {
@@ -82,15 +84,21 @@ bool checktest::movementTest(bool display) {
         } else {
             cout << "Test failed: Pinned pieces can move" << endl;
         }
+
+        if (test4) {
+            cout << "Test passed: Rook moved (no longer pinned)" << endl;
+        } else {
+            cout << "Test failed: Rook failed to move (no longer pinned)" << endl;
+        }
         
-        if (test5) {
+        if (test6) {
             cout << "Test passed: All pieces in correct positions" << endl;
         } else {
             cout << "Test failed: Some pieces in incorrect positions" << endl;
         }
     }
 
-    success = test1 && test2 && test3 && test4 && test5;
+    success = test1 && test2 && test3 && test4 && test5 && test6;
     return success;
 }
 
