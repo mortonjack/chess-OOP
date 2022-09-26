@@ -15,6 +15,93 @@ checktest::checktest(int length) {
     this->_passMessage = "Check test succeeded";
 }
 
+bool checktest::movementTest(bool display) {
+    // Ensure moves can't place own king in check
+    bool success = true;
+
+    // Initialise gameboard & pieces
+    gameboard board;
+    king blackKing('B');
+    queen whiteQueen('W');
+    knight whiteKnight('W');
+    rook blackRook('B');
+    piece* pieces[] = {&blackKing, &whiteQueen, &whiteKnight, &blackRook};
+
+    // Place pieces
+    board.addPiece(6, 2, &blackKing);
+    board.addPiece(7, 7, &whiteQueen);
+    board.addPiece(7, 1, &whiteKnight);
+    board.addPiece(5, 5, &blackRook);
+    int coords[] = {6,2, 7,7, 7,1, 5,5};
+    if (display) board.visualiseTextBoard();
+
+    // Test king can't move into check
+    bool test1 = !board.movePiece(6,2, 7,2);
+    if (display) board.visualiseTextBoard();
+
+    // Test king doesn't take piece when it fails to make a move due to check
+    board.movePiece(6,2, 7,1);
+    bool test2 = board.testDriver(pieces, coords, 4) && !whiteKnight.captured();
+    if (display) board.visualiseTextBoard();
+
+    // Ensure, when king is in check, it can't make a move that keeps it in check
+    board.movePiece(7,7, 6,7);
+    bool test3 = !board.movePiece(6,2, 5,2);
+    if (display) board.visualiseTextBoard();
+
+    // Test pinned pieces can't move
+    bool test4 = !board.movePiece(5,5, 3,5);
+    if (display) board.visualiseTextBoard();
+
+    board.movePiece(6,2, 5,1);
+    bool test5 = board.movePiece(5,5, 3,5);
+
+    // Ensure all pieces in correct position
+    int coords2[] = {5,1, 6,7, 7,1, 3,5};
+    bool test6 = board.testDriver(pieces, coords2, 4);
+
+    if (display) {
+        if (test1) {
+            cout << "Test passed: King can't move into check" << endl;
+        } else {
+            cout << "Test failed: King moved into check" << endl;
+        }
+        
+        if (test2) {
+            cout << "Test passed: King doesn't take piece upon failed move" << endl;
+        } else {
+            cout << "Test failed: King takes piece despite move failure" << endl;
+        }
+        
+        if (test3) {
+            cout << "Test passed: When in check, king must move out of check" << endl;
+        } else {
+            cout << "Test failed: When in check, king can move into check" << endl;
+        }
+        
+        if (test4) {
+            cout << "Test passed: Pinned pieces can't move" << endl;
+        } else {
+            cout << "Test failed: Pinned pieces can move" << endl;
+        }
+
+        if (test4) {
+            cout << "Test passed: Rook moved (no longer pinned)" << endl;
+        } else {
+            cout << "Test failed: Rook failed to move (no longer pinned)" << endl;
+        }
+        
+        if (test6) {
+            cout << "Test passed: All pieces in correct positions" << endl;
+        } else {
+            cout << "Test failed: Some pieces in incorrect positions" << endl;
+        }
+    }
+
+    success = test1 && test2 && test3 && test4 && test5 && test6;
+    return success;
+}
+
 bool checktest::diagonalTest(bool display) {
     // Ensure check works in diagonal direction
     bool success;
@@ -62,8 +149,8 @@ bool checktest::diagonalTest(bool display) {
     board.movePiece(4,5, 3,6);
     bool test5 = !board.isInCheck('B');
     if (display) board.visualiseTextBoard();
-    board.movePiece(3,6, 4,5);
     board.movePiece(5,4, 5,5);
+    board.movePiece(3,6, 4,5);
     
     // Test pawn doesn't check king from behind
     board.movePiece(5,5, 5,6);
@@ -245,9 +332,9 @@ bool checktest::knightTest(bool display) {
     // Intiialise gameboard & pieces
     gameboard board;
     king whiteKing;
-    knight blackKnight;
-    queen blackQueen;
-    pawn blackPawn;
+    knight blackKnight('B');
+    queen blackQueen('B');
+    pawn blackPawn('B');
 
     // Check king isn't in check on empty board
     board.addPiece(3, 3, &whiteKing);
@@ -268,7 +355,7 @@ bool checktest::knightTest(bool display) {
         if (!test1[i] && display) board.visualiseTextBoard();
         // remove knight from board
         board.removePiece(files[i], ranks[i]);
-        bool test1total = test1total && test1[i];
+        test1total = test1total && test1[i];
     }
 
     // Ensure knight doesn't check king diagonally or forward
@@ -328,6 +415,9 @@ bool checktest::runTests(bool display) {
     bool test;
 
     // idk why this works, but it fixes a bug
+    test = this->movementTest(display);
+    success = success && test;
+
     test = this->diagonalTest(display);
     success = success && test;
     

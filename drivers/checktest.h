@@ -8,6 +8,7 @@ class checktest : public testcase {
     public:
         checktest();
         checktest(int length);
+        bool movementTest(bool display);
         bool diagonalTest(bool display);
         bool straightTest(bool display);
         bool knightTest(bool display); // display determines whether 

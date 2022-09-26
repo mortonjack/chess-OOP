@@ -39,25 +39,56 @@ bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
         // If there is not a piece at the new location...
         if (board[newFile][newRank] == nullptr) {
             if (!(piece->checkMoveValidity(oldFile,oldRank, newFile,newRank))) return false; // Check if the move is valid
-
+            // Move piece
+            addPiece(newFile, newRank, piece);
+            removePiece(oldFile, oldRank);
+            // Check if king is in check
+            if (isInCheck(piece->getColor())) {
+                // Undo move
+                removePiece(newFile, newRank);
+                addPiece(oldFile, oldRank, piece);
+                return false;
+            } else {
+                // increment move counter
+                piece->move();
+                // report successful move
+                return true;
+            }
         // If there is a piece at the new location...
         } else {
             // If the piece is a different color...
             if (board[newFile][newRank]->getColor() != board[oldFile][oldRank]->getColor()) {
-                if (!(piece->checkCaptureValidity(oldFile,oldRank, newFile,newRank))) return false; // Check if the capture is valid
-                board[newFile][newRank]->capture(); // Capture it
-            } else {
+                // Check if the capture is valid
+                if (!(piece->checkCaptureValidity(oldFile,oldRank, newFile,newRank))) return false;
+                
+                // store pointer to piece at desination
+                piece = board[newFile][newRank];
+
+                // Move piece
+                addPiece(newFile, newRank, board[oldFile][oldRank]);
+                removePiece(oldFile, oldRank);
+
+                // Check if king is in check
+                if (isInCheck(board[newFile][newRank]->getColor())) {
+                    // Undo move
+                    addPiece(oldFile, oldRank, board[newFile][newRank]);
+                    addPiece(newFile, newRank, piece);
+                    return false;
+                } else {
+                    // increment move counter
+                    board[newFile][newRank]->move();
+                    // capture piece
+                    piece->capture();
+                    // report successful move
+                    return true;
+                }
+            } else { // Piece at destination is the same colour as piece being moved
                 return false; // Don't move
+                /*
+                    IMPLEMENT CASTLE CHECK HERE
+                */
             }
         }
-
-        // Successfully move piece
-        addPiece(newFile,newRank,piece); // Add the piece in the target location
-        removePiece(oldFile,oldRank); // Remove the piece from the original location
-        piece->move(); // increment piece's move count
-
-        // report successful move
-        return true;
     } else { // if no piece exists at oldRank, oldFile
         return false;
     }
