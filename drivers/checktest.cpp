@@ -60,7 +60,7 @@ bool checktest::diagonalTest(bool display) {
 
     // Test pawn only checks king if within 1 space
     board.movePiece(4,5, 3,6);
-    bool test5 = board.isInCheck('B');
+    bool test5 = !board.isInCheck('B');
     if (display) board.visualiseTextBoard();
     board.movePiece(3,6, 4,5);
     board.movePiece(5,4, 5,5);
@@ -105,7 +105,7 @@ bool checktest::diagonalTest(bool display) {
             cout << "Test failed: Pawn didn't check king" << endl;
         }
 
-        if (test7) {
+        if (test5) {
             cout << "Test passed: King escaped check" << endl;
         } else {
             cout << "Test failed: King didn't escape check" << endl;
@@ -130,7 +130,7 @@ bool checktest::diagonalTest(bool display) {
         }
     }
 
-    success = test1 && test2 && test3 && test4 && test5 && test6 && test7;
+    success = test1 && test2 && test3 && test4 && test5 && test6 && test7 && test8;
     return success;
 }
 
@@ -325,10 +325,13 @@ bool checktest::knightTest(bool display) {
 
 bool checktest::runTests(bool display) {
     bool success = true;
-    success = success && this->diagonalTest(display);
-    
+    bool test;
+
     // idk why this works, but it fixes a bug
-    bool test = this->straightTest(display);
+    test = this->diagonalTest(display);
+    success = success && test;
+    
+    test = this->straightTest(display);
     success = success && test;
 
     test = this->knightTest(display);
