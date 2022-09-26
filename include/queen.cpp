@@ -1,26 +1,7 @@
 #include "queen.h"
 
 queen::queen(): queen('W') {}; // Pieces are white by default
-
-queen::queen(char color) {
-    _color = color;
-    _type = 'q';
-
-    switch (color) {
-        case 'W':
-            _name = 'Q';
-            break;
-
-        case 'B':
-            _name = 'q';
-            break;
-
-        default:
-            // Uncolored queens are white by default
-            _name = 'Q';
-            break;
-    }
-}
+queen::queen(char color): piece('q',color) {};
 
 bool queen::checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank) {
     // check the the relative distance moved is equal in both rank and file

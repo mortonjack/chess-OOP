@@ -1,26 +1,7 @@
 #include "knight.h"
 
 knight::knight(): knight('W') {}; // Pieces are white by default
-
-knight::knight(char color) {
-    _color = color;
-    _type = 'n';
-
-    switch (color) {
-        case 'W':
-            _name = 'N';
-            break;
-
-        case 'B':
-            _name = 'n';
-            break;
-
-        default:
-            // Uncolored knights are white by default
-            _name = 'K';
-            break;
-    }
-}
+knight::knight(char color): piece('n',color) {};
 
 bool knight::checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank) {
     // Check the knight is moving 2 tiles in one direction, and 1 tile in the other
