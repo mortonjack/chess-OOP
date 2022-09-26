@@ -14,7 +14,9 @@ class gameboard {
         void addPiece(int rank, int file, piece* newPiece);
         bool movePiece(int oldFile, int oldRank, int newFile, int newRank); // attempt to move a piece
         bool checkPathClear(int oldFile, int oldRank, int newFile, int newRank);
-        bool enPassant(int oldFile, int oldRank, int newFile, int newRank);
+        piece* targetWithEnPassant(int oldFile, int oldRank, int newFile, int newRank);
+        bool isInCheck();
+        bool isInCheck(char color); // check if a king is in check 
         bool testDriver(piece* pieces[], int* coords, int length); // For test drivers: ensure board is set up correctly
 };
 
