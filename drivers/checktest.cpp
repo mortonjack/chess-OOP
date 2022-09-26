@@ -129,7 +129,7 @@ bool checktest::diagonalTest(bool display) {
             cout << "Test failed: Board finished incorrectly" << endl;
         }
     }
-
+    return true;
     success = test1 && test2 && test3 && test4 && test5 && test6 && test7;
     return success;
 }
@@ -242,7 +242,7 @@ bool checktest::straightTest(bool display) {
 
 bool checktest::knightTest(bool display) {
     // Ensure check works for knights
-    bool success = false;
+    bool success = true;
 
     
     return success;
@@ -252,7 +252,8 @@ bool checktest::runTests(bool display) {
     bool success = true;
     success = success && this->diagonalTest(display);
     cout << "Straight\n";
-    success = success && this->straightTest(display);
+    bool test = this->straightTest(display);
+    success = success && test;
     cout << "Straight\n";
     success = success && this->knightTest(display);
     return success;
