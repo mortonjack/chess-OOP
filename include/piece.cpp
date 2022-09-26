@@ -6,7 +6,7 @@ piece::piece(char type, char color) {
     this->_type = type; 
     this->_color = color; 
 
-    this->_name = _color != 'B' ? tolower(type) : toupper(type);
+    this->_name = _color != 'B' ? toupper(type) : tolower(type);
 
     this->_captured = false; 
     this->_moveCount = 1; 
