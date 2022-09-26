@@ -127,7 +127,48 @@ void gameboard::visualiseTextBoard(char color) {
 bool gameboard::isInCheck() {return isInCheck('W');}
 
 bool gameboard::isInCheck(char color) {
-    return true;
+    // Check if king of color is in check
+    int file;
+    int rank;
+    bool foundKing = false;
+    // Find the king
+    for (file = 0; file < 8 && !foundKing; file++) {
+        for (rank = 0; rank < 8 && !foundKing; rank++) {
+            // if there's a piece
+            if (board[file][rank] != nullptr) {
+                // if its a king of the correct color
+                if (board[file][rank]->getColor() == color
+                && board[file][rank]->getType() == 'k') {
+                    foundKing = true; // will break out of loop
+                }
+            }
+        }
+    }
+    file--;
+    rank--;
+    if (!foundKing) return false; // no king exists
+
+    // Check all enemy pieces
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            // Check if piece exists at location
+            if (board[i][j] != nullptr) {
+                // Check if piece is enemy
+                if (board[i][j]->getColor() != color) {
+                    // Check if enemy piece can take king
+                    if (board[i][j]->checkCaptureValidity(i,j, file,rank)) {
+                        // Check if path is clear to take the king
+                        if (checkPathClear(i,j, file,rank)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    // Not in check
+    return false;
 }
 
 bool gameboard::testDriver(piece* pieces[], int* coords, int length) {
