@@ -124,6 +124,10 @@ void gameboard::visualiseTextBoard(char color) {
     }
 }
 
+bool gameboard::isInCheck(char color) {
+    return true;
+}
+
 bool gameboard::testDriver(piece* pieces[], int* coords, int length) {
     /* 
         Test the board is set up correctly.
