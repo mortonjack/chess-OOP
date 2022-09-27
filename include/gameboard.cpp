@@ -46,7 +46,7 @@ piece* gameboard::targetWithEnPassant(int oldFile, int oldRank, int newFile, int
     if (enPassantTarget == nullptr) return targetPiece;
     if (!(enPassantTarget->getType() == 'p')) return targetPiece;
     if (!(enPassantTarget->getColor() != sourcePiece->getColor())) return targetPiece;
-    if (!(enPassantTarget->getMoveCount() != 1)) return targetPiece;
+    if (!(enPassantTarget->getMoveCount() == 1)) return targetPiece;
 
     // If so, target that pawn to be captured
     return enPassantTarget;
