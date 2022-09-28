@@ -16,6 +16,8 @@ class gameboard {
         bool checkPathClear(int oldFile, int oldRank, int newFile, int newRank);
         bool isInCheck();
         bool isInCheck(char color); // check if a king is in check 
+        bool isInCheckmate();
+        bool isInCheckmate(char color); // check if a king is in checkmate
         bool testDriver(piece* pieces[], int* coords, int length); // For test drivers: ensure board is set up correctly
 };
 

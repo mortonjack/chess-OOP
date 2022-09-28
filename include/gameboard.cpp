@@ -202,6 +202,26 @@ bool gameboard::isInCheck(char color) {
     return false;
 }
 
+bool gameboard::isInCheckmate() {return isInCheckmate('W');} 
+
+bool gameboard::isInCheckmate(char color) {
+    /*
+     * STEPS:
+     * 
+     * 1. Ask if king is in check
+     * 2. Remove king from board
+     * 3. Look for a free tile around the king which isn’t under attack
+     * 4. Add king back to board
+     * 5. Get list of coordinates king is under attack from
+     * 6. For all coordinates which a piece could move to to block all attacks:
+     *  Find a piece which can move there
+     *  Remove & add piece there
+     *  Ask if king in check
+     */
+
+    return false;
+}
+
 bool gameboard::testDriver(piece* pieces[], int* coords, int length) {
     /* 
         Test the board is set up correctly.
