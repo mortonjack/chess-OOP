@@ -31,15 +31,15 @@ bool checkmatetest::basicTest(bool display) {
     board.addPiece(7, 0, &whiteKing);
     board.addPiece(6, 4, &blackARook);
     board.addPiece(6, 7, &blackHRook);
-    if (display) board.visualiseTextBoard();
 
     // Test 1: Not in checkmate when not in check
     bool test1 = !board.isInCheckmate('W');
+    if (display) board.visualiseTextBoard();
 
     // Test 2: In checkmate when two rooks block columns
     board.movePiece(6,7, 7,7);
-    bool test2 = board.isInCheckmate('W');
     if (display) board.visualiseTextBoard();
+    bool test2 = board.isInCheckmate('W');
 
     // Test 3: Not in checkmate when rook can be taken
     board.movePiece(6,4, 6,1);
