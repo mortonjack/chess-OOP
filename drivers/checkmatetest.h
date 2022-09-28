@@ -10,6 +10,7 @@ class checkmatetest : public testcase {
         checkmatetest(int length);
         // Display determines whether or not to output to stdout
         bool basicTest(bool display);
+        bool anarchyTest(bool display);
         bool runTests(bool display); 
 };
 

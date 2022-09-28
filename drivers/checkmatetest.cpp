@@ -117,10 +117,90 @@ bool checkmatetest::basicTest(bool display) {
     return success;
 }
 
+bool checkmatetest::anarchyTest(bool display) {
+    // Testing a really cool case I saw on twitter last week!
+    // No idea if this does anything important :3
+    bool success = false;
+
+    // Initialise objects
+    gameboard board;
+
+    pawn whitePawnOne;
+    pawn whitePawnTwo;
+    king whiteKing;
+    knight whiteKnight;
+    rook whiteRook;
+    bishop whiteBishop;
+
+    king blackKing('B');
+    queen blackQueenOne('B');
+    queen blackQueenTwo('B');
+    queen blackQueenThree('B');
+    queen blackQueenFour('B');
+    queen blackQueenFive('B');
+    queen blackQueenSix('B');
+    queen blackQueenSeven('B');
+    queen blackQueenEight('B');
+
+    // Place pieces
+    board.addPiece(0, 0, &whiteKing);
+    board.addPiece(0, 1, &whitePawnOne);
+    board.addPiece(1, 1, &whitePawnTwo);
+    board.addPiece(3, 0, &whiteRook);
+    board.addPiece(2, 2, &whiteKnight);
+    board.addPiece(6, 2, &whiteBishop);
+
+    board.addPiece(3, 5, &blackKing);
+    board.addPiece(4, 4, &blackQueenOne);
+    board.addPiece(3, 4, &blackQueenTwo);
+    board.addPiece(2, 4, &blackQueenThree);
+    board.addPiece(2, 5, &blackQueenFour);
+    board.addPiece(2, 6, &blackQueenFive);
+    board.addPiece(3, 6, &blackQueenSix);
+    board.addPiece(4, 6, &blackQueenSeven);
+    board.addPiece(4, 5, &blackQueenEight);
+
+    if (display) board.visualiseTextBoard('B');
+
+    // Test 1: Neither in checkmate
+    bool test1 = !board.isInCheckmate('W') && !board.isInCheckmate('B');
+
+    // Test 2: Knight to E4 (checkmate)
+    board.movePiece(2,2, 4,3);
+    if (display) board.visualiseTextBoard('B');
+    bool test2 = board.isInCheckmate('B');
+    bool test3 = !board.isInCheckmate('W');
+
+    // Display results
+    if (display) {
+        if (test1) {
+            cout << "Test passed: No one in checkmate" << endl;
+        } else {
+            cout << "Test failed: Someone in checkmate" << endl;
+        }
+
+        if (test2) {
+            cout << "Test passed: Black in checkmate" << endl;
+        } else {
+            cout << "Test failed: Black not in checkmate" << endl;
+        }
+
+        if (test3) {
+            cout << "Test passed: White not in checkmate" << endl;
+        } else {
+            cout << "Test failed: White in checkmate" << endl;
+        }
+    }
+
+    success = test1 && test2 && test3;
+    return success;
+}
+
 bool checkmatetest::runTests(bool display) {
     bool success = true;
 
     success = success && this->basicTest(display);
+    success = success && this->anarchyTest(display);
 
     return success;
 }
