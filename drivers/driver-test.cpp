@@ -8,6 +8,7 @@
 #include "capturetest.h"
 #include "collisiontest.h"
 #include "checktest.h"
+#include "checkmatetest.h"
 
 int main() {
     driver tests(6);
@@ -33,6 +34,8 @@ int main() {
     tests.addCase(&case8);
     checktest case9;
     tests.addCase(&case9);
+    checkmatetest case10;
+    tests.addCase(&case10);
 
     tests.runTests();
     return 0;
