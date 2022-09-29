@@ -292,8 +292,8 @@ bool pawntest::enPassantTest(bool display) {
 
 bool pawntest::runTests(bool display) {
     bool success = true;
-    //success = success && this->movementTest(display);
-    //success = success && this->captureTest(display);
+    success = success && this->movementTest(display);
+    success = success && this->captureTest(display);
     success = success && this->enPassantTest(display);
     return success;
 }
