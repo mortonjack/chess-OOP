@@ -15,6 +15,9 @@ class gameboard {
         bool movePiece(int oldFile, int oldRank, int newFile, int newRank); // attempt to move a piece
         bool checkPathClear(int oldFile, int oldRank, int newFile, int newRank);
 
+        // Change the target piece to the pawn targetted with en passant, if applicable
+        piece* targetWithEnPassant(int oldFile, int oldRank, int newFile, int newRank);
+
         // Replace kingFile and kingRank with king coordinates (if no king is found, returns -1, -1)
         void getKingCoords(char color, int * kingFile, int * kingRank);
 

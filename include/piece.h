@@ -18,6 +18,7 @@ class piece {
         char getName();
         char getType();
         char getColor();
+        int getMoveCount();
         void move();
 };
 

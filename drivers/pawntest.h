@@ -10,6 +10,7 @@ class pawntest : public testcase {
         pawntest(int length);
         bool movementTest(bool display); // display determines whether 
         bool captureTest(bool display); // or not to output to stdout
+        bool enPassantTest(bool display);
         bool runTests(bool display); 
 };
 

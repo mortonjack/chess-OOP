@@ -168,9 +168,132 @@ bool pawntest::captureTest(bool display) {
     return success;
 }
 
+bool pawntest::enPassantTest(bool display) {
+    // Test en passant feature
+    bool success = false;
+    
+    // Initialise objects
+    gameboard board;
+    pawn blackPawnOne('B');
+    pawn blackPawnTwo('B');
+    pawn blackPawnThree('B');
+    pawn blackPawnFour('B');
+    pawn blackPawnFive('B');
+    pawn whitePawnOne('W');
+    pawn whitePawnTwo('W');
+    pawn whitePawnThree('W');
+    pawn whitePawnFour('W');
+
+    // Place pieces
+    board.addPiece(2,6, &blackPawnOne);
+    board.addPiece(3,4, &whitePawnOne);
+    if (display) board.visualiseTextBoard();
+    board.movePiece(2,6, 2,4);
+    if (display) board.visualiseTextBoard();
+
+    // Test case 0: move pawn wrong way
+    bool test0 = !board.movePiece(3,4, 4,5);
+
+    // Test case 1: regular en passant
+    board.movePiece(3,4, 2,5); // White captures
+    if (display) board.visualiseTextBoard();
+
+    piece* pieces[1] = {&whitePawnOne};
+    int coords[] = {2,5};
+    bool test1 = blackPawnOne.captured() && board.testDriver(pieces, coords, 1);
+
+    board.removePiece(2,5);
+
+    // Test case 2: illegal en passant (move piece up twice)
+    board.addPiece(2,6, &blackPawnTwo);
+    board.addPiece(3,4, &whitePawnTwo);
+
+    board.movePiece(2,6, 2,5);
+    if (display) board.visualiseTextBoard();
+    board.movePiece(2,5, 2,4);
+    if (display) board.visualiseTextBoard();
+    board.movePiece(3,4, 2,5); // White attempts to capture
+    board.movePiece(2,4, 3,3); // Black attempts to capture
+    if (display) board.visualiseTextBoard();
+
+    piece* pieces2[] = {&whitePawnTwo, &blackPawnTwo};
+    int coords2[] = {3,4, 2,4};
+    bool test2 = board.testDriver(pieces2, coords2, 2);
+
+    board.removePiece(2,4);
+    board.removePiece(3,4);
+
+    // Test case 3: illegal en passant (never move piece)
+    board.addPiece(2,6, &blackPawnThree);
+    board.addPiece(3,4, &whitePawnThree);
+    
+    board.movePiece(3,4, 3,5);
+    board.movePiece(3,5, 3,6);
+    if (display) board.visualiseTextBoard();
+    board.movePiece(3,6, 4,7); // White attemps to capture
+
+    piece* pieces3[] = {&whitePawnThree, &blackPawnThree};
+    int coords3[] = {3,6, 2,6};
+    bool test3 = board.testDriver(pieces3, coords3, 2);
+    
+    if (display) board.visualiseTextBoard();
+    board.removePiece(3,6);
+    board.removePiece(2,6);
+
+    // Test case 4: Take diagonally with pawn next to piece
+    board.addPiece(3,4, &whitePawnFour);
+    board.addPiece(4,4, &blackPawnFour);
+    board.addPiece(4,5, &blackPawnFive);
+    if (display) board.visualiseTextBoard();
+    board.movePiece(3,4, 4,5);
+    if (display) board.visualiseTextBoard();
+
+    piece* pieces4[] = {&whitePawnFour, &blackPawnFour};
+    int coords4[] = {4,5, 4,4};
+
+    bool test4 = board.testDriver(pieces4, coords4, 2);
+
+    // Display results
+    if (display) {
+        if (test0) {
+            cout << "Test passed: Pawn only takes piece en passant at [newFile]" << endl;
+        } else {
+            cout << "Test failed: Pawn takes piece en passant in wrong file direction" << endl;
+        }
+
+        if (test1) {
+            cout << "Test passed: Pawn takes piece en passant" << endl;
+        } else {
+            cout << "Test failed: Pawn doesn't take piece en passant" << endl;
+        }
+
+        if (test2) {
+            cout << "Test passed: Pawn doesn't take piece en passant which moved up twice" << endl;
+        } else {
+            cout << "Test failed: Pawn takes piece en passant which moved up twice" << endl;
+        }
+
+        if (test3) {
+            cout << "Test passed: Pawn doesn't take piece en passant which hasn't moveed" << endl;
+        } else {
+            cout << "Test failed: Pawn takes piece en passant which hasn't moved" << endl;
+        }
+
+        if (test4) {
+            cout << "Test passed: Pawn takes correct piece when one pawn is behind another" << endl;
+        } else {
+            cout << "Test failed: Pawn takes incorrect piece when one pawn is behind another" << endl;
+        }
+    }
+
+    success = test0 && test1 && test2 && test3 && test4;
+    return success;
+}
+
 bool pawntest::runTests(bool display) {
     bool success = true;
     success = success && this->movementTest(display);
     success = success && this->captureTest(display);
+    success = success && this->enPassantTest(display);
     return success;
 }
