@@ -53,6 +53,67 @@ piece* gameboard::targetWithEnPassant(int oldFile, int oldRank, int newFile, int
     return enPassantTarget;
 }
 
+bool gameboard::isCastling(int oldFile, int oldRank, int newFile, int newRank) {
+    piece* sourcePiece = board[oldFile][oldRank];
+
+    if (!(sourcePiece->getType() == 'k')) return false; // Castling can only happen to kings
+    if (!(sourcePiece->getMoveCount() == 1)) return false; // Kings lose castling rights when they move
+    if (!((oldRank == newRank) && (newFile == oldFile + 2 || newFile == oldFile - 2))) return false; // Castling only moves the king 2 tiles to the left/right
+
+    // Store properties about the potential castling move
+    int rookFile;
+    int fileIncrement;
+
+    // If we are castling short... (new file is larger)
+    if (newFile > oldFile) {
+        rookFile = 7;
+        fileIncrement = 1;
+    } else {
+        rookFile = 1;
+        fileIncrement = -1;
+    }
+
+    piece* castleRook = board[rookFile][oldRank];
+
+    if (castleRook == nullptr) return false; // Castling must occur between a king and its rook
+    if (!(castleRook->getType() == 'r')) return false;
+    if (!(castleRook->getColor() == sourcePiece->getColor())) return false; // You cannot castle with an opposite-colored rook
+    if (!(castleRook->getMoveCount() == 1)) return false; // Rooks lose castling rights when they move
+
+    if (!(checkPathClear(oldFile, oldRank, newFile, newRank))) return false; // You cannot castle through peices
+
+    for (int i = 0; i < 3; i++) {
+        if (isThreatened(sourcePiece->getColor(), oldFile+(i*fileIncrement),oldRank)) return false; // You cannot castle into, out of, or through check
+    }
+
+    // All conditions pass, castling is valid
+    return true;
+}
+
+void gameboard::castle(int oldFile, int newFile, int rank) {
+    // Move the king to its new, castled position
+    piece* castleKing = board[oldFile][rank];
+
+    addPiece(newFile,rank,castleKing);
+    removePiece(oldFile,rank);
+
+    // Move the rook to its new, castled position
+    piece* castleRook;
+
+    // If we are castling short... (new file is larger)
+    if (newFile > oldFile) {
+        castleRook = board[7][rank];
+
+        addPiece(newFile-1,rank,castleRook);
+        removePiece(7,rank);
+    } else {
+        castleRook = board[1][rank];
+
+        addPiece(newFile+1,rank,castleRook);
+        removePiece(1,rank);
+    }
+}
+
 bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
     // Ensure all coordinates are valid
     if (oldRank < 0 || oldRank > 7 || oldFile < 0 || oldFile > 7 ||
@@ -70,12 +131,18 @@ bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
 
         // If there is not a piece at the new location...
         if (targetPiece == nullptr) {
-            // Return false if the move isn't valid
-            if (!(sourcePiece->checkMoveValidity(oldFile,oldRank, newFile,newRank))) return false;     
 
-            // Move piece
-            addPiece(newFile, newRank, sourcePiece);
-            removePiece(oldFile, oldRank);
+            // If the player is trying to castle...
+            if (isCastling(oldFile,oldRank, newFile,newRank)) {
+                castle(oldFile,newFile,oldRank);
+            } else {
+                // Return false if the move isn't valid
+                if (!(sourcePiece->checkMoveValidity(oldFile,oldRank, newFile,newRank))) return false;     
+
+                // Move piece
+                addPiece(newFile, newRank, sourcePiece);
+                removePiece(oldFile, oldRank);
+            }
 
             // Check if king is in check
             if (isInCheck(sourcePiece->getColor())) {

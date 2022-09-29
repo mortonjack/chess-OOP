@@ -18,6 +18,10 @@ class gameboard {
         // Change the target piece to the pawn targetted with en passant, if applicable
         piece* targetWithEnPassant(int oldFile, int oldRank, int newFile, int newRank);
 
+        // Checks if the player is trying to perform a valid castle, and handles the castle
+        bool isCastling(int oldFile, int oldRank, int newFile, int newRank);
+        void castle(int oldFile, int newFile, int rank);
+
         // Replace kingFile and kingRank with king coordinates (if no king is found, returns -1, -1)
         void getKingCoords(char color, int * kingFile, int * kingRank);
 
