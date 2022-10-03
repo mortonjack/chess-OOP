@@ -20,3 +20,11 @@ char piece::getType() {return this->_type;}
 char piece::getColor() {return this->_color;}
 int piece::getMoveCount() {return this->_moveCount;}
 void piece::move() {_moveCount++;}
+void piece::reverseMove() {
+    if (captured()) {
+        this->_captured = false;
+    } else {
+        this->_moveCount--;
+    }
+    return;
+}
