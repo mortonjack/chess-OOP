@@ -11,8 +11,9 @@ class checktest : public testcase {
         bool movementTest(bool display);
         bool diagonalTest(bool display);
         bool straightTest(bool display);
-        bool knightTest(bool display); // display determines whether 
-        bool runTests(bool display); // or not to output to stdout
+        bool knightTest(bool display); 
+        bool enPassantTest(bool display);   // display determines whether 
+        bool runTests(bool display);        // or not to output to stdout
 };
 
 #endif//CHECKTEST_H

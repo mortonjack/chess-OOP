@@ -410,6 +410,53 @@ bool checktest::knightTest(bool display) {
     return success;
 }
 
+bool checktest::enPassantTest(bool display) {
+    // Ensure check works for knights
+    bool success;
+
+    // Intiialise gameboard & pieces
+    gameboard board;
+    king whiteKing;
+    pawn whiteEPawn;
+    pawn blackDPawn('B');
+
+    // Check king isn't in check on empty board
+    board.addPiece(5,2, &whiteKing);
+    if (display) board.visualiseTextBoard();
+    bool test0 = !board.isInCheck('W');
+
+    // Place pawns on the board
+    board.addPiece(4,1, &whiteEPawn);
+    board.addPiece(3,6, &blackDPawn);
+
+    // Move the pawns up into a position where black can en passant
+    board.movePiece(3,7, 3,4);
+    board.movePiece(3,5, 3,3);
+    board.movePiece(4,1, 4,3);
+
+    // Peform en passant, checking the king
+    board.movePiece(3,3, 4,2);
+    bool test1 = !board.isInCheck('W');
+
+    // Output test results
+    if (display) {
+        if (test0) {
+            cout << "Test passed: King not in check in empty board" << endl;
+        } else {
+            cout << "Test failed: King in check in empty board" << endl;
+        }
+
+        if (test1) {
+            cout << "Test passed: En passant can check king" << endl;
+        } else {
+            cout << "Test failed: En passant fails to check king" << endl;
+        }
+    }
+    
+    success = test0 && test1;
+    return success;
+}
+
 bool checktest::runTests(bool display) {
     bool success = true;
     bool test;
@@ -427,5 +474,9 @@ bool checktest::runTests(bool display) {
     test = this->knightTest(display);
     success = success && test;
 
+    test = this->enPassantTest(display);
+    success = success && test;
+
     return success;
 }
+
