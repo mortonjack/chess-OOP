@@ -398,7 +398,7 @@ bool gameboard::isInCheckmate(char color) {
             // Check friendly piece doesn't already exist there
             if (board[i][j] == nullptr || board[i][j]->getColor() != color) {
                 // Save current piece
-                piece* currentPiece = board[i][j];
+                piece* targetPiece = board[i][j];
                 // Add generic piece to this location
                 addPiece(i, j, &somePawn);
                 // See if king is out of check
@@ -409,7 +409,7 @@ bool gameboard::isInCheckmate(char color) {
                             if (board[f][r] != nullptr) {
                                 // Check piece is friendly
                                 canEscape = board[f][r]->getColor() == color;
-                                if (currentPiece == nullptr) {
+                                if (targetPiece == nullptr) {
                                     // Check if piece can move to i, j
                                     canEscape = canEscape && 
                                     board[f][r]->checkMoveValidity(f,r, i,j);
@@ -438,7 +438,7 @@ bool gameboard::isInCheckmate(char color) {
                     }
                 }
                 // Put existing piece back
-                addPiece(i, j, currentPiece);
+                addPiece(i, j, targetPiece);
                 if (canEscape) return false;
             }
         }
