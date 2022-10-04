@@ -20,6 +20,7 @@ class piece {
         char getColor();
         int getMoveCount();
         void move();
+        void reverseMove();
 };
 
 #endif//PIECE_H
