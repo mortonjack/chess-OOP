@@ -10,9 +10,12 @@ class gameboard {
         gameboard(); // initialise empty board
         void visualiseTextBoard();
         void visualiseTextBoard(char color); // print text-based visualisation of the board
+
         void removePiece(int rank, int file);
+        void clearBoard();
         void addPiece(int rank, int file, piece* newPiece);
         bool movePiece(int oldFile, int oldRank, int newFile, int newRank); // attempt to move a piece
+
         bool checkPathClear(int oldFile, int oldRank, int newFile, int newRank);
 
         // Change the target piece to the pawn targetted with en passant, if applicable

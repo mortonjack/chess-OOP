@@ -13,6 +13,14 @@ gameboard::gameboard() {
     }
 }
 
+void gameboard::clearBoard() {
+    for (int rank = 0; rank < 8; rank++) {
+        for (int file = 0; file < 8; file++) {
+            removePiece(file,rank);
+        }
+    }
+}
+
 void gameboard::removePiece(int file, int rank) {
     // remove piece from the board
     board[file][rank] = nullptr;
@@ -69,7 +77,7 @@ bool gameboard::isCastling(int oldFile, int oldRank, int newFile, int newRank) {
         rookFile = 7;
         fileIncrement = 1;
     } else {
-        rookFile = 1;
+        rookFile = 0;
         fileIncrement = -1;
     }
 
@@ -107,11 +115,14 @@ void gameboard::castle(int oldFile, int newFile, int rank) {
         addPiece(newFile-1,rank,castleRook);
         removePiece(7,rank);
     } else {
-        castleRook = board[1][rank];
+        castleRook = board[0][rank];
 
         addPiece(newFile+1,rank,castleRook);
-        removePiece(1,rank);
+        removePiece(0,rank);
     }
+
+    castleKing->move();
+    castleRook->move();
 }
 
 bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
@@ -134,7 +145,11 @@ bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
 
             // If the player is trying to castle...
             if (isCastling(oldFile,oldRank, newFile,newRank)) {
+                // perform castle
                 castle(oldFile,newFile,oldRank);
+
+                // report successful move
+                return true;
             } else {
                 // Return false if the move isn't valid
                 if (!(sourcePiece->checkMoveValidity(oldFile,oldRank, newFile,newRank))) return false;     

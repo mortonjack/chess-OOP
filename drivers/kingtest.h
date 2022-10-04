@@ -8,8 +8,10 @@ class kingtest : public testcase {
     public:
         kingtest();
         kingtest(int length);
-        bool movementTest(bool display); // display determines whether 
-        bool runTests(bool display); // or not to output to stdout
+        // display determines whether or not to output to stdout
+        bool movementTest(bool display); 
+        bool castleTest(bool display);
+        bool runTests(bool display);
 };
 
 #endif//KINGTEST_H

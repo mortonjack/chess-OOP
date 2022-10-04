@@ -284,9 +284,9 @@ bool checkmatetest::enPassantTest(bool display) {
 bool checkmatetest::runTests(bool display) {
     bool success = true;
 
-    //success = success && this->basicTest(display);
+    success = success && this->basicTest(display);
     success = success && this->anarchyTest(display);
-    success = success && this->enPassantTest(display);
+    //success = success && this->enPassantTest(display);
 
     return success;
 }
