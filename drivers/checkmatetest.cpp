@@ -218,11 +218,75 @@ bool checkmatetest::anarchyTest(bool display) {
     return success;
 }
 
+bool checkmatetest::enPassantTest(bool display) {
+    bool success = false;
+
+    // Initialise objects
+    gameboard board;
+
+    king whiteKing;
+    pawn whiteCPawn;
+
+    king blackKing('B');
+    pawn blackDPawn('B');
+    rook blackRook('B');
+    queen blackQueen('B');
+
+    // Place pieces
+    board.addPiece(4,3, &whiteKing);
+    board.addPiece(2,4, &whiteCPawn);
+
+    board.addPiece(4,5, &blackKing);
+    board.addPiece(3,1, &blackQueen);
+    board.addPiece(5,7, &blackRook);
+    board.addPiece(3,6, &blackDPawn);
+
+    if (display) board.visualiseTextBoard();
+
+    // Test 1: Neither in checkmate
+    bool test1 = !board.isInCheckmate('W') && !board.isInCheckmate('B');
+
+    // Test 2: Black pawn to D5 (Not checkmate due to en passant)
+    board.movePiece(3,6, 3,4);
+    if (display) board.visualiseTextBoard();
+    bool test2 = board.isInCheck('W') && !board.isInCheckmate('W');
+
+    // Test 3: White pawn to D6, capturing via en passant
+    board.movePiece(2,4, 3,5);
+    if (display) board.visualiseTextBoard();
+    bool test3 = !board.isInCheck('W') && !board.isInCheckmate('W');
+
+    // Display results
+    if (display) {
+        if (test1) {
+            cout << "Test passed: No one in checkmate" << endl;
+        } else {
+            cout << "Test failed: Someone in checkmate" << endl;
+        }
+
+        if (test2) {
+            cout << "Test passed: White in check, but en passant saves them from checkmate" << endl;
+        } else {
+            cout << "Test failed: White not in check and/or en passant does not save them from checkmate" << endl;
+        }
+
+        if (test3) {
+            cout << "Test passed: White not in check or checkmate anymore" << endl;
+        } else {
+            cout << "Test failed: White in check or checkmate" << endl;
+        }
+    }
+
+    success = test1 && test2 && test3;
+    return success;
+}
+
 bool checkmatetest::runTests(bool display) {
     bool success = true;
 
     success = success && this->basicTest(display);
     success = success && this->anarchyTest(display);
+    //success = success && this->enPassantTest(display);
 
     return success;
 }

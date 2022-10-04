@@ -1,5 +1,7 @@
 #include "../include/gameboard.h"
 #include "../include/king.h"
+#include "../include/rook.h"
+#include "../include/bishop.h"
 #include "kingtest.h"
 #include <iostream>
 using namespace std;
@@ -80,8 +82,141 @@ bool kingtest::movementTest(bool display) {
     return success;
 }
 
+bool kingtest::castleTest(bool display) {
+    // Test king castling
+    bool success = true;
+
+    // Create the game board a white king.
+    gameboard board;
+
+    king whiteKing = king();
+    king whiteKingTwo = king();
+    king whiteKingThree = king();
+
+    rook whiteARook = rook();
+    rook whiteHRook = rook();
+    rook whiteARookTwo = rook();
+    rook whiteHRookTwo = rook();
+    rook whiteARookThree = rook();
+    rook whiteHRookThree = rook();
+
+    rook blackRook('B');
+
+    // Place the pieces
+    board.addPiece(4,0, &whiteKing);
+    board.addPiece(7,0, &whiteHRook);
+    board.addPiece(0,0, &whiteARook);
+    if (display) board.visualiseTextBoard();
+
+    // Castle short
+    board.movePiece(4,0, 6,0);
+    if (display) board.visualiseTextBoard();
+
+    piece* pieces1[] = {&whiteKing, &whiteARook, &whiteHRook};
+    int coords1[] = {6,0, 0,0, 5,0};
+    bool test1 = board.testDriver(pieces1, coords1, 3);
+    
+
+    // Reset the board
+    board.clearBoard();
+
+    // Place the pieces
+    board.addPiece(4,0, &whiteKingTwo);
+    board.addPiece(7,0, &whiteHRookTwo);
+    board.addPiece(0,0, &whiteARookTwo);
+    if (display) board.visualiseTextBoard();
+
+    // Castle long
+    board.movePiece(4,0, 2,0);
+    if (display) board.visualiseTextBoard();
+
+    piece* pieces2[] = {&whiteKingTwo, &whiteARookTwo, &whiteHRookTwo};
+    int coords2[] = {2,0, 3,0, 7,0};
+    bool test2 = board.testDriver(pieces2, coords2, 3);
+
+
+    // Reset the board
+    board.clearBoard();
+
+    // Place the pieces
+    board.addPiece(4,0, &whiteKingThree);
+    board.addPiece(7,0, &whiteHRookThree);
+    board.addPiece(0,0, &whiteARookThree);
+    board.addPiece(4,7, &blackRook);
+    if (display) board.visualiseTextBoard();
+
+    // Try castling long (out of check) and ensure this failed
+    board.movePiece(4,0, 2,0);
+    if (display) board.visualiseTextBoard();
+
+    piece* pieces3[] = {&whiteKingThree, &whiteARookThree, &whiteHRookThree, &blackRook};
+    int coords3[] = {4,0, 0,0, 7,0, 4,7};
+    bool test3 = board.testDriver(pieces3, coords3, 4);
+
+
+    // Move the black rook
+    board.movePiece(4,7, 3,7);
+    if (display) board.visualiseTextBoard();
+
+    // Try castling long (through check) and ensure this failed
+    board.movePiece(4,0, 2,0);
+    if (display) board.visualiseTextBoard();
+
+    int coords4[] = {4,0, 0,0, 7,0, 3,7};
+    bool test4 = board.testDriver(pieces3, coords4, 4);
+
+
+    // Move the black rook
+    board.movePiece(3,7, 2,7);
+    if (display) board.visualiseTextBoard();
+
+    // Try castling long (into check) and ensure this failed
+    board.movePiece(4,0, 2,0);
+    if (display) board.visualiseTextBoard();
+
+    int coords5[] = {4,0, 0,0, 7,0, 2,7};
+    bool test5 = board.testDriver(pieces3, coords5, 4);
+
+
+    if (display) {
+        if (test1) {
+            cout << "Test passed: King successfully castled short" << endl;
+        } else {
+            cout << "Test failed: King did not castle short" << endl;
+        }
+
+        if (test2) {
+            cout << "Test passed: King successfully castled long" << endl;
+        } else {
+            cout << "Test failed: King did not castle long" << endl;
+        }
+
+        if (test3) {
+            cout << "Test passed: King did not castle out of check" << endl;
+        } else {
+            cout << "Test failed: King castled out of check" << endl;
+        }
+
+        if (test4) {
+            cout << "Test passed: King did not castle through check" << endl;
+        } else {
+            cout << "Test failed: King castled through check" << endl;
+        }
+
+        if (test5) {
+            cout << "Test passed: King did not castle into check" << endl;
+        } else {
+            cout << "Test failed: King castled into check" << endl;
+        }
+    }
+
+    success = test1 && test2 && test3 && test4 && test5;
+    return success;
+}
+
 bool kingtest::runTests(bool display) {
     bool success = true;
     success = success && this->movementTest(display);
+    success = success && this->castleTest(display);
     return success;
 }

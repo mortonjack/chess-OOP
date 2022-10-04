@@ -11,6 +11,7 @@ class checkmatetest : public testcase {
         // Display determines whether or not to output to stdout
         bool basicTest(bool display);
         bool anarchyTest(bool display);
+        bool enPassantTest(bool display);
         bool runTests(bool display); 
 };
 
