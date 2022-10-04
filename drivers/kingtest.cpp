@@ -2,6 +2,7 @@
 #include "../include/king.h"
 #include "../include/rook.h"
 #include "../include/bishop.h"
+#include "../include/knight.h"
 #include "kingtest.h"
 #include <iostream>
 using namespace std;
@@ -101,11 +102,25 @@ bool kingtest::castleTest(bool display) {
     rook whiteHRookThree = rook();
 
     rook blackRook('B');
+    knight blackKnight('B');
+    knight whiteKnight('W');
 
     // Place the pieces
     board.addPiece(4,0, &whiteKing);
     board.addPiece(7,0, &whiteHRook);
     board.addPiece(0,0, &whiteARook);
+    board.addPiece(6,0, &whiteKnight);
+    if (display) board.visualiseTextBoard();
+
+    // Attempt castle short
+    board.movePiece(4,0, 6,0);
+    if (display) board.visualiseTextBoard();
+
+    piece* pieces0[] = {&whiteKing, &whiteARook, &whiteHRook, &whiteKnight};
+    int coords0[] = {4,0, 0,0, 7,0, 6,0};
+    bool test0 = board.testDriver(pieces0, coords0, 4);
+
+    board.removePiece(6, 0);
     if (display) board.visualiseTextBoard();
 
     // Castle short
@@ -124,6 +139,13 @@ bool kingtest::castleTest(bool display) {
     board.addPiece(4,0, &whiteKingTwo);
     board.addPiece(7,0, &whiteHRookTwo);
     board.addPiece(0,0, &whiteARookTwo);
+    board.addPiece(1,0, &blackKnight);
+    if (display) board.visualiseTextBoard();
+
+    // Attempt castle long
+    bool test2_extra = !board.movePiece(4,0, 2,0);
+    if (display) board.visualiseTextBoard();
+    board.removePiece(1,0);
     if (display) board.visualiseTextBoard();
 
     // Castle long
@@ -179,10 +201,22 @@ bool kingtest::castleTest(bool display) {
 
 
     if (display) {
+        if (test0) {
+            cout << "Test passed: King doesn't castle through friendly piece" << endl;
+        } else {
+            cout << "Test failed: King castled through friendly piece" << endl;
+        }
+
         if (test1) {
             cout << "Test passed: King successfully castled short" << endl;
         } else {
             cout << "Test failed: King did not castle short" << endl;
+        }
+
+        if (test2_extra) {
+            cout << "Test passed: King doesn't castle through enemy piece" << endl;
+        } else {
+            cout << "Test failed: King castles through enemy piece" << endl;
         }
 
         if (test2) {
@@ -210,7 +244,7 @@ bool kingtest::castleTest(bool display) {
         }
     }
 
-    success = test1 && test2 && test3 && test4 && test5;
+    success = test0 && test1 && test2_extra && test2 && test3 && test4 && test5;
     return success;
 }
 
