@@ -88,10 +88,11 @@ bool gameboard::isCastling(int oldFile, int oldRank, int newFile, int newRank) {
     if (!(castleRook->getColor() == sourcePiece->getColor())) return false; // You cannot castle with an opposite-colored rook
     if (!(castleRook->getMoveCount() == 1)) return false; // Rooks lose castling rights when they move
 
-    if (!(checkPathClear(oldFile, oldRank, newFile, newRank))) return false; // You cannot castle through peices
+    if (!(checkPathClear(oldFile, oldRank, rookFile, newRank))) return false; // You cannot castle through peices
 
     for (int i = 0; i < 3; i++) {
-        if (isThreatened(sourcePiece->getColor(), oldFile+(i*fileIncrement),oldRank)) return false; // You cannot castle into, out of, or through check
+        // You cannot castle into, out of, or through check
+        if (isThreatened(sourcePiece->getColor(), oldFile+(i*fileIncrement),oldRank)) return false; 
     }
 
     // All conditions pass, castling is valid
