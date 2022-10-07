@@ -179,6 +179,7 @@ bool pawntest::enPassantTest(bool display) {
     pawn blackPawnThree('B');
     pawn blackPawnFour('B');
     pawn blackPawnFive('B');
+    pawn blackPawnSix('B');
     pawn whitePawnOne('W');
     pawn whitePawnTwo('W');
     pawn whitePawnThree('W');
@@ -230,7 +231,7 @@ bool pawntest::enPassantTest(bool display) {
     board.movePiece(3,4, 3,5);
     board.movePiece(3,5, 3,6);
     if (display) board.visualiseTextBoard();
-    board.movePiece(3,6, 4,7); // White attemps to capture
+    board.movePiece(3,6, 4,7); // White attempts to capture
 
     piece* pieces3[] = {&whitePawnThree, &blackPawnThree};
     int coords3[] = {3,6, 2,6};
@@ -252,6 +253,21 @@ bool pawntest::enPassantTest(bool display) {
     int coords4[] = {4,5, 4,4};
 
     bool test4 = board.testDriver(pieces4, coords4, 2);
+
+    // Test case 5: Cannot take en passant if 2 moves have elapsed
+    board.clearBoard();
+    board.addPiece(5,6, &blackPawnSix);
+    board.addPiece(1,6, &blackPawnFour);
+    board.addPiece(4,3, &whitePawnFour);
+    if (display) board.visualiseTextBoard();
+
+    board.movePiece(5,6, 5,4);
+    if (display) board.visualiseTextBoard();
+
+    board.movePiece(4,3, 4,4);
+    board.movePiece(1,6, 1,5);
+    bool test5 = !board.movePiece(4,4, 5,5);
+    if (display) board.visualiseTextBoard();
 
     // Display results
     if (display) {
@@ -284,9 +300,15 @@ bool pawntest::enPassantTest(bool display) {
         } else {
             cout << "Test failed: Pawn takes incorrect piece when one pawn is behind another" << endl;
         }
+
+        if (test5) {
+            cout << "Test passed: En passant cannot be played after one turn has elapsed" << endl;
+        } else {
+            cout << "Test failed: En passant can be played after one turn has elapsed" << endl;
+        }
     }
 
-    success = test0 && test1 && test2 && test3 && test4;
+    success = test0 && test1 && test2 && test3 && test4 && test5;
     return success;
 }
 
