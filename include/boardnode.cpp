@@ -60,6 +60,8 @@ boardnode::boardnode(const boardnode &node) {
 }
 
 boardnode::~boardnode() {
+    // Delete prevnode
+    if (_prevNode != nullptr) delete _prevNode;
     // Delete this board
     for (int i = 0; i < 8; i++) {
         delete [] _board[i];
