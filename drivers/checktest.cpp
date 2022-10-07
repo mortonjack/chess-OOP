@@ -445,9 +445,7 @@ bool checktest::enPassantTest(bool display) {
     bool test1 = board.isInCheck('W');
 
     // Reset the board, removing all peices
-    board.removePiece(4,2); // Remove black pawn
-    board.removePiece(5,1); // Remove white king
-
+    board.clearBoard();
 
     // Place king and pawns on the board
     board.addPiece(2,3, &whiteKing);

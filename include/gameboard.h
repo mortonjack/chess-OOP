@@ -2,10 +2,12 @@
 #define GAMEBOARD_H
 
 #include "piece.h"
+#include "boardnode.h"
 
 class gameboard {
     protected:
         piece* board[8][8]; // gameboard, stores piece locations
+        boardnode* prevBoard;
     public:
         gameboard(); // initialise empty board
         void visualiseTextBoard();

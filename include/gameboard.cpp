@@ -4,7 +4,7 @@
 #include <cstdlib>
 using namespace std;
 
-gameboard::gameboard() {
+gameboard::gameboard(): prevBoard(nullptr) {
     // initialise empty board
     for (int rank = 0; rank < 8; rank++) {
         for (int file = 0; file < 8; file++) {
@@ -19,6 +19,8 @@ void gameboard::clearBoard() {
             removePiece(file,rank);
         }
     }
+    delete prevBoard;
+    prevBoard = nullptr;
 }
 
 void gameboard::removePiece(int file, int rank) {
@@ -55,7 +57,10 @@ piece* gameboard::targetWithEnPassant(int oldFile, int oldRank, int newFile, int
     if (enPassantTarget == nullptr) return targetPiece;
     if (!(enPassantTarget->getType() == 'p')) return targetPiece;
     if (enPassantTarget->getColor() == sourcePiece->getColor()) return targetPiece;
+
+    // Did the piece move up 2 spots on the previous turn?
     if (!(enPassantTarget->getMoveCount() == 2)) return targetPiece;
+    if (prevBoard->prev()->getPiece(newFile, newRank*2 - oldRank) != enPassantTarget) return targetPiece; 
 
     // If so, target that pawn to be captured
     return enPassantTarget;
@@ -127,6 +132,11 @@ void gameboard::castle(int oldFile, int newFile, int rank) {
 }
 
 bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
+    // Initialise previous board upon first move
+    if (prevBoard == nullptr) {
+        prevBoard = new boardnode(board);
+    }
+
     // Ensure all coordinates are valid
     if (oldRank < 0 || oldRank > 7 || oldFile < 0 || oldFile > 7 ||
         newRank < 0 || newRank > 7 || newFile < 0 || newFile > 7) {
@@ -150,6 +160,7 @@ bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
                 castle(oldFile,newFile,oldRank);
 
                 // report successful move
+                prevBoard->addBoard(board);
                 return true;
             } else {
                 // Return false if the move isn't valid
@@ -170,6 +181,7 @@ bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
                 // increment move counter
                 sourcePiece->move();
                 // report successful move
+                prevBoard->addBoard(board);
                 return true;
             }
         // If there is a piece at the new location...
@@ -206,13 +218,11 @@ bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
                     // capture piece
                     targetPiece->capture();
                     // report successful move
+                    prevBoard->addBoard(board);
                     return true;
                 }
             } else { // Piece at destination is the same colour as piece being moved
                 return false; // Don't move
-                /*
-                    IMPLEMENT CASTLE CHECK HERE
-                */
             }
         }
     } else { // if no piece exists at oldRank, oldFile
