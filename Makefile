@@ -4,5 +4,8 @@ driver:
 rank-and-file-driver:
 	@g++ -Wall -std=c++11 include/piece.cpp include/pawn.cpp include/knight.cpp include/bishop.cpp include/rook.cpp include/queen.cpp include/king.cpp include/gameboard.cpp drivers/example-board-setup.cpp -o drivers/rankFileTest.out
 
+ui-driver:
+	@g++ -Wall -std=c++11 UI-versions/uitest.cpp -lsfml-graphics -lsfml-window -lsfml-system -o drivers/test.out
+
 clear-drivers:
 	@rm drivers/*.out
