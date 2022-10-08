@@ -59,7 +59,7 @@ piece* gameboard::targetWithEnPassant(int oldFile, int oldRank, int newFile, int
     if (enPassantTarget->getColor() == sourcePiece->getColor()) return targetPiece;
 
     // Did the piece move up 2 spots on the previous turn?
-    if (!(enPassantTarget->getMoveCount() == 2)) return targetPiece;
+    if (!(enPassantTarget->getMoveCount() == 1)) return targetPiece;
     if (prevBoard->prev()->getPiece(newFile, newRank*2 - oldRank) != enPassantTarget) return targetPiece; 
 
     // If so, target that pawn to be captured
@@ -70,7 +70,7 @@ bool gameboard::isCastling(int oldFile, int oldRank, int newFile, int newRank) {
     piece* sourcePiece = board[oldFile][oldRank];
 
     if (!(sourcePiece->getType() == 'k')) return false; // Castling can only happen to kings
-    if (!(sourcePiece->getMoveCount() == 1)) return false; // Kings lose castling rights when they move
+    if (!(sourcePiece->getMoveCount() == 0)) return false; // Kings lose castling rights when they move
     if (!((oldRank == newRank) && (newFile == oldFile + 2 || newFile == oldFile - 2))) return false; // Castling only moves the king 2 tiles to the left/right
 
     // Store properties about the potential castling move
@@ -91,7 +91,7 @@ bool gameboard::isCastling(int oldFile, int oldRank, int newFile, int newRank) {
     if (castleRook == nullptr) return false; // Castling must occur between a king and its rook
     if (!(castleRook->getType() == 'r')) return false;
     if (!(castleRook->getColor() == sourcePiece->getColor())) return false; // You cannot castle with an opposite-colored rook
-    if (!(castleRook->getMoveCount() == 1)) return false; // Rooks lose castling rights when they move
+    if (!(castleRook->getMoveCount() == 0)) return false; // Rooks lose castling rights when they move
 
     if (!(checkPathClear(oldFile, oldRank, rookFile, newRank))) return false; // You cannot castle through peices
 
@@ -591,6 +591,10 @@ bool gameboard::isInStalemate(char color) {
         }
     }
     return true;
+}
+
+bool gameboard::threefoldRepetition(char color) {
+    
 }
 
 bool gameboard::testDriver(piece* pieces[], int* coords, int length) {

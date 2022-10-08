@@ -48,6 +48,7 @@ class gameboard {
 
         // Check for draws
         bool isInStalemate(char color);
+        bool threefoldRepetition(char color);
 
         // For drivers: ensure board is set up correctly
         bool testDriver(piece* pieces[], int* coords, int length); 
