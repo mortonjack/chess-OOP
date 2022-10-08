@@ -21,6 +21,7 @@ class piece {
         int getMoveCount();
         void move();
         void reverseMove();
+        void reset();
 };
 
 #endif//PIECE_H

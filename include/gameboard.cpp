@@ -59,7 +59,7 @@ piece* gameboard::targetWithEnPassant(int oldFile, int oldRank, int newFile, int
     if (enPassantTarget->getColor() == sourcePiece->getColor()) return targetPiece;
 
     // Did the piece move up 2 spots on the previous turn?
-    if (!(enPassantTarget->getMoveCount() == 2)) return targetPiece;
+    if (!(enPassantTarget->getMoveCount() == 1)) return targetPiece;
     if (prevBoard->prev()->getPiece(newFile, newRank*2 - oldRank) != enPassantTarget) return targetPiece; 
 
     // If so, target that pawn to be captured
@@ -70,7 +70,7 @@ bool gameboard::isCastling(int oldFile, int oldRank, int newFile, int newRank) {
     piece* sourcePiece = board[oldFile][oldRank];
 
     if (!(sourcePiece->getType() == 'k')) return false; // Castling can only happen to kings
-    if (!(sourcePiece->getMoveCount() == 1)) return false; // Kings lose castling rights when they move
+    if (!(sourcePiece->getMoveCount() == 0)) return false; // Kings lose castling rights when they move
     if (!((oldRank == newRank) && (newFile == oldFile + 2 || newFile == oldFile - 2))) return false; // Castling only moves the king 2 tiles to the left/right
 
     // Store properties about the potential castling move
@@ -91,7 +91,7 @@ bool gameboard::isCastling(int oldFile, int oldRank, int newFile, int newRank) {
     if (castleRook == nullptr) return false; // Castling must occur between a king and its rook
     if (!(castleRook->getType() == 'r')) return false;
     if (!(castleRook->getColor() == sourcePiece->getColor())) return false; // You cannot castle with an opposite-colored rook
-    if (!(castleRook->getMoveCount() == 1)) return false; // Rooks lose castling rights when they move
+    if (!(castleRook->getMoveCount() == 0)) return false; // Rooks lose castling rights when they move
 
     if (!(checkPathClear(oldFile, oldRank, rookFile, newRank))) return false; // You cannot castle through peices
 
@@ -129,6 +129,104 @@ void gameboard::castle(int oldFile, int newFile, int rank) {
 
     castleKing->move();
     castleRook->move();
+}
+
+bool gameboard::validMove(int oldFile, int oldRank, int newFile, int newRank) {
+    // Handles validity checking for a move
+    // Assumes checks in validMovement have taken place
+    piece* sourcePiece = board[oldFile][oldRank];
+
+    // Check castling
+    if (isCastling(oldFile, oldRank, newFile, newRank)) return true;
+
+    // Call piece's move validity function
+    if (!sourcePiece->checkMoveValidity(oldFile, oldRank, newFile, newRank)) {
+        return false;
+    }
+
+    // Add & remove piece
+    removePiece(oldFile, oldRank);
+    addPiece(newFile, newRank, sourcePiece);
+
+    // Check for check
+    if (isInCheck(sourcePiece->getColor())) {
+        removePiece(newFile, newRank);
+        addPiece(oldFile, oldRank, sourcePiece);
+        return false;
+    }
+
+    // All checks passed. Return true
+    removePiece(newFile, newRank);
+    addPiece(oldFile, oldRank, sourcePiece);
+    return true;
+}
+
+bool gameboard::validCapture(int oldFile, int oldRank, int newFile, int newRank) {
+    // Handles validity checking for a capture
+    // Assumes checks in validMovement have taken place
+    piece* sourcePiece = board[oldFile][oldRank];
+    piece* targetPiece = targetWithEnPassant(oldFile, oldRank, newFile, newRank);
+    bool enPassant = targetPiece != board[newFile][newRank];
+
+    // Call piece's capture validity function
+    if (!sourcePiece->checkCaptureValidity(oldFile, oldRank, newFile, newRank)) {
+        return false;
+    }
+
+    // Add & remove piece
+    removePiece(oldFile, oldRank);
+    if (enPassant) removePiece(newFile, oldRank);
+    addPiece(newFile, newRank, sourcePiece);
+
+    // Check for check
+    if (isInCheck(sourcePiece->getColor())) {
+        removePiece(newFile, newRank);
+        addPiece(oldFile, oldRank, sourcePiece);
+        if (enPassant) {
+            addPiece(newFile, oldRank, targetPiece);
+        } else {
+            addPiece(newFile, newRank, targetPiece);
+        }
+        return false;
+    }
+
+    // All checks passed. Return true
+    removePiece(newFile, newRank);
+    addPiece(oldFile, oldRank, sourcePiece);
+    if (enPassant) {
+        addPiece(newFile, oldRank, targetPiece);
+    } else {
+        addPiece(newFile, newRank, targetPiece);
+    }
+    return true;
+}
+
+bool gameboard::validMovement(int oldFile, int oldRank, int newFile, int newRank) {
+    // Checks if a proposed movement is valid
+    piece* sourcePiece = board[oldFile][oldRank];
+    piece* targetPiece = targetWithEnPassant(oldFile,oldRank, newFile,newRank);
+
+    // Ensure all coordinates are valid
+    if (oldRank < 0 || oldRank > 7 || oldFile < 0 || oldFile > 7 ||
+        newRank < 0 || newRank > 7 || newFile < 0 || newFile > 7) {
+        return false;
+    }
+
+    // Check if piece exists
+    if (sourcePiece == nullptr) return false;
+
+    // Ensure the piece isn't moving to its current location
+    if (oldRank == newRank && oldFile == newFile) return false;
+
+    // Check if the piece's path is clear
+    if (!(checkPathClear(oldFile,oldRank, newFile,newRank))) return false; 
+
+    // Check if capturing a piece
+    if (targetPiece == nullptr) {
+        return validMove(oldFile, oldRank, newFile, newRank);
+    } else {
+        return validCapture(oldFile, oldRank, newFile, newRank);
+    }
 }
 
 bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
@@ -471,6 +569,31 @@ bool gameboard::isInCheckmate(char color) {
     }
 
     // No way out of check (return true)
+    return true;
+}
+
+bool gameboard::isInStalemate(char color) {
+    // Check not in check
+    if (isInCheck(color)) return false;
+
+    // Cycles through all friendly pieces
+    for (int f = 0; f < 8; f++) {
+        for (int r = 0; r < 8; r++) {
+            if (board[f][r] != nullptr && board[f][r]->getColor() == color) {
+                // Looks for any potential move
+                for (int i = 0; i < 8; i++) {
+                    for (int j = 0; j < 8; j++) {
+                        // Check move validity
+                        if (validMovement(f,r, i,j)) return false;
+                    }
+                }
+            }
+        }
+    }
+    return true;
+}
+
+bool gameboard::threefoldRepetition(char color) {
     return true;
 }
 

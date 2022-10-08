@@ -18,7 +18,11 @@ class gameboard {
         void addPiece(int rank, int file, piece* newPiece);
         bool movePiece(int oldFile, int oldRank, int newFile, int newRank); // attempt to move a piece
 
+        // Basic validity checks
         bool checkPathClear(int oldFile, int oldRank, int newFile, int newRank);
+        bool validMove(int oldFile, int oldRank, int newFile, int newRank);
+        bool validCapture(int oldFile, int oldRank, int newFile, int newRank);
+        bool validMovement(int oldFile, int oldRank, int newFile, int newRank);
 
         // Change the target piece to the pawn targetted with en passant, if applicable
         piece* targetWithEnPassant(int oldFile, int oldRank, int newFile, int newRank);
@@ -41,6 +45,10 @@ class gameboard {
         // Check if king is in checkmate
         bool isInCheckmate();
         bool isInCheckmate(char color);
+
+        // Check for draws
+        bool isInStalemate(char color);
+        bool threefoldRepetition(char color);
 
         // For drivers: ensure board is set up correctly
         bool testDriver(piece* pieces[], int* coords, int length); 
