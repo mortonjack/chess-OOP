@@ -22,12 +22,12 @@ bool collisiontest::baseTest(bool display) {
     gameboard board;
 
     // Create pieces
-    queen whiteQueen = queen();
-    bishop blackFBishop = bishop('B');
-    knight whiteGKnight = knight();
-    rook blackARook = rook('B');
-    pawn whiteDPawn = pawn();
-    pawn blackEPawn = pawn('B');
+    queen whiteQueen('W');
+    bishop blackFBishop('B');
+    knight whiteGKnight('W');
+    rook blackARook('B');
+    pawn whiteDPawn('W');
+    pawn blackEPawn('B');
     
     piece* pieces[] = {&whiteQueen, &whiteGKnight, &whiteDPawn, &blackARook, &blackFBishop, &blackEPawn};
 
@@ -154,9 +154,9 @@ bool collisiontest::vertTest(bool display) {
     bool success = true;
     // Create the game board and a rook and pawn;
     gameboard board;
-    rook blackARook = rook('B');
-    pawn whiteCPawn = pawn();
-    pawn whiteDPawn = pawn();
+    rook blackARook('B');
+    pawn whiteCPawn('W');
+    pawn whiteDPawn('W');
     piece* pieces[] = {&blackARook, &whiteCPawn, &whiteDPawn};
 
     // Add the pieces to the game board

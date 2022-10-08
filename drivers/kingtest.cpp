@@ -19,7 +19,7 @@ bool kingtest::movementTest(bool display) {
 
     // Create the game board a white king.
     gameboard board;
-    king testKing = king();
+    king testKing('W');
 
     // Add the king to the game board
     board.addPiece(3,3,&testKing);
@@ -90,16 +90,16 @@ bool kingtest::castleTest(bool display) {
     // Create the game board a white king.
     gameboard board;
 
-    king whiteKing = king();
-    king whiteKingTwo = king();
-    king whiteKingThree = king();
+    king whiteKing('W');
+    king whiteKingTwo('W');
+    king whiteKingThree('W');
 
-    rook whiteARook = rook();
-    rook whiteHRook = rook();
-    rook whiteARookTwo = rook();
-    rook whiteHRookTwo = rook();
-    rook whiteARookThree = rook();
-    rook whiteHRookThree = rook();
+    rook whiteARook('W');
+    rook whiteHRook('W');
+    rook whiteARookTwo('W');
+    rook whiteHRookTwo('W');
+    rook whiteARookThree('W');
+    rook whiteHRookThree('W');
 
     rook blackRook('B');
     knight blackKnight('B');

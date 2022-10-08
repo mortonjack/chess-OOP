@@ -16,8 +16,8 @@ bool queentest::movementTest(bool display) {
 
     // Create the game board and two queens.
     gameboard board;
-    queen whiteAQueen = queen();
-    queen blackAQueen = queen('B');
+    queen whiteAQueen('W');
+    queen blackAQueen('B');
     piece* pieces[] = {&whiteAQueen, &blackAQueen};
 
     // Add the queens to the game board

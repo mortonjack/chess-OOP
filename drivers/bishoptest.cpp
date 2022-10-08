@@ -16,8 +16,8 @@ bool bishoptest::movementTest(bool display) {
 
     // Create the gameboard and two bishops
     gameboard board;
-    bishop whiteCBishop = bishop();
-    bishop blackCBishop = bishop('B');
+    bishop whiteCBishop('W');
+    bishop blackCBishop('B');
 
     // Add the bishops to the board
     board.addPiece(2,0,&whiteCBishop);

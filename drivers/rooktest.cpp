@@ -16,8 +16,8 @@ bool rooktest::movementTest(bool display) {
 
     // Create the gameboard and two rooks
     gameboard board;
-    rook whiteARook = rook('W');
-    rook blackARook = rook('B');
+    rook whiteARook('W');
+    rook blackARook('B');
 
     // Add the rooks to the board
     board.addPiece(0,0,&whiteARook);
@@ -82,8 +82,8 @@ bool rooktest::firstMovementTest(bool display) {
 
     // Create the game board and two rooks
     gameboard board;
-    rook white_a_rook = rook('W');
-    rook black_a_rook = rook('B');
+    rook white_a_rook('W');
+    rook black_a_rook('B');
 
     // Add the rooks to the game board
     board.addPiece(0,0,&white_a_rook);

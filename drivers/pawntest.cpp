@@ -16,8 +16,8 @@ bool pawntest::movementTest(bool display) {
 
     // Create the game board and two pawns.
     gameboard board;
-    pawn whiteCpawn = pawn();
-    pawn blackFPawn = pawn('B');
+    pawn whiteCpawn('W');
+    pawn blackFPawn('B');
     piece* pieces[] = {&whiteCpawn, &blackFPawn};
 
     // Add the pawns to the game board
@@ -98,10 +98,10 @@ bool pawntest::captureTest(bool display) {
 
     // Create the game board and two pawns.
     gameboard board;
-    pawn whiteDpawn = pawn();
-    pawn whiteEpawn = pawn();
-    pawn blackDpawn = pawn('B');
-    pawn blackEpawn = pawn('B');
+    pawn whiteDpawn('W');
+    pawn whiteEpawn('W');
+    pawn blackDpawn('B');
+    pawn blackEpawn('B');
     piece* pieces[] = {&whiteDpawn, &whiteEpawn, &blackDpawn, &blackEpawn};
 
     // Add the pawns to the game board

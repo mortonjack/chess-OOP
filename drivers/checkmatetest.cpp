@@ -126,12 +126,12 @@ bool checkmatetest::anarchyTest(bool display) {
     // Initialise objects
     gameboard board;
 
-    pawn whitePawnOne;
-    pawn whitePawnTwo;
-    king whiteKing;
-    knight whiteKnight;
-    rook whiteRook;
-    bishop whiteBishop;
+    pawn whitePawnOne('W');
+    pawn whitePawnTwo('W');
+    king whiteKing('W');
+    knight whiteKnight('W');
+    rook whiteRook('W');
+    bishop whiteBishop('W');
 
     king blackKing('B');
     rook blackRook('B');
@@ -224,8 +224,8 @@ bool checkmatetest::enPassantTest(bool display) {
     // Initialise objects
     gameboard board;
 
-    king whiteKing;
-    pawn whiteCPawn;
+    king whiteKing('W');
+    pawn whiteCPawn('W');
 
     king blackKing('B');
     pawn blackDPawn('B');

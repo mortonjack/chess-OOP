@@ -110,10 +110,10 @@ bool checktest::diagonalTest(bool display) {
     gameboard board;
     king blackKing('B');
 
-    king whiteKing;
-    pawn whitePawn;
-    queen whiteQueen;
-    bishop whiteBishop;
+    king whiteKing('W');
+    pawn whitePawn('W');
+    queen whiteQueen('W');
+    bishop whiteBishop('W');
 
     // Place pieces
     board.addPiece(4, 5, &blackKing);
@@ -228,8 +228,8 @@ bool checktest::straightTest(bool display) {
 
     // Initialise gameboard & pieces
     gameboard board;
-    king whiteKing;
-    rook whiteRook;
+    king whiteKing('W');
+    rook whiteRook('W');
 
     rook blackRook('B');
     queen blackQueen('B');
@@ -331,7 +331,7 @@ bool checktest::knightTest(bool display) {
 
     // Intiialise gameboard & pieces
     gameboard board;
-    king whiteKing;
+    king whiteKing('W');
     knight blackKnight('B');
     queen blackQueen('B');
     pawn blackPawn('B');
@@ -416,12 +416,12 @@ bool checktest::enPassantTest(bool display) {
 
     // Intiialise gameboard & pieces
     gameboard board;
-    king whiteKing;
+    king whiteKing('W');
 
-    pawn whiteEPawn;
+    pawn whiteEPawn('W');
     pawn blackDPawn('B');
 
-    pawn whiteAPawn;
+    pawn whiteAPawn('W');
     pawn blackBPawn('B');
 
     // Check king isn't in check on empty board

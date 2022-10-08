@@ -16,8 +16,8 @@ bool knighttest::movementTest(bool display) {
 
     // Create the game board and two knights.
     gameboard board;
-    knight whiteAknight = knight();
-    knight blackAknight = knight('B');
+    knight whiteAknight('W');
+    knight blackAknight('B');
     piece* pieces[] = {&whiteAknight, &blackAknight};
 
     // Add the knights to the game board

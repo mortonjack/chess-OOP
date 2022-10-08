@@ -21,10 +21,10 @@ bool capturetest::basicTest(bool display) {
     gameboard board;
 
     // Create pieces
-    queen blackQueen = queen('B');
-    knight whiteGKnight = knight();
-    rook whiteARook = rook();
-    rook blackARook = rook('B');
+    queen blackQueen('B');
+    knight whiteGKnight('W');
+    rook whiteARook('W');
+    rook blackARook('B');
 
     // Add the white pieces
     board.addPiece(0,0,&whiteARook);
@@ -108,10 +108,10 @@ bool capturetest::teamCapture(bool display) {
     gameboard board;
 
     // Create pieces
-    queen blackQueen = queen('B');
-    queen whiteQueen = queen('W');
-    bishop blackBishop = bishop('B');
-    knight whiteKnight = knight('W');
+    queen blackQueen('B');
+    queen whiteQueen('W');
+    bishop blackBishop('B');
+    knight whiteKnight('W');
 
     // Place pieces
     board.addPiece(5,5, &blackQueen);
