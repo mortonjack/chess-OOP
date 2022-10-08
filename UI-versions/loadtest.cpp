@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <iostream>
 #include "../include/uiboard.hpp"
 #include "../include/gameboard.h"
 #include "../include/king.h"
@@ -83,6 +84,10 @@ int main()
 
                     int newFile = uiboard.getTargetCoords().x;
                     int newRank = uiboard.getTargetCoords().y;
+
+                    std::cout << oldFile << "," << oldRank << " " << newFile << "," << newRank;
+
+                    sourceBoard.movePiece(oldFile,oldRank, newFile, newRank);
                 }
             }
         }

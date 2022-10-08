@@ -22,8 +22,6 @@ class uiboard : public Drawable, public Transformable
         Vector2i _sourceCoords;
         Vector2i _targetCoords;
 
-        CircleShape* _sourcePiece;
-
     public:
         CircleShape* pieces[32] = {nullptr};
         int pieceCount = 0;
@@ -81,6 +79,8 @@ class uiboard : public Drawable, public Transformable
         }
 
         bool tileClick(int x, int y) {
+            std::cout << x << "," << y << std::endl;
+
             Vector2i coords = position2coords(x,y);
 
             if (!_sourceSelected) {
@@ -94,7 +94,7 @@ class uiboard : public Drawable, public Transformable
         }
 
         Vector2i getSourceCoords() { return _sourceCoords; }
-        Vector2i getTargetCoords() { return _sourceCoords; }
+        Vector2i getTargetCoords() { return _targetCoords; }
 
         void setSourceCoords(Vector2i coords) {
             // Indicate that a source tile has been selected
