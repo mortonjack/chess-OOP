@@ -594,7 +594,7 @@ bool gameboard::isInStalemate(char color) {
 }
 
 bool gameboard::threefoldRepetition(char color) {
-    
+    return true;
 }
 
 bool gameboard::testDriver(piece* pieces[], int* coords, int length) {
