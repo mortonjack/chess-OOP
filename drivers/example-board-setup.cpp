@@ -9,42 +9,47 @@
 #include <iostream>
 using namespace std;
 
+// This currently has no Makefile
+// because we neglected this test
+// and never use it.
+// but its still here if we want it.
+
 // Tests whether the rank and file system matches the intuition of ranks and files
 int main() {
     // Create the game board
     gameboard board;
 
     // Create kings
-    king whiteKing = king();
-    king blackKing = king('B');
+    king whiteKing('W');
+    king blackKing('B');
 
     // Create queens
-    queen whiteQueen = queen();
-    queen blackQueen = queen('B');
+    queen whiteQueen('W');
+    queen blackQueen('B');
 
     // Create bishops
-    bishop whiteCBishop = bishop();
-    bishop whiteFBishop = bishop();
-    bishop blackCBishop = bishop('B');
-    bishop blackFBishop = bishop('B');
+    bishop whiteCBishop('W');
+    bishop whiteFBishop('W');
+    bishop blackCBishop('B');
+    bishop blackFBishop('B');
 
     // Create knights
-    knight whiteBKnight = knight();
-    knight whiteGKnight = knight();
-    knight blackBKnight = knight('B');
-    knight blackGKnight = knight('B');
+    knight whiteBKnight('W');
+    knight whiteGKnight('W');
+    knight blackBKnight('B');
+    knight blackGKnight('B');
 
     // Create rooks
-    rook whiteARook = rook();
-    rook whiteHRook = rook();
-    rook blackARook = rook('B');
-    rook blackHRook = rook('B');
+    rook whiteARook('W');
+    rook whiteHRook('W');
+    rook blackARook('B');
+    rook blackHRook('B');
 
     // Create e-file and d-file pawns
-    pawn whiteEPawn = pawn();
-    pawn whiteDPawn = pawn();
-    pawn blackEPawn = pawn('B');
-    pawn blackDPawn = pawn('B');
+    pawn whiteEPawn('W');
+    pawn whiteDPawn('W');
+    pawn blackEPawn('B');
+    pawn blackDPawn('B');
 
     // Add the white pieces
     board.addPiece(0,0,&whiteARook);
