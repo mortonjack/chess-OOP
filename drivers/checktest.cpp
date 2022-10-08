@@ -249,27 +249,27 @@ bool checktest::straightTest(bool display) {
     bool test1 = board.testDriver(pieces, coords, 5);
 
     // Test white rook can't check black king
-    bool test2 = !board.isInCheck();
+    bool test2 = !board.isInCheck('W');
 
     // Test black rook can check white king
     board.movePiece(0,1, 0,3);
-    bool test3 = board.isInCheck();
+    bool test3 = board.isInCheck('W');
     if (display) board.visualiseTextBoard();
     board.movePiece(0,3, 0,1);
 
     // Test black queen can check white king
     board.movePiece(6,6, 2,6);
-    bool test4 = board.isInCheck();
+    bool test4 = board.isInCheck('W');
     if (display) board.visualiseTextBoard();
 
     // Test black bishop blocks check
     board.movePiece(6,1, 2,5);
-    bool test5 = !board.isInCheck();
+    bool test5 = !board.isInCheck('W');
     if (display) board.visualiseTextBoard();
 
     // Test white rook blocks check
     board.movePiece(2,6, 5,3);
-    bool test6 = !board.isInCheck();
+    bool test6 = !board.isInCheck('W');
     if (display) board.visualiseTextBoard();
 
     // Ensure pieces in right position
@@ -360,16 +360,16 @@ bool checktest::knightTest(bool display) {
 
     // Ensure knight doesn't check king diagonally or forward
     board.addPiece(1, 5, &blackKnight);
-    bool test2 = !board.isInCheck();
+    bool test2 = !board.isInCheck('W');
     if (display) board.visualiseTextBoard();
     board.movePiece(1,5, 3,6);
-    bool test3 = !board.isInCheck();
+    bool test3 = !board.isInCheck('W');
     if (display) board.visualiseTextBoard();
 
     // Ensure non-knight pieces can't check king from knight position
     board.addPiece(2, 1, &blackQueen);
     board.addPiece(4, 5, &blackPawn);
-    bool test4 = !board.isInCheck();
+    bool test4 = !board.isInCheck('W');
     if (display) board.visualiseTextBoard();
 
     // Output test results
