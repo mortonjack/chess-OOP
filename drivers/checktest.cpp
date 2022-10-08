@@ -496,25 +496,13 @@ bool checktest::enPassantTest(bool display) {
 }
 
 bool checktest::runTests(bool display) {
-    bool success = true;
-    bool test;
 
-    // idk why this works, but it fixes a bug
-    test = this->movementTest(display);
-    success = success && test;
+    _results[0] = movementTest(display && !_results[0]);
+    _results[1] = diagonalTest(display && !_results[1]);
+    _results[2] = straightTest(display && !_results[2]);
+    _results[3] = knightTest(display && !_results[3]);
+    _results[4] = enPassantTest(display && !_results[4]);
 
-    test = this->diagonalTest(display);
-    success = success && test;
-    
-    test = this->straightTest(display);
-    success = success && test;
-
-    test = this->knightTest(display);
-    success = success && test;
-
-    test = this->enPassantTest(display);
-    success = success && test;
-
-    return success;
+    return result();
 }
 

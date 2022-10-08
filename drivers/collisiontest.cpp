@@ -243,8 +243,9 @@ bool collisiontest::vertTest(bool display) {
 }
 
 bool collisiontest::runTests(bool display) {
-    bool success = true;
-    success = success && this->baseTest(display);
-    success = success && this->vertTest(display);
-    return success;
+    
+    _results[0] = baseTest(display && !_results[0]);
+    _results[1] = vertTest(display && !_results[1]);
+
+    return result();
 }

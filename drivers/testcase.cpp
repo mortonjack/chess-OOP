@@ -13,6 +13,14 @@ string testcase::getMessage(bool pass) {
     else return _failMessage;
 }
 
+bool testcase::result() {
+    int success = true;
+    for (int i = 0; i < _length; i++) {
+        success = success && _results[i];
+    }
+    return success;
+}
+
 testcase::~testcase() {
     delete [] _results;
 }

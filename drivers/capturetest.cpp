@@ -188,8 +188,9 @@ bool capturetest::teamCapture(bool display) {
 }
 
 bool capturetest::runTests(bool display) {
-    bool success = true;
-    success = success && this->basicTest(display);
-    success = success && this->teamCapture(display);
-    return success;
+
+    _results[0] = basicTest(display && !_results[0]);
+    _results[1] = teamCapture(display && !_results[1]);
+
+    return result();
 }

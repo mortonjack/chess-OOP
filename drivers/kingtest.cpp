@@ -258,12 +258,8 @@ bool kingtest::checkTest(bool display) {
 }
 
 bool kingtest::runTests(bool display) {
-    bool success = true;
+    
+    _results[3] = castleTest(display && !_results[3]);
 
-    success = success && movementTest(display);
-    success = success && castleTest(display);
-    success = success && captureTest(display);
-    success = success && checkTest(display);
-
-    return success;
+    return piecetest::runTests(display);
 }

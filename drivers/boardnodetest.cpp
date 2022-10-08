@@ -150,9 +150,8 @@ bool boardnodetest::basicTest(bool display) {
 }
 
 bool boardnodetest::runTests(bool display) {
-    bool success = true;
+    
+    _results[0] = basicTest(display && !_results[0]);
 
-    success = success && basicTest(display);
-
-    return success;
+    return result();
 }

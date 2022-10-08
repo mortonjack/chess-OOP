@@ -318,12 +318,8 @@ bool pawntest::checkTest(bool display) {
 }
 
 bool pawntest::runTests(bool display) {
-    bool success = true;
 
-    success = success && movementTest(display);
-    success = success && captureTest(display);
-    success = success && enPassantTest(display);
-    success = success && checkTest(display);
+    _results[3] = enPassantTest(display && !_results[3]);
 
-    return success;
+    return piecetest::runTests(display);
 }

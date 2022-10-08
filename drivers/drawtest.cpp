@@ -120,13 +120,12 @@ bool drawtest::deadTest(bool display) {
 }
 
 bool drawtest::runTests(bool display) {
-    bool success = true;
-    
-    success = success && stalemateTest(display);
-    success = success && threefoldTest(display);
-    success = success && fiftyMoveTest(display);
-    success = success && mutualTest(display);
-    success = success && deadTest(display);
 
-    return success;
+    _results[0] = stalemateTest(display && !_results[0]);
+    _results[1] = threefoldTest(display && !_results[1]);
+    _results[2] = fiftyMoveTest(display && !_results[2]);
+    _results[3] = mutualTest(display && !_results[3]);
+    _results[4] = deadTest(display && !_results[4]);
+
+    return result();
 }

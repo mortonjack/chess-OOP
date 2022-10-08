@@ -283,11 +283,10 @@ bool checkmatetest::enPassantTest(bool display) {
 }
 
 bool checkmatetest::runTests(bool display) {
-    bool success = true;
 
-    success = success && this->basicTest(display);
-    success = success && this->anarchyTest(display);
-    success = success && this->enPassantTest(display);
+    _results[0] = basicTest(display && !_results[0]);
+    _results[1] = anarchyTest(display && !_results[1]);
+    _results[2] = enPassantTest(display && !_results[2]);
 
-    return success;
+    return result();
 }

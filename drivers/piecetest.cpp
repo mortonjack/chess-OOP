@@ -1,11 +1,10 @@
 #include "piecetest.h"
 
 bool piecetest::runTests(bool display) {
-    bool success = true;
 
-    success = success && movementTest(display);
-    success = success && captureTest(display);
-    success = success && checkTest(display);
+    _results[0] = movementTest(display && !_results[0]);
+    _results[1] = captureTest(display && !_results[0]);
+    _results[2] = checkTest(display && !_results[0]);
 
-    return success;
+    return result();
 }
