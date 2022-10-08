@@ -9,10 +9,11 @@
 #include <iostream>
 using namespace std;
 
-checktest::checktest(): checktest(1) {}
-checktest::checktest(int length) {
+checktest::checktest() {
+    this->_length = 5;
     this->_failMessage = "Check test failed";
     this->_passMessage = "Check test succeeded";
+    initialiseResults();
 }
 
 bool checktest::movementTest(bool display) {

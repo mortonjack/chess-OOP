@@ -9,10 +9,11 @@
 #include <iostream>
 using namespace std;
 
-checkmatetest::checkmatetest(): checkmatetest(1) {}
-checkmatetest::checkmatetest(int length) {
+checkmatetest::checkmatetest() {
+    this->_length = 3;
     this->_failMessage = "Checkmate test failed";
     this->_passMessage = "Checkmate test succeeded";
+    initialiseResults();
 }
 
 bool checkmatetest::basicTest(bool display) {

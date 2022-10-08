@@ -5,10 +5,11 @@
 #include <iostream>
 using namespace std;
 
-boardnodetest::boardnodetest(): boardnodetest(1) {}
-boardnodetest::boardnodetest(int length) {
+boardnodetest::boardnodetest() {
+    this->_length = 1;
     this->_failMessage = "Board Node test failed";
     this->_passMessage = "Board Node test succeeded";
+    initialiseResults();
 }
 
 void boardnodetest::visualiseBoard(boardnode node) {

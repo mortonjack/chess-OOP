@@ -8,6 +8,7 @@ queentest::queentest() {
     this->_length = 3;
     this->_failMessage = "Queen test failed";
     this->_passMessage = "Queen test succeeded";
+    initialiseResults();
 }
 
 bool queentest::movementTest(bool display) {

@@ -9,10 +9,11 @@
 #include <iostream>
 using namespace std;
 
-drawtest::drawtest(): drawtest(1) {}
-drawtest::drawtest(int length) {
+drawtest::drawtest() {
+    this->_length = 5;
     this->_failMessage = "Draw test failed";
     this->_passMessage = "Draw test succeeded";
+    initialiseResults();
 }
 
 

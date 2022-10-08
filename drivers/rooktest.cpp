@@ -8,6 +8,7 @@ rooktest::rooktest() {
     this->_length = 3;
     this->_failMessage = "Rook test failed";
     this->_passMessage = "Rook test succeeded";
+    initialiseResults();
 }
 
 bool rooktest::movementTest(bool display) {

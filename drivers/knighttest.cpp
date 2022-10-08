@@ -8,6 +8,7 @@ knighttest::knighttest() {
     this->_length = 3;
     this->_failMessage = "Knight test failed";
     this->_passMessage = "Knight test succeeded";
+    initialiseResults();
 }
 
 bool knighttest::movementTest(bool display) {

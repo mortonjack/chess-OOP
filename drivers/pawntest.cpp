@@ -8,6 +8,7 @@ pawntest::pawntest() {
     this->_length = 4;
     this->_failMessage = "Pawn test failed";
     this->_passMessage = "Pawn test succeeded";
+    initialiseResults();
 }
 
 bool pawntest::movementTest(bool display) {

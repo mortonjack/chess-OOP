@@ -7,7 +7,6 @@
 class boardnodetest : public testcase {
     public:
         boardnodetest();
-        boardnodetest(int length);
         void visualiseBoard(boardnode node);
         void visualiseBoard(piece* board[8][8]);
         bool basicTest(bool display);

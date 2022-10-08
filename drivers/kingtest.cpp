@@ -11,6 +11,7 @@ kingtest::kingtest() {
     this->_length = 4;
     this->_failMessage = "King test failed";
     this->_passMessage = "King test succeeded";
+    initialiseResults();
 }
 
 bool kingtest::movementTest(bool display) {

@@ -8,6 +8,7 @@ bishoptest::bishoptest() {
     this->_length = 3;
     this->_failMessage = "Bishop test failed";
     this->_passMessage = "Bishop test succeeded";
+    initialiseResults();
 }
 
 bool bishoptest::movementTest(bool display) {

@@ -8,10 +8,11 @@
 #include <iostream>
 using namespace std;
 
-collisiontest::collisiontest(): collisiontest(1) {}
-collisiontest::collisiontest(int length) {
+collisiontest::collisiontest() {
+    this->_length = 2;
     this->_failMessage = "Collision test failed";
     this->_passMessage = "Collision test succeeded";
+    initialiseResults();
 }
 
 bool collisiontest::baseTest(bool display) {

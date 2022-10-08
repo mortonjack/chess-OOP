@@ -7,7 +7,6 @@ using namespace std;
 class drawtest : public testcase {
     public:
         drawtest();
-        drawtest(int length);
         // Display determines whether or not to output to stdout
         bool stalemateTest(bool display);
         bool threefoldTest(bool display);

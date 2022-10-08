@@ -7,10 +7,11 @@
 #include <iostream>
 using namespace std;
 
-capturetest::capturetest(): capturetest(1) {}
-capturetest::capturetest(int length) {
+capturetest::capturetest() {
+    this->_length = 2;
     this->_failMessage = "Capture test failed";
     this->_passMessage = "Capture test succeeded";
+    initialiseResults();
 }
 
 bool capturetest::basicTest(bool display) {
