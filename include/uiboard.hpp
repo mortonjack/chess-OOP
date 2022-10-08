@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-using namespace std;
+#include "../include/piece.h"
 using namespace sf;
 
 class uiboard : public Drawable, public Transformable
@@ -26,6 +26,7 @@ class uiboard : public Drawable, public Transformable
 
     public:
         CircleShape* pieces[32] = {nullptr};
+        int pieceCount = 0;
 
         // Define board vertices
         VertexArray vertices;
@@ -62,24 +63,23 @@ class uiboard : public Drawable, public Transformable
                 }
         }
 
-        bool loadPieces(int radius) {
-            for (int f = 0; f < 8; f++) {
-                CircleShape *piece = new CircleShape;
+        bool loadPieces(piece* board[8][8]) {
+            for (int file = 0; file < 8; file++) {
+                for (int rank = 0; rank < 8; rank++) {
+                    if (board[file][rank] != nullptr) {
+                        CircleShape* sprite = piece2Sprite(board[file][rank]);
+                        sprite->setPosition(coords2Position(Vector2i(file,rank)));
 
-                piece->setRadius(radius);
-                piece->setOrigin(radius,radius);
-                piece->setPosition(coords2Position(Vector2i(f,0)));
-
-                piece->setFillColor(_whiteColor);
-                piece->setOutlineThickness(3);
-                piece->setOutlineColor(_blackColor);
-
-                pieces[f] = piece;
+                        pieces[pieceCount] = sprite;
+                        pieceCount++;
+                    }
+                }
             }
 
             return true;
         }
 
+        /*
         void tileClick(int x, int y) {
             Vector2i coords = position2coords(x,y);
 
@@ -117,17 +117,34 @@ class uiboard : public Drawable, public Transformable
 
         // Move the piece where the player has clicked
         _sourcePiece->setPosition(coords2Position(coords));
-    }
+    } */
 
     private:
-        // MISCELLANEOUS 
+        /*
         CircleShape* coords2Piece(Vector2i coords) {
             for (int i = 0; i < 32; i++) {
                 if (pieces[i] == nullptr) return nullptr;
                 if (pieces[i]->getPosition() == coords2Position(coords)) return pieces[i];
             }
             return nullptr;
+        } */
+
+        CircleShape* piece2Sprite(piece* piece) {
+            CircleShape* sprite = new CircleShape;
+
+            // Setup physical properties (size, origin)
+            int size = pieceType2Size(piece->getType());
+            sprite->setRadius(size);
+            sprite->setOrigin(size,size);
+
+            // Setup style properties (color, outline)            
+            sprite->setFillColor(pieceColor2Color(piece->getColor()));
+            sprite->setOutlineThickness(3);
+            sprite->setOutlineColor(pieceColor2OutlineColor(piece->getColor()));
+
+            return sprite;
         }
+
 
         // POSITION-COORDS CONVERTERS
         Vector2i position2coords(int x, int y) {  
@@ -181,7 +198,35 @@ class uiboard : public Drawable, public Transformable
         }
 
 
-        // TILE COLOR MANAGEMENT
+        // PIECE STYLE MANAGEMENT
+        int pieceType2Size(char type) {
+            switch (type) {
+                case 'k':
+                    return 20;
+
+                case 'q':
+                    return 15;
+
+                case 'r':
+                    return 10;
+
+                case 'b':
+                    return 8;
+
+                case 'n':
+                    return 8;
+
+                case 'p':
+                    return 5;
+
+                default:
+                    return 0;
+            }
+        }
+        Color pieceColor2Color(char color) { return color != 'B' ? _whiteColor : _blackColor; }
+        Color pieceColor2OutlineColor(char color) { return color != 'B' ? _blackColor : _whiteColor; }
+        
+        // TILE STYLE MANAGEMENT
 
         // Calculates the natural color of a tile, based on its rank and file
         Color coords2TileColor(Vector2i coords)  { return (coords.x + coords.y) % 2 == 0 ? _lightColor : _darkColor; }
@@ -201,8 +246,8 @@ class uiboard : public Drawable, public Transformable
         Vertex* coords2TilePointer(Vector2i coords) { return &vertices[(coords.x + coords.y * 8) * 4]; }
 
 
-        // DRAW FUNCTION
-        virtual void draw(RenderTarget& target, RenderStates states) const
+    // DRAW FUNCTION
+    virtual void draw(RenderTarget& target, RenderStates states) const
     {
         // apply the transform
         states.transform *= getTransform();
@@ -210,8 +255,8 @@ class uiboard : public Drawable, public Transformable
         // draw the vertex array
         target.draw(vertices, states);
 
-        for (int i = 0; i < 8; i++) {
-            target.draw(*pieces[i]);
+        for (int i = 0; i < pieceCount; i++) {
+            if (pieces[i] != nullptr) target.draw(*pieces[i]);
         }
     }
 };

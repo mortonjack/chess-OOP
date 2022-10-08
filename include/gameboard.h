@@ -5,7 +5,7 @@
 #include "boardnode.h"
 
 class gameboard {
-    protected:
+    public:
         piece* board[8][8]; // gameboard, stores piece locations
         boardnode* prevBoard;
     public:
