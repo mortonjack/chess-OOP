@@ -10,6 +10,7 @@
 #include "checktest.h"
 #include "checkmatetest.h"
 #include "boardnodetest.h"
+#include "drawtest.h"
 
 int main() {
     driver tests(15);
@@ -39,6 +40,8 @@ int main() {
     tests.addCase(&case10);
     boardnodetest case11;
     tests.addCase(&case11);
+    drawtest case12;
+    tests.addCase(&case12);
 
     tests.runTests();
     return 0;
