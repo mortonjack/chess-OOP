@@ -22,6 +22,60 @@ bool drawtest::stalemateTest(bool display) {
     // cannot make a legal move on their turn
     bool success = false;
 
+    // Initialise objects
+    gameboard board;
+    king whiteKing('W');
+    king blackKing('B');
+    queen whiteQueen('W');
+
+    // Set up board
+    board.addPiece(0,7, &blackKing);
+    board.addPiece(1,5, &whiteKing);
+    board.addPiece(7,6, &whiteQueen);
+
+    // Test 1: Not in stalemate
+    if (display) board.visualiseTextBoard();
+    bool test1 = !board.isInStalemate('B');
+
+    // Test 2: In stalemate when queen moves to C7
+    board.movePiece(7,6, 2,6);
+    if (display) board.visualiseTextBoard();
+    bool test2 = board.isInStalemate('B');
+
+    // Test 3: White not also in stalemate
+    bool test3 = !board.isInStalemate('W');
+
+    // Test 4: Not in stalemate whilst in check
+    board.movePiece(2,6, 1,6);
+    bool test4 = !board.isInStalemate('B') && board.isInCheckmate('B');
+    if (display) board.visualiseTextBoard();
+
+    if (display) {
+        if (test1) {
+            cout << "Test passed: Not in stalemate" << endl;
+        } else {
+            cout << "Test failed: Stalemate" << endl;
+        }
+
+        if (test2) {
+            cout << "Test passed: Stalemate" << endl;
+        } else {
+            cout << "Test failed: Not in stalemate" << endl;
+        }
+
+        if (test3) {
+            cout << "Test passed: White not in stalemate" << endl;
+        } else {
+            cout << "Test failed: White in stalemate" << endl;
+        }
+
+        if (test4) {
+            cout << "Test passed: Not in stalemate (checkmate)" << endl;
+        } else {
+            cout << "Test failed: Stalemate" << endl;
+        }
+    }
+
     return success;
 }
 

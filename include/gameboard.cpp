@@ -131,6 +131,104 @@ void gameboard::castle(int oldFile, int newFile, int rank) {
     castleRook->move();
 }
 
+bool gameboard::validMove(int oldFile, int oldRank, int newFile, int newRank) {
+    // Handles validity checking for a move
+    // Assumes checks in validMovement have taken place
+    piece* sourcePiece = board[oldFile][oldRank];
+
+    // Check castling
+    if (isCastling(oldFile, oldRank, newFile, newRank)) return true;
+
+    // Call piece's move validity function
+    if (!sourcePiece->checkMoveValidity(oldFile, oldRank, newFile, newRank)) {
+        return false;
+    }
+
+    // Add & remove piece
+    removePiece(oldFile, oldRank);
+    addPiece(newFile, newRank, sourcePiece);
+
+    // Check for check
+    if (isInCheck(sourcePiece->getColor())) {
+        removePiece(newFile, newRank);
+        addPiece(oldFile, oldRank, sourcePiece);
+        return false;
+    }
+
+    // All checks passed. Return true
+    removePiece(newFile, newRank);
+    addPiece(oldFile, oldRank, sourcePiece);
+    return true;
+}
+
+bool gameboard::validCapture(int oldFile, int oldRank, int newFile, int newRank) {
+    // Handles validity checking for a capture
+    // Assumes checks in validMovement have taken place
+    piece* sourcePiece = board[oldFile][oldRank];
+    piece* targetPiece = targetWithEnPassant(oldFile, oldRank, newFile, newRank);
+    bool enPassant = targetPiece != board[newFile][newRank];
+
+    // Call piece's capture validity function
+    if (!sourcePiece->checkCaptureValidity(oldFile, oldRank, newFile, newRank)) {
+        return false;
+    }
+
+    // Add & remove piece
+    removePiece(oldFile, oldRank);
+    if (enPassant) removePiece(newFile, oldRank);
+    addPiece(newFile, newRank, sourcePiece);
+
+    // Check for check
+    if (isInCheck(sourcePiece->getColor())) {
+        removePiece(newFile, newRank);
+        addPiece(oldFile, oldRank, sourcePiece);
+        if (enPassant) {
+            addPiece(newFile, oldRank, targetPiece);
+        } else {
+            addPiece(newFile, newRank, targetPiece);
+        }
+        return false;
+    }
+
+    // All checks passed. Return true
+    removePiece(newFile, newRank);
+    addPiece(oldFile, oldRank, sourcePiece);
+    if (enPassant) {
+        addPiece(newFile, oldRank, targetPiece);
+    } else {
+        addPiece(newFile, newRank, targetPiece);
+    }
+    return true;
+}
+
+bool gameboard::validMovement(int oldFile, int oldRank, int newFile, int newRank) {
+    // Checks if a proposed movement is valid
+    piece* sourcePiece = board[oldFile][oldRank];
+    piece* targetPiece = targetWithEnPassant(oldFile,oldRank, newFile,newRank);
+
+    // Ensure all coordinates are valid
+    if (oldRank < 0 || oldRank > 7 || oldFile < 0 || oldFile > 7 ||
+        newRank < 0 || newRank > 7 || newFile < 0 || newFile > 7) {
+        return false;
+    }
+
+    // Check if piece exists
+    if (sourcePiece == nullptr) return false;
+
+    // Ensure the piece isn't moving to its current location
+    if (oldRank == newRank && oldFile == newFile) return false;
+
+    // Check if the piece's path is clear
+    if (!(checkPathClear(oldFile,oldRank, newFile,newRank))) return false; 
+
+    // Check if capturing a piece
+    if (targetPiece == nullptr) {
+        return validMove(oldFile, oldRank, newFile, newRank);
+    } else {
+        return validCapture(oldFile, oldRank, newFile, newRank);
+    }
+}
+
 bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
     // Initialise previous board upon first move
     if (prevBoard == nullptr) {
@@ -471,6 +569,27 @@ bool gameboard::isInCheckmate(char color) {
     }
 
     // No way out of check (return true)
+    return true;
+}
+
+bool gameboard::isInStalemate(char color) {
+    // Check not in check
+    if (isInCheck(color)) return false;
+
+    // Cycles through all friendly pieces
+    for (int f = 0; f < 8; f++) {
+        for (int r = 0; r < 8; r++) {
+            if (board[f][r] != nullptr && board[f][r]->getColor() == color) {
+                // Looks for any potential move
+                for (int i = 0; i < 8; i++) {
+                    for (int j = 0; j < 8; j++) {
+                        // Check move validity
+                        if (validMovement(f,r, i,j)) return false;
+                    }
+                }
+            }
+        }
+    }
     return true;
 }
 
