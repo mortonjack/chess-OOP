@@ -12,7 +12,7 @@
 int main()
 {
     // Create empty board
-    gameboard gameboard;
+    gameboard sourceBoard;
 
     // Create a black and white king
     rook whiteARook;
@@ -34,23 +34,23 @@ int main()
     king blackKing('B');
 
 
-    gameboard.addPiece(0,0,&whiteARook);
-    gameboard.addPiece(1,0,&whiteBKnight);
-    gameboard.addPiece(2,0,&whiteCBishop);
-    gameboard.addPiece(3,0,&whiteQueen);
-    gameboard.addPiece(4,0,&whiteKing);
-    gameboard.addPiece(5,0,&whiteFBishop);
-    gameboard.addPiece(6,0,&whiteGKnight);
-    gameboard.addPiece(7,0,&whiteHRook);
+    sourceBoard.addPiece(0,0,&whiteARook);
+    sourceBoard.addPiece(1,0,&whiteBKnight);
+    sourceBoard.addPiece(2,0,&whiteCBishop);
+    sourceBoard.addPiece(3,0,&whiteQueen);
+    sourceBoard.addPiece(4,0,&whiteKing);
+    sourceBoard.addPiece(5,0,&whiteFBishop);
+    sourceBoard.addPiece(6,0,&whiteGKnight);
+    sourceBoard.addPiece(7,0,&whiteHRook);
 
-    gameboard.addPiece(0,7,&blackARook);
-    gameboard.addPiece(1,7,&blackBKnight);
-    gameboard.addPiece(2,7,&blackCBishop);
-    gameboard.addPiece(3,7,&blackQueen);
-    gameboard.addPiece(4,7,&blackKing);
-    gameboard.addPiece(5,7,&blackFBishop);
-    gameboard.addPiece(6,7,&blackGKnight);
-    gameboard.addPiece(7,7,&blackHRook);
+    sourceBoard.addPiece(0,7,&blackARook);
+    sourceBoard.addPiece(1,7,&blackBKnight);
+    sourceBoard.addPiece(2,7,&blackCBishop);
+    sourceBoard.addPiece(3,7,&blackQueen);
+    sourceBoard.addPiece(4,7,&blackKing);
+    sourceBoard.addPiece(5,7,&blackFBishop);
+    sourceBoard.addPiece(6,7,&blackGKnight);
+    sourceBoard.addPiece(7,7,&blackHRook);
     
     // Board dimensions
     const int boardLength = 512;
@@ -64,7 +64,6 @@ int main()
 
     // Create the chess board and some pieces with radius 20px
     uiboard uiboard(boardLength,boardWidth);
-    uiboard.loadPieces(gameboard.board);
 
     // Run the main loop
     while (window.isOpen())
@@ -77,12 +76,15 @@ int main()
             if(event.type == sf::Event::Closed) { window.close(); }
 
             // Handle the appropriate behavior for clicking a tile
-            // BROKEN if (event.type == sf::Event::MouseButtonPressed) { uiboard.tileClick(event.mouseButton.x, event.mouseButton.y); }
+            if (event.type == sf::Event::MouseButtonPressed) {
+                sourceBoard.movePiece(0,0, 0,7);
+            }
         }
 
         // Draw the UI
         window.clear();
         window.draw(uiboard);
+        uiboard.loadPieces(sourceBoard.board);
         window.display();
     }
 
