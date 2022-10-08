@@ -1,5 +1,6 @@
 #include "../include/gameboard.h"
 #include "../include/pawn.h"
+#include "../include/king.h"
 #include "pawntest.h"
 #include <iostream>
 using namespace std;
@@ -314,7 +315,72 @@ bool pawntest::enPassantTest(bool display) {
 }
 
 bool pawntest::checkTest(bool display) {
-    return true;
+    bool success = false;
+
+    // Initialise objects
+    gameboard board;
+    pawn whitePawnOne('W');
+    pawn whitePawnTwo('W');
+    pawn whitePawnThree('W');
+    pawn whitePawnFour('W');
+    king whiteKing('W');
+    king blackKing('B');
+
+    // Place pieces
+    board.addPiece(1,7, &whiteKing);
+    board.addPiece(1,4, &blackKing);
+    board.addPiece(1,3, &whitePawnFour);
+    board.addPiece(1,2, &whitePawnThree);
+    board.addPiece(0,2, &whitePawnTwo);
+    board.addPiece(2,2, &whitePawnOne);
+
+    // Test 1: Not in check nor mate
+    bool test1 = !board.isInMate('B') && !board.isInCheck('B');
+    if (display) board.visualiseTextBoard();
+
+    // Test 2: Stalemate
+    board.movePiece(1,7, 1,6);
+    if (display) board.visualiseTextBoard();
+    bool test2 = board.isInStalemate('B');
+
+    // Test 3: Checkmate
+    board.movePiece(2,2, 2,3);
+    if (display) board.visualiseTextBoard();
+    bool test3 = board.isInCheckmate('B');
+
+    // Test 4: Check
+    board.movePiece(1,6, 1,7);
+    if (display) board.visualiseTextBoard();
+    bool test4 = board.isInCheck('B') && !board.isInMate('B');
+
+    // Display results
+    if (display) {
+        if (test1) {
+            cout << "Test passed: Not in check nor mate" << endl;
+        } else {
+            cout << "Test failed: In check and/or mate" << endl;
+        }
+
+        if (test2) {
+            cout << "Test passed: Stalemate" << endl;
+        } else {
+            cout << "Test failed: Not in stalemate" << endl;
+        }
+
+        if (test3) {
+            cout << "Test passed: Checkmate" << endl;
+        } else {
+            cout << "Test failed: Not in checkmate" << endl;
+        }
+
+        if (test4) {
+            cout << "Test passed: Check" << endl;
+        } else {
+            cout << "Test failed: Not in check, or in mate" << endl;
+        }
+    }
+
+    return success;
 }
 
 bool pawntest::runTests(bool display) {
