@@ -1,6 +1,5 @@
 #include "pawn.h"
 
-pawn::pawn(): pawn('W') {}; // Pieces are white by default
 pawn::pawn(char color): piece('p',color) {};
 
 bool pawn::checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank) {

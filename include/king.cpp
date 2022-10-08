@@ -1,6 +1,5 @@
 #include "king.h"
 
-king::king(): king('W') {}; // Pieces are white by default
 king::king(char color): piece('k',color) {};
 
 bool king::checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank) {

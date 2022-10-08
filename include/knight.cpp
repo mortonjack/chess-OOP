@@ -1,6 +1,5 @@
 #include "knight.h"
 
-knight::knight(): knight('W') {}; // Pieces are white by default
 knight::knight(char color): piece('n',color) {};
 
 bool knight::checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank) {
