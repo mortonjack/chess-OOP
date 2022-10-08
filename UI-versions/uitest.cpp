@@ -1,10 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include "../include/uiboard.hpp"
+#include "../include/gameboard.h"
 
 // UI Test
 int main()
 {
-    // The board's length and width
+    // Board dimensions
     const int boardLength = 512;
     const int boardWidth = 512;
 
@@ -15,8 +16,7 @@ int main()
     sf::RenderWindow window(sf::VideoMode(windowLength, boardWidth), "Chess-OOP");
 
     // Create the chess board and some pieces with radius 20px
-    uiboard board;
-    if (!board.loadBoard(sf::Vector2u(boardLength/8, boardWidth/8))) return -1;
+    uiboard board(boardLength,boardWidth);
     if (!board.loadPieces(20)) return -1;
 
     // Run the main loop

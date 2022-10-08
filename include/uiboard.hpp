@@ -1,66 +1,77 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 using namespace std;
+using namespace sf;
 
-class uiboard : public sf::Drawable, public sf::Transformable
+class uiboard : public Drawable, public Transformable
 {
-public:
-    // Define color constants
-    sf::Color white = sf::Color{ 0xF3F3F3FF };
-    sf::Color black = sf::Color{ 0x4D4C4AFF };
-    sf::Color light = sf::Color{ 0xF2DBB4FF };
-    sf::Color dark = sf::Color{ 0xB48C64FF };
-    sf::Color red = sf::Color{ 0xCC0000FF };
+    protected:
 
+    // Board size constants
+    int _length;
+    int _width;
+
+    // Color constants
+    const Color _whiteColor = Color{ 0xF3F3F3FF };
+    const Color _blackColor = Color{ 0x4D4C4AFF };
+    const Color _lightColor = Color{ 0xF2DBB4FF };
+    const Color _darkColor = Color{ 0xB48C64FF };
+    const Color _redColor = Color{ 0xCC0000FF };
 
     bool sourceSelected = false;
-    sf::Vector2i sourceCoords;
-    sf::Vector2i targetCoords;
+    Vector2i sourceCoords;
+    Vector2i targetCoords;
 
-    sf::CircleShape* sourcePiece;
+    CircleShape* sourcePiece;
 
-    sf::CircleShape* pieces[32] = {nullptr};
+    CircleShape* pieces[32] = {nullptr};
 
     // Define board vertices
-    sf::VertexArray vertices;
+    VertexArray vertices;
 
-    bool loadBoard(sf::Vector2u tileSize)  {  
-  
+    public:
+    uiboard(): uiboard(512,512) {}
+
+    uiboard(int length, int width) {
+        _length = length;
+        _width = width;
+
         // resize the vertex array to fit the level size
-        vertices.setPrimitiveType(sf::Quads);
+        vertices.setPrimitiveType(Quads);
         vertices.resize(8 * 8 * 4);
 
         // populate the vertex array, with one tile per tile
         for (unsigned int file = 0; file < 8; ++file)
             for (unsigned int rank = 0; rank < 8; ++rank)
             {
+                // Vectorise the rank and file
+                Vector2i coords = Vector2i(file,rank);
+
                 // get a pointer to the current tile's tile
-                sf::Vertex* tile = coords2TopLeftVertex(file, rank);
+                Vertex* tile = coords2TilePointer(coords);
 
                 // define its 4 corners
-                tile[0].position = sf::Vector2f(file * tileSize.x, rank * tileSize.y);
-                tile[1].position = sf::Vector2f((file + 1) * tileSize.x, rank * tileSize.y);
-                tile[2].position = sf::Vector2f((file + 1) * tileSize.x, (rank + 1) * tileSize.y);
-                tile[3].position = sf::Vector2f(file * tileSize.x, (rank + 1) * tileSize.y);
+                tile[0].position = Vector2f(file * _length/8, rank * _width/8);
+                tile[1].position = Vector2f((file + 1) * _length/8, rank * _width/8);
+                tile[2].position = Vector2f((file + 1) * _length/8, (rank + 1) * _width/8);
+                tile[3].position = Vector2f(file * _length/8, (rank + 1) * _width/8);
 
                 // Determine whether the square is light or dark
-                colorTile(file, rank, coords2TileColor(file,rank));
+                colorTile(coords, coords2TileColor(coords));
             }
-
-        return true;
     }
 
     bool loadPieces(int radius) {
         for (int f = 0; f < 8; f++) {
-            sf::CircleShape *piece = new sf::CircleShape;
+            CircleShape *piece = new CircleShape;
 
             piece->setRadius(radius);
             piece->setOrigin(radius,radius);
-            piece->setPosition(coords2Position(f, 0));
+            piece->setPosition(coords2Position(Vector2i(f,0)));
 
-            piece->setFillColor(white);
+            piece->setFillColor(_whiteColor);
             piece->setOutlineThickness(3);
-            piece->setOutlineColor(black);
+            piece->setOutlineColor(_blackColor);
 
             pieces[f] = piece;
         }
@@ -68,11 +79,11 @@ public:
         return true;
     }
 
-    sf::Vector2i position2coords(int x, int y) {  
+    Vector2i position2coords(int x, int y) {  
         int file = 0;
         int rank = 0;
 
-        sf::Vertex* farQuad = coords2TopLeftVertex(7, 7);
+        Vertex* farQuad = coords2TilePointer(Vector2i(7,7));
 
         int minXDiff = getTileX(farQuad);
         int minYDiff = getTileY(farQuad);
@@ -80,7 +91,7 @@ public:
         // Calculate the file the user is clicking
         for (int f = 0; f < 8; f++) {
             // Find the x-position of the current tile
-            int tileX = getTileX(coords2TopLeftVertex(f, 0));
+            int tileX = getTileX(coords2TilePointer(Vector2i(f,0)));
 
             // Calculate the horizontal distance between the mouse and the tile
             int xDiff = abs(x - tileX);
@@ -95,7 +106,7 @@ public:
         // Calculate the rank the user is clicking
         for (int r = 0; r < 8; r++) {
             // Find the y-position of the current tile
-            int tileY = getTileY(coords2TopLeftVertex(0, r));
+            int tileY = getTileY(coords2TilePointer(Vector2i(0,r)));
 
             // Calculate the vertical distance between the mouse and the tile
             int yDiff = abs(y - tileY);
@@ -107,29 +118,28 @@ public:
             }
         }
 
-        return sf::Vector2i(file,rank);
+        return Vector2i(file,rank);
     }
 
-    sf::CircleShape* coords2Piece(int file, int rank) {
+    CircleShape* coords2Piece(Vector2i coords) {
         for (int i = 0; i < 32; i++) {
             if (pieces[i] == nullptr) return nullptr;
-            if (pieces[i]->getPosition() == coords2Position(file,rank)) return pieces[i];
+            if (pieces[i]->getPosition() == coords2Position(coords)) return pieces[i];
         }
-        cout << "Failed...";
         return nullptr;
     }
 
-    sf::Vector2f coords2Position(int file, int rank) {
-        sf::Vertex* tile = coords2TopLeftVertex(file, rank);
+    Vector2f coords2Position(Vector2i coords) {
+        Vertex* tile = coords2TilePointer(coords);
 
         float vectorX = getTileX(tile);
         float vectorY = getTileY(tile);
 
-        return sf::Vector2f(vectorX, vectorY);
+        return Vector2f(vectorX, vectorY);
     }
 
     void tileClick(int x, int y) {
-        sf::Vector2i coords = position2coords(x,y);
+        Vector2i coords = position2coords(x,y);
 
         if (!sourceSelected) {
             setSourceCoords(coords);
@@ -139,7 +149,7 @@ public:
 
     }
 
-    void setSourceCoords(sf::Vector2i coords) {
+    void setSourceCoords(Vector2i coords) {
         // Indicate that a source tile has been selected
         sourceSelected = true;
 
@@ -147,13 +157,13 @@ public:
         sourceCoords = coords;
 
         // Select the piece on this tile
-        sourcePiece = coords2Piece(sourceCoords.x, sourceCoords.y);
+        sourcePiece = coords2Piece(sourceCoords);
 
         // Color the tile red
-        colorTile(sourceCoords.x, sourceCoords.y, red);
+        colorTile(sourceCoords, _redColor);
     }
 
-    void movePiece(sf::Vector2i coords) {
+    void movePiece(Vector2i coords) {
         // Indicate that a source tile is no longer selected
         sourceSelected = false;
 
@@ -161,28 +171,38 @@ public:
         targetCoords = coords;
 
         // Remove the color of the previously selected tile
-        colorTile(sourceCoords.x, sourceCoords.y, coords2TileColor(sourceCoords.x, sourceCoords.y));
+        colorTile(sourceCoords, coords2TileColor(sourceCoords));
 
         // If our source piece is empty, we are moving nothing.
         if (sourcePiece == nullptr) return;
 
         // Move the piece where the player has clicked
-        sourcePiece->setPosition(coords2Position(coords.x, coords.y));
+        sourcePiece->setPosition(coords2Position(targetCoords));
     }
 
 private:
-    sf::Color coords2TileColor(int file, int rank)  { return (file + rank) % 2 == 0 ? light : dark; }
-    void colorTile(int file, int rank, sf::Color color)  {
-        sf::Vertex* tile = coords2TopLeftVertex(file, rank);
+    // TILE COLOR MANAGEMENT
+
+    // Calculates the natural color of a tile, based on its rank and file
+    Color coords2TileColor(Vector2i coords)  { return (coords.x + coords.y) % 2 == 0 ? _lightColor : _darkColor; }
+
+    // Colors a tile a passed color
+    void colorTile(Vector2i coords, Color color)  {
+        Vertex* tile = coords2TilePointer(coords);
         tile[0].color = tile[1].color = tile[2].color = tile[3].color = color;
     }
 
-    float getTileX(sf::Vertex* tile) { return (tile[0].position.x + tile[2].position.x) / 2; }
-    float getTileY(sf::Vertex* tile) { return (tile[0].position.y + tile[2].position.y) / 2; }
+    // TILE POSITION FUNCTIONS
 
-    sf::Vertex* coords2TopLeftVertex(int file, int rank) { return &vertices[(file + rank * 8) * 4]; }
+    // Returns the X and Y positions of a file, from its pointer
+    float getTileX(Vertex* tile) { return (tile[0].position.x + tile[2].position.x) / 2; }
+    float getTileY(Vertex* tile) { return (tile[0].position.y + tile[2].position.y) / 2; }
 
-    virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
+    // Converts rank and file into a tile pointer
+    Vertex* coords2TilePointer(Vector2i coords) { return &vertices[(coords.x + coords.y * 8) * 4]; }
+
+    // MAIN FUNCTION
+    virtual void draw(RenderTarget& target, RenderStates states) const
     {
         // apply the transform
         states.transform *= getTransform();
