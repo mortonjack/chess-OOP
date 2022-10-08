@@ -1,5 +1,4 @@
 #include "gameboard.h"
-#include "pawn.h"
 #include <iostream>
 #include <cstdlib>
 using namespace std;
@@ -205,8 +204,6 @@ bool gameboard::validCapture(int oldFile, int oldRank, int newFile, int newRank)
 
 bool gameboard::validMovement(int oldFile, int oldRank, int newFile, int newRank) {
     // Checks if a proposed movement is valid
-    piece* sourcePiece = board[oldFile][oldRank];
-    piece* targetPiece = targetWithEnPassant(oldFile,oldRank, newFile,newRank);
 
     // Ensure all coordinates are valid
     if (oldRank < 0 || oldRank > 7 || oldFile < 0 || oldFile > 7 ||
@@ -214,14 +211,18 @@ bool gameboard::validMovement(int oldFile, int oldRank, int newFile, int newRank
         return false;
     }
 
+    piece* sourcePiece = board[oldFile][oldRank];
+
     // Check if piece exists
     if (sourcePiece == nullptr) return false;
+
+    piece* targetPiece = targetWithEnPassant(oldFile, oldRank, newFile, newRank);
 
     // Ensure the piece isn't moving to its current location
     if (oldRank == newRank && oldFile == newFile) return false;
 
     // Check if the piece's path is clear
-    if (!(checkPathClear(oldFile,oldRank, newFile,newRank))) return false; 
+    if (!(checkPathClear(oldFile,oldRank, newFile,newRank))) return false;
 
     // Check if capturing a piece
     if (targetPiece == nullptr) {
@@ -232,102 +233,44 @@ bool gameboard::validMovement(int oldFile, int oldRank, int newFile, int newRank
 }
 
 bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
-    // Initialise previous board upon first move
+    // Initialise previous board upon first attempted move
     if (prevBoard == nullptr) {
         prevBoard = new boardnode(board);
     }
 
-    // Ensure all coordinates are valid
-    if (oldRank < 0 || oldRank > 7 || oldFile < 0 || oldFile > 7 ||
-        newRank < 0 || newRank > 7 || newFile < 0 || newFile > 7) {
-        return false;
+    // Check validity of move
+    if (!validMovement(oldFile, oldRank, newFile, newRank)) return false;
+
+    // Check castle
+    if (isCastling(oldFile, oldRank, newFile, newRank)) {
+        castle(oldFile, newFile, newRank);
+        prevBoard->addBoard(board);
+        return true;
     }
 
-    if (board[oldFile][oldRank] != nullptr) { // check a piece exists at oldRank, oldFile
-        piece* sourcePiece = board[oldFile][oldRank];
-        piece* targetPiece = targetWithEnPassant(oldFile,oldRank, newFile,newRank);
+    // Store pieces
+    piece* sourcePiece = board[oldFile][oldRank];
+    piece* targetPiece = targetWithEnPassant(oldFile, oldRank, newFile, newRank);
+    bool enPassant = targetPiece != board[newFile][newRank];
 
-        // Validity Checks
-        if (oldRank == newRank && oldFile == newFile) return false; // Ensure that the piece has moved
-        if (!(checkPathClear(oldFile,oldRank, newFile,newRank))) return false; // Check if the piece's path is clear
-
-        // If there is not a piece at the new location...
-        if (targetPiece == nullptr) {
-
-            // If the player is trying to castle...
-            if (isCastling(oldFile,oldRank, newFile,newRank)) {
-                // perform castle
-                castle(oldFile,newFile,oldRank);
-
-                // report successful move
-                prevBoard->addBoard(board);
-                return true;
-            } else {
-                // Return false if the move isn't valid
-                if (!(sourcePiece->checkMoveValidity(oldFile,oldRank, newFile,newRank))) return false;     
-
-                // Move piece
-                addPiece(newFile, newRank, sourcePiece);
-                removePiece(oldFile, oldRank);
-            }
-
-            // Check if king is in check
-            if (isInCheck(sourcePiece->getColor())) {
-                // Undo move
-                removePiece(newFile, newRank);
-                addPiece(oldFile, oldRank, sourcePiece);
-                return false;
-            } else {
-                // increment move counter
-                sourcePiece->move();
-                // report successful move
-                prevBoard->addBoard(board);
-                return true;
-            }
-        // If there is a piece at the new location...
-        } else {
-            // If the piece is a different color...
-            if (sourcePiece->getColor() != targetPiece->getColor()) {
-                // Check if the capture is valid
-                if (!(sourcePiece->checkCaptureValidity(oldFile,oldRank, newFile,newRank))) return false;
-
-                // EXCEPTION: If en passant applies, capture via en passant
-                if (targetPiece != board[newFile][newRank]) {
-                    removePiece(newFile, oldRank);
-                }
-
-                // Move piece
-                addPiece(newFile, newRank, board[oldFile][oldRank]);
-                removePiece(oldFile, oldRank);
-            
-                // Check if king is in check
-                if (isInCheck(sourcePiece->getColor())) {
-                    // Undo move
-                    addPiece(oldFile, oldRank, sourcePiece);
-                    addPiece(newFile, newRank, targetPiece);
-
-                    // EXCEPTION: If en passant applies, capture via en passant
-                    if (targetPiece != board[newFile][newRank]) {
-                        addPiece(newFile, oldRank, targetPiece);
-                    }
-
-                    return false;
-                } else {
-                    // increment move counter
-                    sourcePiece->move();
-                    // capture piece
-                    targetPiece->capture();
-                    // report successful move
-                    prevBoard->addBoard(board);
-                    return true;
-                }
-            } else { // Piece at destination is the same colour as piece being moved
-                return false; // Don't move
-            }
-        }
-    } else { // if no piece exists at oldRank, oldFile
-        return false;
+    // Check en passant
+    if (enPassant) {
+        removePiece(newFile, oldRank);
     }
+
+    // Capture
+    if (targetPiece != nullptr) {
+        targetPiece->capture();
+    }
+
+    // Move
+    sourcePiece->move();
+    removePiece(oldFile, oldRank);
+    addPiece(newFile, newRank, sourcePiece);
+
+    // Report successful move
+    prevBoard->addBoard(board);
+    return true;
 }
 
 bool gameboard::checkPathClear(int oldFile, int oldRank, int newFile, int newRank) {
