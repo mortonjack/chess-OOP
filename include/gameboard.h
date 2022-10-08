@@ -39,7 +39,6 @@ class gameboard {
         bool isThreatened(char color, int file, int rank);
 
         // Check if king is in check
-        bool isInCheck();
         bool isInCheck(char color);
 
         // Check if king is in checkmate

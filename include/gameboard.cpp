@@ -395,8 +395,6 @@ bool gameboard::isThreatened(char color, int file, int rank) {
     return false;
 }
 
-bool gameboard::isInCheck() {return isInCheck('W');}
-
 bool gameboard::isInCheck(char color) {
     // Check if king of color is in check
     int file;
