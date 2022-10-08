@@ -33,7 +33,6 @@ class uiboard : public Drawable, public Transformable
 
     public:
         uiboard(): uiboard(512,512) {}
-
         uiboard(int length, int width) {
             _length = length;
             _width = width;
@@ -81,17 +80,21 @@ class uiboard : public Drawable, public Transformable
             return true;
         }
 
-        /*
-        void tileClick(int x, int y) {
+        bool tileClick(int x, int y) {
             Vector2i coords = position2coords(x,y);
 
             if (!_sourceSelected) {
                 setSourceCoords(coords);
+                return false;
             } else {
-                movePiece(coords);
+                setTargetCoords(coords);
+                return true;
             }
 
         }
+
+        Vector2i getSourceCoords() { return _sourceCoords; }
+        Vector2i getTargetCoords() { return _sourceCoords; }
 
         void setSourceCoords(Vector2i coords) {
             // Indicate that a source tile has been selected
@@ -100,26 +103,19 @@ class uiboard : public Drawable, public Transformable
             // Store the clicked socation as the source coordiantes
             _sourceCoords = coords;
 
-            // Select the piece on this tile
-            _sourcePiece = coords2Piece(_sourceCoords);
-
             // Color the tile red
             colorTile(_sourceCoords, _redColor);
         }
 
-        void movePiece(Vector2i coords) {
-        // Indicate that a source tile is no longer selected
-        _sourceSelected = false;
+        void setTargetCoords(Vector2i coords) {
+            // Indicate that a source tile is no longer selected
+            _sourceSelected = false;
 
-        // Remove the color of the previously selected tile
-        colorTile(_sourceCoords, coords2TileColor(_sourceCoords));
+            _targetCoords = coords;
 
-        // If our source piece is empty, we are moving nothing.
-        if (_sourcePiece == nullptr) return;
-
-        // Move the piece where the player has clicked
-        _sourcePiece->setPosition(coords2Position(coords));
-    } */
+            // Remove the color of the previously selected tile
+            colorTile(_sourceCoords, coords2TileColor(_sourceCoords));
+        }
 
     private:
         /*

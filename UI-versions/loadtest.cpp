@@ -77,7 +77,13 @@ int main()
 
             // Handle the appropriate behavior for clicking a tile
             if (event.type == sf::Event::MouseButtonPressed) {
-                sourceBoard.movePiece(0,0, 0,7);
+                if (uiboard.tileClick(event.mouseButton.x, event.mouseButton.y)) {
+                    int oldFile = uiboard.getSourceCoords().x;
+                    int oldRank = uiboard.getSourceCoords().y;
+
+                    int newFile = uiboard.getTargetCoords().x;
+                    int newRank = uiboard.getTargetCoords().y;
+                }
             }
         }
 
