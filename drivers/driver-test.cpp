@@ -13,7 +13,7 @@
 #include "drawtest.h"
 
 int main() {
-    driver tests(15);
+    driver tests(12);
 
     // Piece tests
     bishoptest case1;
