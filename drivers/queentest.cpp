@@ -4,8 +4,8 @@
 #include <iostream>
 using namespace std;
 
-queentest::queentest(): queentest(1) {}
-queentest::queentest(int length) {
+queentest::queentest() {
+    this->_length = 3;
     this->_failMessage = "Queen test failed";
     this->_passMessage = "Queen test succeeded";
 }
@@ -76,8 +76,10 @@ bool queentest::movementTest(bool display) {
     return success;
 }
 
-bool queentest::runTests(bool display) {
-    bool success = true;
-    success = success && this->movementTest(display);
-    return success;
+bool queentest::captureTest(bool display) {
+    return true;
+}
+
+bool queentest::checkTest(bool display) {
+    return true;
 }

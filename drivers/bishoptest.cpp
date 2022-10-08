@@ -4,8 +4,8 @@
 #include <iostream>
 using namespace std;
 
-bishoptest::bishoptest(): bishoptest(1) {}
-bishoptest::bishoptest(int length) {
+bishoptest::bishoptest() {
+    this->_length = 3;
     this->_failMessage = "Bishop test failed";
     this->_passMessage = "Bishop test succeeded";
 }
@@ -61,8 +61,10 @@ bool bishoptest::movementTest(bool display) {
     return success;
 }
 
-bool bishoptest::runTests(bool display) {
-    bool success = true;
-    success = success && this->movementTest(display);
-    return success;
+bool bishoptest::captureTest(bool display) {
+    return true;
+}
+
+bool bishoptest::checkTest(bool display) {
+    return true;
 }

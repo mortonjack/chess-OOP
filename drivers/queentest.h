@@ -1,15 +1,15 @@
 #ifndef QUEENTEST_H
 #define QUEENTEST_H
 
-#include "testcase.h"
+#include "piecetest.h"
 using namespace std;
 
-class queentest : public testcase {
+class queentest : public piecetest {
     public:
         queentest();
-        queentest(int length);
-        bool movementTest(bool display); // display determines whether 
-        bool runTests(bool display); // or not to output to stdout
+        bool movementTest(bool display);
+        bool captureTest(bool display);
+        bool checkTest(bool display);
 };
 
 #endif//QUEENTEST_H

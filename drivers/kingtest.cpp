@@ -7,8 +7,8 @@
 #include <iostream>
 using namespace std;
 
-kingtest::kingtest(): kingtest(1) {}
-kingtest::kingtest(int length) {
+kingtest::kingtest() {
+    this->_length = 4;
     this->_failMessage = "King test failed";
     this->_passMessage = "King test succeeded";
 }
@@ -248,9 +248,21 @@ bool kingtest::castleTest(bool display) {
     return success;
 }
 
+bool kingtest::captureTest(bool display) {
+    return true;
+}
+
+bool kingtest::checkTest(bool display) {
+    return true;
+}
+
 bool kingtest::runTests(bool display) {
     bool success = true;
-    success = success && this->movementTest(display);
-    success = success && this->castleTest(display);
+
+    success = success && movementTest(display);
+    success = success && castleTest(display);
+    success = success && captureTest(display);
+    success = success && checkTest(display);
+
     return success;
 }

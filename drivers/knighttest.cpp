@@ -4,8 +4,8 @@
 #include <iostream>
 using namespace std;
 
-knighttest::knighttest(): knighttest(1) {}
-knighttest::knighttest(int length) {
+knighttest::knighttest() {
+    this->_length = 3;
     this->_failMessage = "Knight test failed";
     this->_passMessage = "Knight test succeeded";
 }
@@ -77,8 +77,10 @@ bool knighttest::movementTest(bool display) {
     return success;
 }
 
-bool knighttest::runTests(bool display) {
-    bool success = true;
-    success = success && this->movementTest(display);
-    return success;
+bool knighttest::captureTest(bool display) {
+    return true;
+}
+
+bool knighttest::checkTest(bool display) {
+    return true;
 }

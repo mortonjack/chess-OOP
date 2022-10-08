@@ -4,8 +4,8 @@
 #include <iostream>
 using namespace std;
 
-pawntest::pawntest(): pawntest(1) {}
-pawntest::pawntest(int length) {
+pawntest::pawntest() {
+    this->_length = 4;
     this->_failMessage = "Pawn test failed";
     this->_passMessage = "Pawn test succeeded";
 }
@@ -312,10 +312,17 @@ bool pawntest::enPassantTest(bool display) {
     return success;
 }
 
+bool pawntest::checkTest(bool display) {
+    return true;
+}
+
 bool pawntest::runTests(bool display) {
     bool success = true;
-    success = success && this->movementTest(display);
-    success = success && this->captureTest(display);
-    success = success && this->enPassantTest(display);
+
+    success = success && movementTest(display);
+    success = success && captureTest(display);
+    success = success && enPassantTest(display);
+    success = success && checkTest(display);
+
     return success;
 }

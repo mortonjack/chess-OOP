@@ -4,8 +4,8 @@
 #include <iostream>
 using namespace std;
 
-rooktest::rooktest(): rooktest(1) {}
-rooktest::rooktest(int length) {
+rooktest::rooktest() {
+    this->_length = 3;
     this->_failMessage = "Rook test failed";
     this->_passMessage = "Rook test succeeded";
 }
@@ -51,6 +51,13 @@ bool rooktest::movementTest(bool display) {
     int coords2[] = {3,3, 0,2};
     bool test3 = board.testDriver(pieces, coords2, 2);
 
+    // Move rooks to own positions
+    bool test4 = !board.movePiece(3,3, 3,3) && !board.movePiece(0,2, 0,2);
+
+    // Move rooks outside the gameboard
+    bool test5 = !board.movePiece(3,3, 3,8) && !board.movePiece(0,2, -3,4);
+    if (display) board.visualiseTextBoard();
+
     // Check results
     if (display) {
         if (test1) {
@@ -70,77 +77,28 @@ bool rooktest::movementTest(bool display) {
         } else {
             cout << "Test failed: Rooks failed to move" << endl;
         }
-    }
 
-    success = test1 && test2 && test3;
-    return success;
-}
-
-bool rooktest::firstMovementTest(bool display) {
-    // Check for weird moves- outside the board, into own position, etc
-    bool success;
-
-    // Create the game board and two rooks
-    gameboard board;
-    rook white_a_rook('W');
-    rook black_a_rook('B');
-
-    // Add the rooks to the game board
-    board.addPiece(0,0,&white_a_rook);
-    board.addPiece(7,0,&black_a_rook);
-    
-    if (display) board.visualiseTextBoard();
-
-    // Move the rooks to illegal positions
-    board.movePiece(0,0, 1,1);
-    board.movePiece(7,0, 4,6);
-
-    if (display) board.visualiseTextBoard();
-
-    // Move the rooks to legal positions
-    board.movePiece(0,0, 0,3);
-    board.movePiece(7,0, 7,7);
-
-    // Move the rooks to their own positions
-    board.movePiece(0,3, 0,3);
-    board.movePiece(7,7, 7,7);
-
-    // Move the rooks outside the game board
-    board.movePiece(0,3, -1,3);
-    board.movePiece(7,7, 7,8);
-    board.movePiece(0,32, 1,3);
-    board.movePiece(-7,7, 8,7);
-
-    if (display) board.visualiseTextBoard();
-
-    // Test: Both rooks uncaptured
-    bool test1 = (!white_a_rook.captured() && !black_a_rook.captured());
-
-    // Test: rooks in correct positions
-    piece* pieces[] = {&white_a_rook, &black_a_rook};
-    int coords[] = {0,3, 7,7};
-    bool test2 = (board.testDriver(pieces, coords, 2));
-
-    if (display) {
-        if (test1) {
-            cout << "Test passed: Neither rook captured" << endl;
+        if (test4) {
+            cout << "Test passed: Pieces can't move to own position" << endl;
         } else {
-            cout << "Test failed: Rook captured" << endl;
+            cout << "Test failed: Pieces can move to their own position" << endl;
         }
-        if (test2) {
-            cout << "Test passed: All pieces in correct position" << endl;
+
+        if (test5) {
+            cout << "Test passed: Pieces can't move outside the gameboard" << endl;
         } else {
-            cout << "Test failed: Pieces in incorrect position" << endl;
+            cout << "Test failed: Pieces can move outside the gameboard" << endl;
         }
     }
 
-    success = test1 && test2;
+    success = test1 && test2 && test3 && test4 && test5;
     return success;
 }
 
-bool rooktest::runTests(bool display) {
-    bool success = true;
-    success = success && this->movementTest(display);
-    success = success && this->firstMovementTest(display);
-    return success;
+bool rooktest::captureTest(bool display) {
+    return true;
+}
+
+bool rooktest::checkTest(bool display) {
+    return true;
 }

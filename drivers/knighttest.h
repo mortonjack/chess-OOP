@@ -1,15 +1,15 @@
 #ifndef KNIGHTTEST_H
 #define KNIGHTTEST_H
 
-#include "testcase.h"
+#include "piecetest.h"
 using namespace std;
 
-class knighttest : public testcase {
+class knighttest : public piecetest {
     public:
         knighttest();
-        knighttest(int length);
-        bool movementTest(bool display); // display determines whether 
-        bool runTests(bool display); // or not to output to stdout
+        bool movementTest(bool display);
+        bool captureTest(bool display);
+        bool checkTest(bool display);
 };
 
 #endif//KNIGHTTEST_H
