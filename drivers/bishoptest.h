@@ -1,15 +1,15 @@
 #ifndef BISHOPTEST_H
 #define BISHOPTEST_H
 
-#include "testcase.h"
+#include "piecetest.h"
 using namespace std;
 
-class bishoptest : public testcase {
+class bishoptest : public piecetest {
     public:
         bishoptest();
-        bishoptest(int length);
-        bool movementTest(bool display); // display determines whether 
-        bool runTests(bool display); // or not to output to stdout
+        bool movementTest(bool display);
+        bool captureTest(bool display);
+        bool checkTest(bool display);
 };
 
 #endif//BISHOPTEST_H

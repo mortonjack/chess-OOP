@@ -1,6 +1,5 @@
 #include "bishop.h"
 
-bishop::bishop(): bishop('W') {}; // Pieces are white by default
 bishop::bishop(char color) : piece('b',color) {};
 
 bool bishop::checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank) {

@@ -8,10 +8,11 @@
 #include <iostream>
 using namespace std;
 
-collisiontest::collisiontest(): collisiontest(1) {}
-collisiontest::collisiontest(int length) {
+collisiontest::collisiontest() {
+    this->_length = 2;
     this->_failMessage = "Collision test failed";
     this->_passMessage = "Collision test succeeded";
+    initialiseResults();
 }
 
 bool collisiontest::baseTest(bool display) {
@@ -22,12 +23,12 @@ bool collisiontest::baseTest(bool display) {
     gameboard board;
 
     // Create pieces
-    queen whiteQueen = queen();
-    bishop blackFBishop = bishop('B');
-    knight whiteGKnight = knight();
-    rook blackARook = rook('B');
-    pawn whiteDPawn = pawn();
-    pawn blackEPawn = pawn('B');
+    queen whiteQueen('W');
+    bishop blackFBishop('B');
+    knight whiteGKnight('W');
+    rook blackARook('B');
+    pawn whiteDPawn('W');
+    pawn blackEPawn('B');
     
     piece* pieces[] = {&whiteQueen, &whiteGKnight, &whiteDPawn, &blackARook, &blackFBishop, &blackEPawn};
 
@@ -154,9 +155,9 @@ bool collisiontest::vertTest(bool display) {
     bool success = true;
     // Create the game board and a rook and pawn;
     gameboard board;
-    rook blackARook = rook('B');
-    pawn whiteCPawn = pawn();
-    pawn whiteDPawn = pawn();
+    rook blackARook('B');
+    pawn whiteCPawn('W');
+    pawn whiteDPawn('W');
     piece* pieces[] = {&blackARook, &whiteCPawn, &whiteDPawn};
 
     // Add the pieces to the game board
@@ -242,8 +243,9 @@ bool collisiontest::vertTest(bool display) {
 }
 
 bool collisiontest::runTests(bool display) {
-    bool success = true;
-    success = success && this->baseTest(display);
-    success = success && this->vertTest(display);
-    return success;
+    
+    _results[0] = baseTest(display && !_results[0]);
+    _results[1] = vertTest(display && !_results[1]);
+
+    return result();
 }

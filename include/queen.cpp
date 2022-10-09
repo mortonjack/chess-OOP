@@ -1,6 +1,5 @@
 #include "queen.h"
 
-queen::queen(): queen('W') {}; // Pieces are white by default
 queen::queen(char color): piece('q',color) {};
 
 bool queen::checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank) {

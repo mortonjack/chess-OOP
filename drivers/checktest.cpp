@@ -9,10 +9,11 @@
 #include <iostream>
 using namespace std;
 
-checktest::checktest(): checktest(1) {}
-checktest::checktest(int length) {
+checktest::checktest() {
+    this->_length = 5;
     this->_failMessage = "Check test failed";
     this->_passMessage = "Check test succeeded";
+    initialiseResults();
 }
 
 bool checktest::movementTest(bool display) {
@@ -110,10 +111,10 @@ bool checktest::diagonalTest(bool display) {
     gameboard board;
     king blackKing('B');
 
-    king whiteKing;
-    pawn whitePawn;
-    queen whiteQueen;
-    bishop whiteBishop;
+    king whiteKing('W');
+    pawn whitePawn('W');
+    queen whiteQueen('W');
+    bishop whiteBishop('W');
 
     // Place pieces
     board.addPiece(4, 5, &blackKing);
@@ -228,8 +229,8 @@ bool checktest::straightTest(bool display) {
 
     // Initialise gameboard & pieces
     gameboard board;
-    king whiteKing;
-    rook whiteRook;
+    king whiteKing('W');
+    rook whiteRook('W');
 
     rook blackRook('B');
     queen blackQueen('B');
@@ -331,7 +332,7 @@ bool checktest::knightTest(bool display) {
 
     // Intiialise gameboard & pieces
     gameboard board;
-    king whiteKing;
+    king whiteKing('W');
     knight blackKnight('B');
     queen blackQueen('B');
     pawn blackPawn('B');
@@ -416,12 +417,12 @@ bool checktest::enPassantTest(bool display) {
 
     // Intiialise gameboard & pieces
     gameboard board;
-    king whiteKing;
+    king whiteKing('W');
 
-    pawn whiteEPawn;
+    pawn whiteEPawn('W');
     pawn blackDPawn('B');
 
-    pawn whiteAPawn;
+    pawn whiteAPawn('W');
     pawn blackBPawn('B');
 
     // Check king isn't in check on empty board
@@ -495,25 +496,13 @@ bool checktest::enPassantTest(bool display) {
 }
 
 bool checktest::runTests(bool display) {
-    bool success = true;
-    bool test;
 
-    // idk why this works, but it fixes a bug
-    test = this->movementTest(display);
-    success = success && test;
+    _results[0] = movementTest(display && !_results[0]);
+    _results[1] = diagonalTest(display && !_results[1]);
+    _results[2] = straightTest(display && !_results[2]);
+    _results[3] = knightTest(display && !_results[3]);
+    _results[4] = enPassantTest(display && !_results[4]);
 
-    test = this->diagonalTest(display);
-    success = success && test;
-    
-    test = this->straightTest(display);
-    success = success && test;
-
-    test = this->knightTest(display);
-    success = success && test;
-
-    test = this->enPassantTest(display);
-    success = success && test;
-
-    return success;
+    return result();
 }
 

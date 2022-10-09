@@ -5,8 +5,7 @@
 
 class knight : public piece {
     public:
-        knight(); // Default constructor (pieces are white by default)
-        knight(char color); // Colored constructor
+        knight(char color); 
         bool checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank);
 };
 

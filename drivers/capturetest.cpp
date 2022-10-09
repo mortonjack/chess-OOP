@@ -7,10 +7,11 @@
 #include <iostream>
 using namespace std;
 
-capturetest::capturetest(): capturetest(1) {}
-capturetest::capturetest(int length) {
+capturetest::capturetest() {
+    this->_length = 2;
     this->_failMessage = "Capture test failed";
     this->_passMessage = "Capture test succeeded";
+    initialiseResults();
 }
 
 bool capturetest::basicTest(bool display) {
@@ -21,10 +22,10 @@ bool capturetest::basicTest(bool display) {
     gameboard board;
 
     // Create pieces
-    queen blackQueen = queen('B');
-    knight whiteGKnight = knight();
-    rook whiteARook = rook();
-    rook blackARook = rook('B');
+    queen blackQueen('B');
+    knight whiteGKnight('W');
+    rook whiteARook('W');
+    rook blackARook('B');
 
     // Add the white pieces
     board.addPiece(0,0,&whiteARook);
@@ -108,10 +109,10 @@ bool capturetest::teamCapture(bool display) {
     gameboard board;
 
     // Create pieces
-    queen blackQueen = queen('B');
-    queen whiteQueen = queen('W');
-    bishop blackBishop = bishop('B');
-    knight whiteKnight = knight('W');
+    queen blackQueen('B');
+    queen whiteQueen('W');
+    bishop blackBishop('B');
+    knight whiteKnight('W');
 
     // Place pieces
     board.addPiece(5,5, &blackQueen);
@@ -187,8 +188,9 @@ bool capturetest::teamCapture(bool display) {
 }
 
 bool capturetest::runTests(bool display) {
-    bool success = true;
-    success = success && this->basicTest(display);
-    success = success && this->teamCapture(display);
-    return success;
+
+    _results[0] = basicTest(display && !_results[0]);
+    _results[1] = teamCapture(display && !_results[1]);
+
+    return result();
 }

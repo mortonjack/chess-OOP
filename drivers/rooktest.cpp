@@ -1,13 +1,17 @@
 #include "../include/gameboard.h"
 #include "../include/rook.h"
+#include "../include/king.h"
+#include "../include/knight.h"
+#include "../include/bishop.h"
 #include "rooktest.h"
 #include <iostream>
 using namespace std;
 
-rooktest::rooktest(): rooktest(1) {}
-rooktest::rooktest(int length) {
+rooktest::rooktest() {
+    this->_length = 3;
     this->_failMessage = "Rook test failed";
     this->_passMessage = "Rook test succeeded";
+    initialiseResults();
 }
 
 bool rooktest::movementTest(bool display) {
@@ -16,8 +20,8 @@ bool rooktest::movementTest(bool display) {
 
     // Create the gameboard and two rooks
     gameboard board;
-    rook whiteARook = rook('W');
-    rook blackARook = rook('B');
+    rook whiteARook('W');
+    rook blackARook('B');
 
     // Add the rooks to the board
     board.addPiece(0,0,&whiteARook);
@@ -51,6 +55,13 @@ bool rooktest::movementTest(bool display) {
     int coords2[] = {3,3, 0,2};
     bool test3 = board.testDriver(pieces, coords2, 2);
 
+    // Move rooks to own positions
+    bool test4 = !board.movePiece(3,3, 3,3) && !board.movePiece(0,2, 0,2);
+
+    // Move rooks outside the gameboard
+    bool test5 = !board.movePiece(3,3, 3,8) && !board.movePiece(0,2, -3,4);
+    if (display) board.visualiseTextBoard();
+
     // Check results
     if (display) {
         if (test1) {
@@ -70,77 +81,167 @@ bool rooktest::movementTest(bool display) {
         } else {
             cout << "Test failed: Rooks failed to move" << endl;
         }
+
+        if (test4) {
+            cout << "Test passed: Pieces can't move to own position" << endl;
+        } else {
+            cout << "Test failed: Pieces can move to their own position" << endl;
+        }
+
+        if (test5) {
+            cout << "Test passed: Pieces can't move outside the gameboard" << endl;
+        } else {
+            cout << "Test failed: Pieces can move outside the gameboard" << endl;
+        }
     }
 
-    success = test1 && test2 && test3;
+    success = test1 && test2 && test3 && test4 && test5;
     return success;
 }
 
-bool rooktest::firstMovementTest(bool display) {
-    // Check for weird moves- outside the board, into own position, etc
-    bool success;
+bool rooktest::captureTest(bool display) {
+    bool success = false;
 
-    // Create the game board and two rooks
+    // Initialise objects
     gameboard board;
-    rook white_a_rook = rook('W');
-    rook black_a_rook = rook('B');
+    rook whiteRook('W');
+    bishop whiteBishop('W');
+    rook blackRookOne('B');
+    rook blackRookTwo('B');
+    knight blackKnight('B');
+    bishop blackBishopOne('B');
+    bishop blackBishopTwo('B');
 
-    // Add the rooks to the game board
-    board.addPiece(0,0,&white_a_rook);
-    board.addPiece(7,0,&black_a_rook);
-    
+    // Add pieces to board
+    board.addPiece(4,6, &whiteBishop);
+    board.addPiece(4,4, &whiteRook);
+    board.addPiece(2,4, &blackRookOne);
+    board.addPiece(6,4, &blackBishopOne);
+    board.addPiece(6,0, &blackKnight);
+    board.addPiece(6,7, &blackRookTwo);
+    board.addPiece(4,7, &blackBishopTwo);
+
+    // Test 1: Can't take bishop through friendly piece
+    bool test1 = !board.movePiece(4,4, 4,7);
     if (display) board.visualiseTextBoard();
 
-    // Move the rooks to illegal positions
-    board.movePiece(0,0, 1,1);
-    board.movePiece(7,0, 4,6);
-
+    // Test 2: Takes across the rank
+    board.movePiece(4,4, 2,4);
+    if (display) board.visualiseTextBoard();
+    bool test2 = board.movePiece(2,4, 6,4) && blackRookOne.captured();
     if (display) board.visualiseTextBoard();
 
-    // Move the rooks to legal positions
-    board.movePiece(0,0, 0,3);
-    board.movePiece(7,0, 7,7);
-
-    // Move the rooks to their own positions
-    board.movePiece(0,3, 0,3);
-    board.movePiece(7,7, 7,7);
-
-    // Move the rooks outside the game board
-    board.movePiece(0,3, -1,3);
-    board.movePiece(7,7, 7,8);
-    board.movePiece(0,32, 1,3);
-    board.movePiece(-7,7, 8,7);
-
+    // Test 3: Takes across the file
+    board.movePiece(6,4, 6,0);
     if (display) board.visualiseTextBoard();
+    board.movePiece(6,0, 6,7);
+    if (display) board.visualiseTextBoard();
+    bool test3 = blackKnight.captured() && blackRookTwo.captured();
 
-    // Test: Both rooks uncaptured
-    bool test1 = (!white_a_rook.captured() && !black_a_rook.captured());
-
-    // Test: rooks in correct positions
-    piece* pieces[] = {&white_a_rook, &black_a_rook};
-    int coords[] = {0,3, 7,7};
-    bool test2 = (board.testDriver(pieces, coords, 2));
+    // Test 4: Now takes bishop
+    bool test4 = board.movePiece(6,7, 4,7);
+    if (display) board.visualiseTextBoard();
 
     if (display) {
         if (test1) {
-            cout << "Test passed: Neither rook captured" << endl;
+            cout << "Test passed: Can't take bishop through friendly piece" << endl;
         } else {
-            cout << "Test failed: Rook captured" << endl;
+            cout << "Test failed: Takes bishop through friendly piece" << endl;
         }
+
         if (test2) {
-            cout << "Test passed: All pieces in correct position" << endl;
+            cout << "Test passed: Takes across rank" << endl;
         } else {
-            cout << "Test failed: Pieces in incorrect position" << endl;
+            cout << "Test failed: Doesn't take across rank" << endl;
+        }
+
+        if (test3) {
+            cout << "Test passed: Takes across file" << endl;
+        } else {
+            cout << "Test failed: Doesn't take across file" << endl;
+        }
+
+        if (test4) {
+            cout << "Test passed: Now takes bishop" << endl;
+        } else {
+            cout << "Test failed: Doesn't take bishop" << endl;
         }
     }
-
-    success = test1 && test2;
+    
+    success = test1 && test2 && test3 && test4;
     return success;
 }
 
-bool rooktest::runTests(bool display) {
-    bool success = true;
-    success = success && this->movementTest(display);
-    success = success && this->firstMovementTest(display);
+bool rooktest::checkTest(bool display) {
+    bool success = false;
+
+    // Initialise objects
+    gameboard board;
+    king blackKing('B');
+    rook rookOne('W');
+    rook rookTwo('W');
+
+    // Place pieces
+    board.addPiece(1,1, &blackKing);
+    board.addPiece(2,7, &rookOne);
+    board.addPiece(7,2, &rookTwo);
+
+    // Test 1: Rooks control rank and file
+    bool test1 = !board.movePiece(1,1, 1,2) && !board.movePiece(1,1, 2,1);
+    if (display) board.visualiseTextBoard();
+
+    // Test 2: Rooks check across file
+    bool test2 = board.movePiece(2,7, 1,7) && board.isInCheck('B');
+    test2 = test2 && board.movePiece(1,1, 0,1) && !board.isInCheck('B');
+    if (display) board.visualiseTextBoard();
+
+    // Test 3: Rooks check across rank
+    bool test3 = board.movePiece(7,2, 7,1) && board.isInCheck('B');
+    test3 = test3 && board.movePiece(0,1, 0,0) && !board.isInCheck('B');
+    if (display) board.visualiseTextBoard();
+
+    // Test 4: Stalemate
+    bool test4 = board.isInStalemate('B');
+    board.movePiece(7,1, 7,2);
+    if (display) board.visualiseTextBoard();
+
+    // Test 5: Checkmate
+    board.movePiece(7,2, 0,2);
+    bool test5 = board.isInCheckmate('B');
+    if (display) board.visualiseTextBoard();
+
+    if (display) {
+        if (test1) {
+            cout << "Test passed: Rooks control rank and file" << endl;
+        } else {
+            cout << "Test failed: Rooks don't control rank and file" << endl;
+        }
+
+        if (test2) {
+            cout << "Test passed: Rooks check across file" << endl;
+        } else {
+            cout << "Test failed: Rooks don't check across file" << endl;
+        }
+
+        if (test3) {
+            cout << "Test passed: Rooks check across rank" << endl;
+        } else {
+            cout << "Test failed: Rooks don't check across rank" << endl;
+        }
+
+        if (test4) {
+            cout << "Test passed: Stalemate" << endl;
+        } else {
+            cout << "Test failed: Not in stalemate" << endl;
+        }
+
+        if (test5) {
+            cout << "Test passed: Checkmate" << endl;
+        } else {
+            cout << "Test failed: Not in checkmate" << endl;
+        }
+    }
+
+    success = test1 && test2 && test3 && test4 && test5;
     return success;
 }

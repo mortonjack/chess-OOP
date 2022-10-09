@@ -5,10 +5,11 @@
 #include <iostream>
 using namespace std;
 
-boardnodetest::boardnodetest(): boardnodetest(1) {}
-boardnodetest::boardnodetest(int length) {
+boardnodetest::boardnodetest() {
+    this->_length = 1;
     this->_failMessage = "Board Node test failed";
     this->_passMessage = "Board Node test succeeded";
+    initialiseResults();
 }
 
 void boardnodetest::visualiseBoard(boardnode node) {
@@ -149,9 +150,8 @@ bool boardnodetest::basicTest(bool display) {
 }
 
 bool boardnodetest::runTests(bool display) {
-    bool success = true;
+    
+    _results[0] = basicTest(display && !_results[0]);
 
-    success = success && basicTest(display);
-
-    return success;
+    return result();
 }

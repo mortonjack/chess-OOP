@@ -7,9 +7,8 @@ using namespace std;
 class collisiontest : public testcase {
     public:
         collisiontest();
-        collisiontest(int length);
-        bool baseTest(bool display); // display determines whether 
-        bool vertTest(bool display); // or not to output to stdout
+        bool baseTest(bool display);
+        bool vertTest(bool display);
         bool runTests(bool display);
 };
 
