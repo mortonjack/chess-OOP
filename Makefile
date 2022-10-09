@@ -7,5 +7,8 @@ rank-and-file-driver:
 ui-driver:
 	@g++ -Wall -std=c++11 UI-versions/uitest.cpp -std=c++11 include/piece.cpp include/rook.cpp include/bishop.cpp include/knight.cpp include/pawn.cpp include/queen.cpp include/king.cpp include/boardnode.cpp include/gameboard.cpp -lsfml-graphics -lsfml-window -lsfml-system -o drivers/test.out
 
+ui-load-driver:
+	@g++ -Wall -std=c++11 UI-versions/loadtest.cpp -std=c++11 include/piece.cpp include/rook.cpp include/bishop.cpp include/knight.cpp include/pawn.cpp include/queen.cpp include/king.cpp include/boardnode.cpp include/gameboard.cpp -lsfml-graphics -lsfml-window -lsfml-system -o drivers/test.out
+
 clear-drivers:
 	@rm drivers/*.out
