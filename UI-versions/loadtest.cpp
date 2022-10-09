@@ -25,6 +25,9 @@ int main()
     queen whiteQueen;
     king whiteKing;
 
+    pawn whiteDPawn;
+    pawn whiteEPawn;
+
     rook blackARook('B');
     rook blackHRook('B');
     knight blackBKnight('B');
@@ -34,6 +37,8 @@ int main()
     queen blackQueen('B');
     king blackKing('B');
 
+    pawn blackDPawn('B');
+    pawn blackEPawn('B');
 
     sourceBoard.addPiece(0,0,&whiteARook);
     sourceBoard.addPiece(1,0,&whiteBKnight);
@@ -44,6 +49,9 @@ int main()
     sourceBoard.addPiece(6,0,&whiteGKnight);
     sourceBoard.addPiece(7,0,&whiteHRook);
 
+    sourceBoard.addPiece(3,1,&whiteDPawn);
+    sourceBoard.addPiece(4,1,&whiteEPawn);
+
     sourceBoard.addPiece(0,7,&blackARook);
     sourceBoard.addPiece(1,7,&blackBKnight);
     sourceBoard.addPiece(2,7,&blackCBishop);
@@ -53,9 +61,12 @@ int main()
     sourceBoard.addPiece(6,7,&blackGKnight);
     sourceBoard.addPiece(7,7,&blackHRook);
     
+    sourceBoard.addPiece(3,6,&blackDPawn);
+    sourceBoard.addPiece(4,6,&blackEPawn);
+
     // Board dimensions
-    const int boardLength = 512;
-    const int boardWidth = 512;
+    const int boardLength = 768;
+    const int boardWidth = 768;
 
     // The length of the window is 5/3 times the length of the board
     const int windowLength = boardLength * 5/3;
@@ -65,6 +76,8 @@ int main()
 
     // Create the chess board and some pieces with radius 20px
     uiboard uiboard(boardLength,boardWidth);
+ 
+    uiboard.loadPieces(sourceBoard.board);
 
     // Run the main loop
     while (window.isOpen())
@@ -85,9 +98,8 @@ int main()
                     int newFile = uiboard.getTargetCoords().x;
                     int newRank = uiboard.getTargetCoords().y;
 
-                    std::cout << oldFile << "," << oldRank << " " << newFile << "," << newRank;
-
                     sourceBoard.movePiece(oldFile,oldRank, newFile, newRank);
+                    uiboard.loadPieces(sourceBoard.board);
                 }
             }
         }
@@ -95,7 +107,6 @@ int main()
         // Draw the UI
         window.clear();
         window.draw(uiboard);
-        uiboard.loadPieces(sourceBoard.board);
         window.display();
     }
 

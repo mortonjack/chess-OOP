@@ -10,6 +10,9 @@ class uiboard : public Drawable, public Transformable
         int _length;
         int _width;
 
+        int _tileLength;
+        int _tileWidth;
+
         // Color constants
         const Color _whiteColor = Color{ 0xF3F3F3FF };
         const Color _blackColor = Color{ 0x4D4C4AFF };
@@ -23,7 +26,7 @@ class uiboard : public Drawable, public Transformable
         Vector2i _targetCoords;
 
     public:
-        CircleShape* pieces[32] = {nullptr};
+        Sprite* pieces[32] = {nullptr};
         int pieceCount = 0;
 
         // Define board vertices
@@ -35,12 +38,15 @@ class uiboard : public Drawable, public Transformable
             _length = length;
             _width = width;
 
+            _tileLength = length/8;
+            _tileWidth = width/8;
+
             // resize the vertex array to fit the level size
             vertices.setPrimitiveType(Quads);
             vertices.resize(8 * 8 * 4);
 
             // populate the vertex array, with one tile per tile
-            for (unsigned int file = 0; file < 8; ++file)
+            for (unsigned int file = 0; file < 8; ++file) {
                 for (unsigned int rank = 0; rank < 8; ++rank)
                 {
                     // Vectorise the rank and file
@@ -50,14 +56,15 @@ class uiboard : public Drawable, public Transformable
                     Vertex* tile = coords2TilePointer(coords);
 
                     // define its 4 corners
-                    tile[0].position = Vector2f(file * _length/8, rank * _width/8);
-                    tile[1].position = Vector2f((file + 1) * _length/8, rank * _width/8);
-                    tile[2].position = Vector2f((file + 1) * _length/8, (rank + 1) * _width/8);
-                    tile[3].position = Vector2f(file * _length/8, (rank + 1) * _width/8);
+                    tile[0].position = Vector2f(file * _tileLength, rank * _tileWidth);
+                    tile[1].position = Vector2f((file + 1) * _tileLength, rank * _tileWidth);
+                    tile[2].position = Vector2f((file + 1) * _tileLength, (rank + 1) * _tileWidth);
+                    tile[3].position = Vector2f(file * _tileLength, (rank + 1) * _tileWidth);
 
                     // Determine whether the square is light or dark
                     colorTile(coords, coords2TileColor(coords));
                 }
+            }
         }
 
         bool loadPieces(piece* board[8][8]) {
@@ -66,7 +73,7 @@ class uiboard : public Drawable, public Transformable
             for (int file = 0; file < 8; file++) {
                 for (int rank = 0; rank < 8; rank++) {
                     if (board[file][rank] != nullptr) {
-                        CircleShape* sprite = piece2Sprite(board[file][rank]);
+                        Sprite* sprite = piece2Sprite(board[file][rank]);
                         sprite->setPosition(coords2Position(Vector2i(file,rank)));
 
                         pieces[pieceCount] = sprite;
@@ -79,8 +86,6 @@ class uiboard : public Drawable, public Transformable
         }
 
         bool tileClick(int x, int y) {
-            std::cout << x << "," << y << std::endl;
-
             Vector2i coords = position2coords(x,y);
 
             if (!_sourceSelected) {
@@ -106,7 +111,6 @@ class uiboard : public Drawable, public Transformable
             // Color the tile red
             colorTile(_sourceCoords, _redColor);
         }
-
         void setTargetCoords(Vector2i coords) {
             // Indicate that a source tile is no longer selected
             _sourceSelected = false;
@@ -118,28 +122,10 @@ class uiboard : public Drawable, public Transformable
         }
 
     private:
-        /*
-        CircleShape* coords2Piece(Vector2i coords) {
-            for (int i = 0; i < 32; i++) {
-                if (pieces[i] == nullptr) return nullptr;
-                if (pieces[i]->getPosition() == coords2Position(coords)) return pieces[i];
-            }
-            return nullptr;
-        } */
-
-        CircleShape* piece2Sprite(piece* piece) {
-            CircleShape* sprite = new CircleShape;
-
-            // Setup physical properties (size, origin)
-            int size = pieceType2Size(piece->getType());
-            sprite->setRadius(size);
-            sprite->setOrigin(size,size);
-
-            // Setup style properties (color, outline)            
-            sprite->setFillColor(pieceColor2Color(piece->getColor()));
-            sprite->setOutlineThickness(3);
-            sprite->setOutlineColor(pieceColor2OutlineColor(piece->getColor()));
-
+        Sprite* piece2Sprite(piece* piece) {
+            Sprite* sprite = new Sprite;
+            sprite->setTexture(*pieceName2Texture(piece->getName()));
+            sprite->setOrigin(32,32);
             return sprite;
         }
 
@@ -197,32 +183,65 @@ class uiboard : public Drawable, public Transformable
 
 
         // PIECE STYLE MANAGEMENT
-        int pieceType2Size(char type) {
-            switch (type) {
-                case 'k':
-                    return 20;
 
-                case 'q':
-                    return 15;
+        Texture* pieceName2Texture(char name) {
 
-                case 'r':
-                    return 10;
+            Texture* texture = new Texture;
 
-                case 'b':
-                    return 8;
+            switch (name) {
+                case 'P':
+                    texture->loadFromFile("./assets/whitePawn.png");
+                    break;
 
-                case 'n':
-                    return 8;
+                case 'N':
+                    texture->loadFromFile("./assets/whiteKnight.png");
+                    break;
+
+                case 'B':
+                    texture->loadFromFile("./assets/whiteBishop.png");
+                    break;
+
+                case 'R':
+                    texture->loadFromFile("./assets/whiteRook.png");
+                    break;
+
+                case 'Q':
+                    texture->loadFromFile("./assets/whiteQueen.png");
+                    break;
+
+                case 'K':
+                    texture->loadFromFile("./assets/whiteKing.png");
+                    break;
+
 
                 case 'p':
-                    return 5;
+                    texture->loadFromFile("./assets/blackPawn.png");
+                    break;
 
-                default:
-                    return 0;
+                case 'n':
+                    texture->loadFromFile("./assets/blackKnight.png");
+                    break;
+
+                case 'b':
+                    texture->loadFromFile("./assets/blackBishop.png");
+                    break;
+
+                case 'r':
+                     texture->loadFromFile("./assets/blackRook.png");
+                    break;
+
+                case 'q':
+                    texture->loadFromFile("./assets/blackQueen.png");
+                    break;
+
+                case 'k':
+                    texture->loadFromFile("./assets/blackKing.png");
+                    break;
+
             }
+
+            return texture;
         }
-        Color pieceColor2Color(char color) { return color != 'B' ? _whiteColor : _blackColor; }
-        Color pieceColor2OutlineColor(char color) { return color != 'B' ? _blackColor : _whiteColor; }
         
         // TILE STYLE MANAGEMENT
 
