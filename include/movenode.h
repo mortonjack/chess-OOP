@@ -15,6 +15,7 @@ class movenode {
         movenode* _prevNode;
     public:
         // Constructors
+        movenode();
         movenode(int oldFile, int oldRank, int newFile, int newRank, 
                 bool enPassant, piece* capturedPiece);
         movenode(int oldFile, int oldRank, int newFile, int newRank, 

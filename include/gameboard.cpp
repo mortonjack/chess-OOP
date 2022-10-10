@@ -3,13 +3,15 @@
 #include <cstdlib>
 using namespace std;
 
-gameboard::gameboard(): prevBoard(nullptr) {
+gameboard::gameboard() {
     // initialise empty board
     for (int rank = 0; rank < 8; rank++) {
         for (int file = 0; file < 8; file++) {
             this->board[file][rank] = nullptr;
         }
     }
+    // Initialise empty movenode
+    prevMove = new movenode();
 }
 
 void gameboard::clearBoard() {
@@ -18,8 +20,8 @@ void gameboard::clearBoard() {
             removePiece(file,rank);
         }
     }
-    delete prevBoard;
-    prevBoard = nullptr;
+    delete prevMove;
+    prevMove = new movenode();
 }
 
 void gameboard::removePiece(int file, int rank) {
@@ -59,7 +61,7 @@ piece* gameboard::targetWithEnPassant(int oldFile, int oldRank, int newFile, int
 
     // Did the piece move up 2 spots on the previous turn?
     if (!(enPassantTarget->getMoveCount() == 1)) return targetPiece;
-    if (prevBoard->prev()->getPiece(newFile, newRank*2 - oldRank) != enPassantTarget) return targetPiece; 
+    if (!(prevMove->getNewFile() == newFile && prevMove->getNewRank() == oldRank)) return targetPiece;
 
     // If so, target that pawn to be captured
     return enPassantTarget;
@@ -233,18 +235,13 @@ bool gameboard::validMovement(int oldFile, int oldRank, int newFile, int newRank
 }
 
 bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
-    // Initialise previous board upon first attempted move
-    if (prevBoard == nullptr) {
-        prevBoard = new boardnode(board);
-    }
-
     // Check validity of move
     if (!validMovement(oldFile, oldRank, newFile, newRank)) return false;
 
     // Check castle
     if (isCastling(oldFile, oldRank, newFile, newRank)) {
         castle(oldFile, newFile, newRank);
-        prevBoard->addBoard(board);
+        prevMove->addMove(oldFile, oldRank, newFile, newRank, false, nullptr);
         return true;
     }
 
@@ -269,7 +266,7 @@ bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
     addPiece(newFile, newRank, sourcePiece);
 
     // Report successful move
-    prevBoard->addBoard(board);
+    prevMove->addMove(oldFile, oldRank, newFile, newRank, enPassant, targetPiece);
     return true;
 }
 

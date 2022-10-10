@@ -1,6 +1,17 @@
 #include "movenode.h"
 #include <cstdlib>
 
+// Constructors
+movenode::movenode() {
+    _oldFile = -1;
+    _newFile = -1;
+    _oldRank = -1;
+    _newRank = -1;
+    _enPassant = false;
+    _capturedPiece = nullptr;
+    _prevNode = nullptr;
+}
+
 movenode::movenode(int oldFile, int oldRank, int newFile, int newRank, 
                     bool enPassant, piece* capturedPiece) {
     _oldFile = oldFile;
