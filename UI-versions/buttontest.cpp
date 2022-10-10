@@ -91,28 +91,24 @@ int main()
     sf::Text text;
 
     sf::Font font;
-    if (!font.loadFromFile("arial.ttf"))
-    {
-        return -1;
-    }
+    if (!font.loadFromFile("./assets/Roboto-Black.ttf")) { return -1; }
 
     // select the font
     text.setFont(font); // font is a sf::Font
 
     // set the string to display
-    text.setString("Hello world");
+    text.setString("White");
+
+
+    // set the string to display
+    text.setPosition(Vector2f(padding,gutterSpace/2 - padding));
+
 
     // set the character size
-    text.setCharacterSize(24); // in pixels, not points!
+    text.setCharacterSize(60); // in pixels, not points!
 
     // set the color
-    text.setFillColor(sf::Color::Red);
-
-    // set the text style
-    text.setStyle(sf::Text::Bold | sf::Text::Underlined);
-
-    // inside the main loop, between window.clear() and window.display()
-    window.draw(text);
+    text.setFillColor(sf::Color::White);
 
     uiboard.loadPieces(sourceBoard.board);
 
@@ -144,6 +140,7 @@ int main()
         // Draw the UI
         window.clear();
         window.draw(uiboard);
+        window.draw(text);
         window.display();
     }
 
