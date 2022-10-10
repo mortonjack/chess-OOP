@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "../include/uiboard.hpp"
+#include "../include/uitext.hpp"
 #include "../include/gameboard.h"
 #include "../include/king.h"
 #include "../include/bishop.h"
@@ -72,15 +73,13 @@ int main()
 
     // Window dimentions
     const int windowLength = 1200;
-    const int windowHeight = 900;
+    const int windowHeight = 800;
     
     const int gutterSpace = (windowHeight - boardHeight)/2;
-    const int padding = 20;
+    const int padding = 25;
 
     // UI dimentions
     const int uiLength = windowLength - boardLength - padding*2;
-
-
 
     // Create the window
     RenderWindow window(sf::VideoMode(windowLength, windowHeight), "Chess-OOP");
@@ -88,27 +87,10 @@ int main()
     // Create the chess board and some pieces with radius 20px
     uiboard uiboard(boardLength,boardHeight,Vector2i(padding,gutterSpace));
 
-    sf::Text text;
+    int titleFontSize = 40;
 
-    sf::Font font;
-    if (!font.loadFromFile("./assets/Roboto-Black.ttf")) { return -1; }
-
-    // select the font
-    text.setFont(font); // font is a sf::Font
-
-    // set the string to display
-    text.setString("White");
-
-
-    // set the string to display
-    text.setPosition(Vector2f(padding,gutterSpace/2 - padding));
-
-
-    // set the character size
-    text.setCharacterSize(60); // in pixels, not points!
-
-    // set the color
-    text.setFillColor(sf::Color::White);
+    uitext whiteName("White",Vector2f(padding,gutterSpace - titleFontSize - padding),titleFontSize);
+    uitext blackName("Black",Vector2f(padding,boardHeight + gutterSpace + 10),titleFontSize);
 
     uiboard.loadPieces(sourceBoard.board);
 
@@ -140,7 +122,8 @@ int main()
         // Draw the UI
         window.clear();
         window.draw(uiboard);
-        window.draw(text);
+        window.draw(whiteName);
+        window.draw(blackName);
         window.display();
     }
 
