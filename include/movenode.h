@@ -20,6 +20,10 @@ class movenode {
         movenode(int oldFile, int oldRank, int newFile, int newRank, 
                 bool enPassant, piece* capturedPiece, movenode*);
 
+        // Add move to list
+        void addMove(int oldFile, int oldRank, int newFile, int newRank, 
+                bool enPassant, piece* capturedPiece);
+
         // Access previous node
         movenode* prev();
         movenode* prev(int distance);
@@ -35,13 +39,6 @@ class movenode {
         // Reverse
         void reverseBoard(piece* board[8][8], int moves);
         void unreverseBoard(piece* board[8][8], int moves);
-
-        // Add move to list
-        void addMove(int oldFile, int oldRank, int newFile, int newRank, 
-                bool enPassant, piece* capturedPiece);
-
-        // Copy piece
-        piece* copyPiece(piece* pieceToCopy);
 
         // Destructor
         ~movenode();

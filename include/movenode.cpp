@@ -23,6 +23,7 @@ movenode::movenode(int oldFile, int oldRank, int newFile, int newRank,
     _prevNode = prevNode;
 }
 
+// Add move
 void movenode::addMove(int oldFile, int oldRank, int newFile, int newRank,
                     bool enPassant, piece* capturedPiece) {
     movenode* prevMove = new movenode(_oldFile, _oldRank, _newFile, _newRank,
@@ -36,6 +37,7 @@ void movenode::addMove(int oldFile, int oldRank, int newFile, int newRank,
     _capturedPiece = capturedPiece;
 }
 
+// Access previous node
 movenode* movenode::prev() {
     return _prevNode;
 }
@@ -50,6 +52,15 @@ movenode* movenode::prev(int distance) {
     }
 }
 
+// Access information
+int movenode::getOldFile() {return _oldFile;}
+int movenode::getOldRank() {return _oldRank;}
+int movenode::getNewFile() {return _newFile;}
+int movenode::getNewRank() {return _newRank;}
+piece* movenode::getCapturedPiece() {return _capturedPiece;}
+bool movenode::enPassant() {return _enPassant;}
+
+// Reverse 
 void movenode::reverseBoard(piece* board[8][8], int moves) {
     // Reverses the input board by [moves] moves
     piece* sourcePiece = board[_newFile][_newRank];
@@ -126,6 +137,7 @@ void movenode::unreverseBoard(piece* board[8][8], int moves) {
     return;
 }
 
+// Destructor
 movenode::~movenode() {
     if (_prevNode != nullptr) {
         delete _prevNode;
