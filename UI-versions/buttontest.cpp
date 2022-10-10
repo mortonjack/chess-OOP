@@ -1,7 +1,9 @@
+
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "../include/uiboard.hpp"
 #include "../include/uitext.hpp"
+#include "../include/uibutton.hpp"
 #include "../include/gameboard.h"
 #include "../include/king.h"
 #include "../include/bishop.h"
@@ -17,6 +19,8 @@ int main()
 {
     // Create empty board
     gameboard sourceBoard;
+
+    // GAME BOARD SETUP
 
     // Create a black and white king
     rook whiteARook;
@@ -67,30 +71,56 @@ int main()
     sourceBoard.addPiece(3,6,&blackDPawn);
     sourceBoard.addPiece(4,6,&blackEPawn);
 
+    // UI CONSTANTS
+
+    // Core Constants
+    const int PADDING = 25;
+
+    const int TEXT_HEIGHT = 40;
+    const int BUTTON_HEIGHT = 70;
+
     // Board dimensions
-    const int boardLength = 640;
-    const int boardHeight = 640;
+    const int BOARD_LENGTH = 640;
+    const int BOARD_HEIGHT = 640;
 
-    // Window dimentions
-    const int windowLength = 1200;
-    const int windowHeight = 800;
-    
-    const int gutterSpace = (windowHeight - boardHeight)/2;
-    const int padding = 25;
+    // Window dimensions
+    const int WINDOW_LENGTH = 1200;
+    const int WINDOW_HEIGHT = BOARD_HEIGHT + 4*PADDING + 2*TEXT_HEIGHT;
 
-    // UI dimentions
-    const int uiLength = windowLength - boardLength - padding*2;
+    // Space next to board
+    const int CONTROL_LENGTH = WINDOW_LENGTH - 3*PADDING - BOARD_LENGTH;
+
+    // Space above / below board
+    const int GUTTER_HEIGHT = 2*PADDING + TEXT_HEIGHT;
+
+    // Remaining space in the control panel after the buttons are made
+    const int MOVES_HEIGHT = WINDOW_HEIGHT - 4*PADDING - 4*BUTTON_HEIGHT - 2*GUTTER_HEIGHT;
+
+    // Recurring positons
+    const int TOP_TEXT_Y = PADDING - 5;
+    const int BOTTOM_TEXT_Y = GUTTER_HEIGHT + BOARD_HEIGHT + PADDING;
+
+    const int CONTROL_X = PADDING*2 + BOARD_LENGTH;
+
+    const Vector2f BUTTON_DIMENSIONS = Vector2f(CONTROL_LENGTH,BUTTON_HEIGHT);
 
     // Create the window
-    RenderWindow window(sf::VideoMode(windowLength, windowHeight), "Chess-OOP");
+    RenderWindow window(sf::VideoMode(WINDOW_LENGTH, WINDOW_HEIGHT), "Chess-OOP");
 
     // Create the chess board and some pieces with radius 20px
-    uiboard uiboard(boardLength,boardHeight,Vector2i(padding,gutterSpace));
+    uiboard uiboard(BOARD_LENGTH,BOARD_HEIGHT,Vector2i(PADDING,GUTTER_HEIGHT));
 
-    int titleFontSize = 40;
+    uitext whiteName(Vector2f(PADDING,TOP_TEXT_Y),"White");
+    uitext blackName(Vector2f(PADDING,BOTTOM_TEXT_Y),"Black");
 
-    uitext whiteName("White",Vector2f(padding,gutterSpace - titleFontSize - padding),titleFontSize);
-    uitext blackName("Black",Vector2f(padding,boardHeight + gutterSpace + 10),titleFontSize);
+    uitext matchTitle(Vector2f(CONTROL_X,TOP_TEXT_Y),"White vs. Black");
+
+    uibutton movesFiller  (Vector2f(CONTROL_X,GUTTER_HEIGHT),"Save",Vector2f(CONTROL_LENGTH,MOVES_HEIGHT));
+
+    uibutton saveButton  (Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT),"Save",BUTTON_DIMENSIONS);
+    uibutton loadButton  (Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*1),"Save",BUTTON_DIMENSIONS);
+    uibutton drawButton  (Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*2),"Save",BUTTON_DIMENSIONS);
+    uibutton resignButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*3),"Save",BUTTON_DIMENSIONS);
 
     uiboard.loadPieces(sourceBoard.board);
 
@@ -120,10 +150,16 @@ int main()
         }
 
         // Draw the UI
-        window.clear();
+        window.clear(Color{ 0x151515FF });
         window.draw(uiboard);
         window.draw(whiteName);
         window.draw(blackName);
+        window.draw(matchTitle);
+        window.draw(saveButton);
+        window.draw(loadButton);
+        window.draw(drawButton);
+        window.draw(resignButton);
+        window.draw(movesFiller);
         window.display();
     }
 

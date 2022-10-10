@@ -1,3 +1,6 @@
+#ifndef UITEXT_H
+#define UITEXT_H
+
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
@@ -11,15 +14,17 @@ class uitext : public Drawable, public Transformable
         Font font;
         string text;
 
-        uitext(string text, Vector2f position, int fontSize = 25, Color color = Color{ 0xF2DBB4FF }) {
+        uitext(): uitext(Vector2f(0,0), "") {}
+
+        uitext(Vector2f position, string text, int fontSize = 35, Color fontColor = Color{ 0xF2DBB4FF }) {
             // Load text font
-            font.loadFromFile("./assets/Pixeloid.ttf");
+            font.loadFromFile("./assets/Pixelate.ttf");
 
             // Set text font
             element.setFont(font);
 
             // Set color
-            element.setColor(color);
+            element.setFillColor(fontColor);
 
             // Set text content
             element.setString(text);
@@ -42,3 +47,5 @@ class uitext : public Drawable, public Transformable
         target.draw(element);
     }
 };
+
+#endif

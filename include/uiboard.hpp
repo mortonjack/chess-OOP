@@ -14,11 +14,11 @@ class uiboard : public Drawable, public Transformable
         int _tileWidth;
 
         // Color constants
-        const Color _whiteColor = Color{ 0xF3F3F3FF };
-        const Color _blackColor = Color{ 0x4D4C4AFF };
-        const Color _lightColor = Color{ 0xF2DBB4FF };
-        const Color _darkColor = Color{ 0xB48C64FF };
-        const Color _redColor = Color{ 0xCC0000FF };
+        const Color _whiteColor = Color{ 0xF5F5F5FF };
+        const Color _blackColor = Color{ 0x454545FF };
+        const Color _lightColor = Color{ 0xF5D5B5FF };
+        const Color _darkColor = Color{ 0xB58565FF };
+        const Color _redColor = Color{ 0xD50000FF };
 
         // Piece moving variables
         bool _sourceSelected = false;
