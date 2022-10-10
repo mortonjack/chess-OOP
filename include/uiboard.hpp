@@ -33,13 +33,16 @@ class uiboard : public Drawable, public Transformable
         VertexArray vertices;
 
     public:
-        uiboard(): uiboard(512,512) {}
-        uiboard(int length, int width) {
+        uiboard(): uiboard(512,512,Vector2i(0,0)) {}
+        uiboard(int length, int width, Vector2i offset) {
             _length = length;
             _width = width;
 
             _tileLength = length/8;
             _tileWidth = width/8;
+
+            int offsetX = offset.x;
+            int offsetY = offset.y;
 
             // resize the vertex array to fit the level size
             vertices.setPrimitiveType(Quads);
@@ -56,10 +59,10 @@ class uiboard : public Drawable, public Transformable
                     Vertex* tile = coords2TilePointer(coords);
 
                     // define its 4 corners
-                    tile[0].position = Vector2f(file * _tileLength, rank * _tileWidth);
-                    tile[1].position = Vector2f((file + 1) * _tileLength, rank * _tileWidth);
-                    tile[2].position = Vector2f((file + 1) * _tileLength, (rank + 1) * _tileWidth);
-                    tile[3].position = Vector2f(file * _tileLength, (rank + 1) * _tileWidth);
+                    tile[0].position = Vector2f(file * _tileLength + offsetX, rank * _tileWidth + offsetY);
+                    tile[1].position = Vector2f((file + 1) * _tileLength + offsetX, rank * _tileWidth + offsetY);
+                    tile[2].position = Vector2f((file + 1) * _tileLength + offsetX, (rank + 1) * _tileWidth + offsetY);
+                    tile[3].position = Vector2f(file * _tileLength + offsetX, (rank + 1) * _tileWidth + offsetY);
 
                     // Determine whether the square is light or dark
                     colorTile(coords, coords2TileColor(coords));
