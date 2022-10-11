@@ -125,10 +125,6 @@ bool drawtest::threefoldTest(bool display) {
     board.movePiece(7,7, 6,7);
     board.movePiece(1,0, 0,0);
     board.movePiece(6,7, 7,7);
-    board.movePiece(0,0, 1,0);
-    board.movePiece(7,7, 6,7);
-    board.movePiece(1,0, 0,0);
-    board.movePiece(6,7, 7,7);
     bool test2 = !board.threefoldRepetition();
 
     // Test 3: Returns true after (truly) same state 3 times
@@ -142,7 +138,7 @@ bool drawtest::threefoldTest(bool display) {
 
     // Test 4: Returns false after moving pawns up
     board.movePiece(2,1, 2,3);
-    bool test4 = board.threefoldRepetition();
+    bool test4 = !board.threefoldRepetition();
     board.movePiece(7,7, 7,6);
     board.movePiece(2,3, 2,4);
     if (display) board.visualiseTextBoard();
@@ -153,13 +149,16 @@ bool drawtest::threefoldTest(bool display) {
 
     board.movePiece(0,0, 0,1);
     board.movePiece(7,6, 7,7);
+    if (display) board.visualiseTextBoard();
     board.movePiece(0,1, 0,0);
     board.movePiece(7,7, 7,6);
+    if (display) board.visualiseTextBoard();
     board.movePiece(0,0, 0,1);
     board.movePiece(7,6, 7,7);
+    if (display) board.visualiseTextBoard();
     board.movePiece(0,1, 0,0);
     board.movePiece(7,7, 7,6);
-
+    if (display) board.visualiseTextBoard();
     bool test5 = !board.threefoldRepetition();
     
     board.movePiece(0,0, 0,1);
@@ -183,12 +182,16 @@ bool drawtest::threefoldTest(bool display) {
     board.movePiece(7,6, 7,7);
     board.movePiece(0,1, 0,0);
     board.movePiece(7,7, 7,6);
+    if (display) board.visualiseTextBoard();
     board.movePiece(0,0, 0,2);
     board.movePiece(7,6, 7,5);
+    if (display) board.visualiseTextBoard();
     board.movePiece(0,2, 0,1);
     board.movePiece(7,5, 7,7);
+    if (display) board.visualiseTextBoard();
     board.movePiece(0,1, 0,0);
     board.movePiece(7,7, 7,6);
+    if (display) board.visualiseTextBoard();
     bool test8 = board.threefoldRepetition();
 
     // Test 9: Doesn't count if opponent's king moves
@@ -258,6 +261,7 @@ bool drawtest::threefoldTest(bool display) {
         }
     }
 
+    success = test1 && test2 && test3 && test4 && test5 && test6 && test7 && test8 && test9;
     return success;
 }
 

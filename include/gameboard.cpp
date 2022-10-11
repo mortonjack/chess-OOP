@@ -464,16 +464,17 @@ bool gameboard::threefoldRepetition() {
 
     while (possibleThreefold) {
         sameState = true;
-        
+        oldPieceCount = 0;
+
         // Are there more moves to reverse?
         if (node->prev(4)->prev() == nullptr) {
             possibleThreefold = false;
             prevMove->unreverseBoard(oldBoard, depth);
             return false;
         }
-        node->reverseBoard(oldBoard, 4);
-        depth += 4;
-        node = node->prev(4);
+        node->reverseBoard(oldBoard, 2);
+        depth += 2;
+        node = prevMove->prev(depth);
 
         // Check if all pieces are in the same state
         for (int i = 0; i < 8; i++) {
@@ -516,8 +517,9 @@ bool gameboard::threefoldRepetition() {
                             }
                             if (couldTake) {
                                 // Did this pawn move up last turn?
-                                if (node->prev()->getOldFile() == node->prev()->getNewFile()) {
-                                    if (abs(node->prev()->getOldRank() - node->prev()->getNewRank()) == 2) {
+                                if (node->getNewFile() == i && node->getNewRank() == j) {
+                                    if (abs(node->getOldRank() - node->getNewRank()) == 2) {
+                                        // En passant possible
                                         prevMove->unreverseBoard(oldBoard, depth);
                                         possibleThreefold = false;
                                         return false;
@@ -527,11 +529,11 @@ bool gameboard::threefoldRepetition() {
                         }
 
                         // Castle check (black)
-                        if (board[4][7] != nullptr) {
-                            if (board[4][7]->getType() == 'k' && board[4][7]->getMoveCount() == 0) {
+                        if (oldBoard[4][7] != nullptr) {
+                            if (oldBoard[4][7]->getType() == 'k' && oldBoard[4][7]->getMoveCount() == 0) {
                                 if (!blackShortCastle) {
-                                    if (board[7][7] != nullptr) {
-                                        if (board[7][7]->getType() == 'r' && board[7][7]->getMoveCount() == 0) {
+                                    if (oldBoard[7][7] != nullptr) {
+                                        if (oldBoard[7][7]->getType() == 'r' && oldBoard[7][7]->getMoveCount() == 0) {
                                             // Could previously castle short. 
                                             prevMove->unreverseBoard(oldBoard, depth);
                                             possibleThreefold = false;
@@ -540,8 +542,8 @@ bool gameboard::threefoldRepetition() {
                                     }
                                 }
                                 if (!blackLongCastle) {
-                                    if (board[0][7] != nullptr) {
-                                        if (board[0][7]->getType() == 'r' && board[0][7]->getMoveCount() == 0) {
+                                    if (oldBoard[0][7] != nullptr) {
+                                        if (oldBoard[0][7]->getType() == 'r' && oldBoard[0][7]->getMoveCount() == 0) {
                                             // Could previously castle long. 
                                             prevMove->unreverseBoard(oldBoard, depth);
                                             possibleThreefold = false;
@@ -553,11 +555,11 @@ bool gameboard::threefoldRepetition() {
                         }
 
                         // Castle check (white)
-                        if (board[4][0] != nullptr) {
-                            if (board[4][0]->getType() == 'k' && board[4][0]->getMoveCount() == 0) {
+                        if (oldBoard[4][0] != nullptr) {
+                            if (oldBoard[4][0]->getType() == 'k' && oldBoard[4][0]->getMoveCount() == 0) {
                                 if (!whiteShortCastle) {
-                                    if (board[7][0] != nullptr) {
-                                        if (board[7][0]->getType() == 'r' && board[7][0]->getMoveCount() == 0) {
+                                    if (oldBoard[7][0] != nullptr) {
+                                        if (oldBoard[7][0]->getType() == 'r' && oldBoard[7][0]->getMoveCount() == 0) {
                                             // Could previously castle short. 
                                             prevMove->unreverseBoard(oldBoard, depth);
                                             possibleThreefold = false;
@@ -566,8 +568,8 @@ bool gameboard::threefoldRepetition() {
                                     }
                                 }
                                 if (!whiteLongCastle) {
-                                    if (board[0][0] != nullptr) {
-                                        if (board[0][0]->getType() == 'r' && board[0][0]->getMoveCount() == 0) {
+                                    if (oldBoard[0][0] != nullptr) {
+                                        if (oldBoard[0][0]->getType() == 'r' && oldBoard[0][0]->getMoveCount() == 0) {
                                             // Could previously castle long. 
                                             prevMove->unreverseBoard(oldBoard, depth);
                                             possibleThreefold = false;
@@ -601,8 +603,6 @@ bool gameboard::threefoldRepetition() {
             return true;
         }
     }
-
-    // Function should return inside loop, but just in case:
 
     // Threefold not possible
     return false;
