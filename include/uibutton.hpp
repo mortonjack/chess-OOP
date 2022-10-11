@@ -14,18 +14,42 @@ class uibutton : public Drawable, public Transformable
         uitext* textComponent;
         RectangleShape buttonComponent;
 
+        Color standardColor;
+        Color inverseColor;
+
         uibutton(Vector2f position, string text, Vector2f dimensions): uibutton(position, text, dimensions, Color{ 0x454545FF }, 35, Color{ 0xF2DBB4FF }) {}
 
         uibutton(Vector2f position, string text, Vector2f dimensions, Color buttonColor, int fontSize, Color fontColor) {
+            standardColor = buttonColor;
+            inverseColor = fontColor;
+
             textComponent = new uitext(position, text, fontSize, fontColor);
 
             buttonComponent.setSize(dimensions);
-            buttonComponent.setFillColor(buttonColor);
             buttonComponent.setPosition(position);
+            buttonComponent.setFillColor(buttonColor);
 
             const sf::FloatRect bounds(textComponent->element.getLocalBounds());
             const sf::Vector2f box(buttonComponent.getSize());
             textComponent->element.setOrigin((bounds.width - box.x) / 2 + bounds.left, (bounds.height - box.y) / 2 + bounds.top);
+        }
+
+        // Retursn whether the button is hovered over
+        bool isHovered(int x, int y) {
+            bool hovered = ((x > buttonComponent.getPosition().x && x < buttonComponent.getPosition().x + buttonComponent.getSize().x) && (y > buttonComponent.getPosition().y && y < buttonComponent.getPosition().y + buttonComponent.getSize().y));
+            return hovered;
+        }
+
+        void updateButtonColors(int x, int y) { 
+            bool invert = isHovered(x,y);
+            
+            if (!invert) {
+                buttonComponent.setFillColor(standardColor);
+                textComponent->element.setFillColor(inverseColor);
+            } else {
+                buttonComponent.setFillColor(inverseColor);   
+                textComponent->element.setFillColor(standardColor);            
+            }
         }
 
     // DRAW FUNCTION

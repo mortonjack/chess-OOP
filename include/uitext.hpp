@@ -16,9 +16,11 @@ class uitext : public Drawable, public Transformable
 
         uitext(): uitext(Vector2f(0,0), "") {}
 
-        uitext(Vector2f position, string text, int fontSize = 35, Color fontColor = Color{ 0xF2DBB4FF }) {
+        uitext(Vector2f position, string text): uitext(position, text, 35, Color{ 0xF2DBB4FF }) {}
+
+        uitext(Vector2f position, string text, int fontSize, Color fontColor) {
             // Load text font
-            font.loadFromFile("./assets/Pixelate.ttf");
+            font.loadFromFile("./assets/Pixeloid-Mono.ttf");
 
             // Set text font
             element.setFont(font);
@@ -36,7 +38,6 @@ class uitext : public Drawable, public Transformable
             element.setPosition(position);
         }
         
-
     // DRAW FUNCTION
     virtual void draw(RenderTarget& target, RenderStates states) const
     {

@@ -115,7 +115,7 @@ int main()
 
     uitext matchTitle(Vector2f(CONTROL_X,TOP_TEXT_Y),"White vs. Black");
 
-    uibutton movesFiller  (Vector2f(CONTROL_X,GUTTER_HEIGHT),"Save",Vector2f(CONTROL_LENGTH,MOVES_HEIGHT));
+    uitext movesText(Vector2f(CONTROL_X,GUTTER_HEIGHT),"1. e4 e5\n2. e4 e5\n3. e4 e5\n4. e4 e5\n5. e4 e5\n6. e4 e5");
 
     uibutton saveButton  (Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT),"Save",BUTTON_DIMENSIONS);
     uibutton loadButton  (Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*1),"Save",BUTTON_DIMENSIONS);
@@ -146,7 +146,17 @@ int main()
                     sourceBoard.movePiece(oldFile,oldRank, newFile, newRank);
                     uiboard.loadPieces(sourceBoard.board);
                 }
+
+                // if (saveButton.isHovered) { // Execute save function }
             }
+
+            if (event.type == sf::Event::MouseMoved) {
+                saveButton.updateButtonColors(event.mouseMove.x, event.mouseMove.y);
+                loadButton.updateButtonColors(event.mouseMove.x, event.mouseMove.y);
+                drawButton.updateButtonColors(event.mouseMove.x, event.mouseMove.y);
+                resignButton.updateButtonColors(event.mouseMove.x, event.mouseMove.y);
+            }
+
         }
 
         // Draw the UI
@@ -159,7 +169,7 @@ int main()
         window.draw(loadButton);
         window.draw(drawButton);
         window.draw(resignButton);
-        window.draw(movesFiller);
+        window.draw(movesText);
         window.display();
     }
 
