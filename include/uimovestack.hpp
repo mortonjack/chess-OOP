@@ -31,12 +31,12 @@ class uimovestack : public Drawable, public Transformable
         }
 
         
-    void updateMovesDisplayed(gameboard board) {
-        movenode* move = board.prevMove;
+    void updateMovesDisplayed(gameboard* board) {
+        movenode* move = board->prevMove;
 
         int file = move->getNewFile();
         int rank = move->getNewRank();
-        char pieceType = board.board[file][rank]->getType();
+        char pieceType = board->board[file][rank]->getType();
 
         string moveString = pieceType2String(pieceType) + file2String(file) + rank2String(rank);
 
@@ -65,6 +65,7 @@ class uimovestack : public Drawable, public Transformable
             
             string moveString = to_string(moveNumber+pastMoves) + ". " + whiteMove + " " + blackMove + "\n";
             string newString = textComponent->element.getString().toAnsiString() + moveString;
+            
             textComponent->element.setString(newString);
 
             moveNumber++;

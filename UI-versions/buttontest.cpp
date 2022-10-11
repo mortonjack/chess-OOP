@@ -150,7 +150,7 @@ int main()
                     sourceBoard.movePiece(oldFile,oldRank, newFile, newRank);
                     uiboard.loadPieces(sourceBoard.board);
 
-                    movesText.updateMovesDisplayed(sourceBoard);
+                    movesText.updateMovesDisplayed(&sourceBoard);
 
                     if (saveButton.isHovered(event.mouseButton.x, event.mouseButton.y)) {} // Execute save function }
                 }
