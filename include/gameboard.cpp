@@ -471,7 +471,7 @@ bool gameboard::threefoldRepetition() {
         oldPieceCount = 0;
 
         // Are there more moves to reverse?
-        if (node->prev(4)->prev() == nullptr) {
+        if (node->prev(2)->prev() == nullptr) {
             possibleThreefold = false;
             prevMove->unreverseBoard(oldBoard, depth);
             return false;
@@ -546,6 +546,56 @@ bool gameboard::threefoldRepetition() {
 
     // Threefold not possible
     return false;
+}
+
+bool gameboard::fiftyMoveRule() {
+    // Returns true if each player has made 50 moves without
+    // capturing a piece or moving up a pawn
+
+    // Check if fifty moves have passed
+    movenode* node = prevMove->prev(99);
+    if (node->prev() == nullptr) {return false;}
+
+    // Initialise variables
+    piece* oldBoard[8][8];
+    int pieceCount = 0;
+    int oldPieceCount = 0;
+    bool pawnMove = false;
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            oldBoard[i][j] = board[i][j];
+        }
+    }
+
+    // Reverse board to old state
+    prevMove->reverseBoard(oldBoard, 99);
+
+    // Check if a piece has been captured or a pawn has moved up
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            // Increment move count
+            if (oldBoard[i][j] != nullptr) {
+                oldPieceCount++;
+            }
+            // Increment move count
+            if (board[i][j] != nullptr) {
+                pieceCount++;
+
+                // See if pawn has moved up
+                if (board[i][j]->getType() == 'p') {
+                    if (board[i][j] != oldBoard[i][j]) {
+                        pawnMove = true;
+                    }
+                }
+            }
+        }
+    }
+
+    // Bring board back to current state
+    prevMove->unreverseBoard(oldBoard, 99);
+
+    // Check if pawn moved up or piece was captured
+    return !(pawnMove || pieceCount < oldPieceCount);
 }
 
 bool gameboard::testDriver(piece* pieces[], int* coords, int length) {

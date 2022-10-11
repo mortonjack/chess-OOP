@@ -85,8 +85,6 @@ bool drawtest::threefoldTest(bool display) {
     // Tests the threefold repetition function
     // Threefold repetition occurs when the same
     // board state occurs 3 turns in a row
-    // and the player who's turn it is requests a draw
-    // their draw request is automatically accepted
     bool success = false;
 
     // Initialise objects
@@ -267,12 +265,100 @@ bool drawtest::threefoldTest(bool display) {
 
 bool drawtest::fiftyMoveTest(bool display) {
     // Tests the fifty move function
-    // If fifty moves have passed without a piece being captured
-    // or a pawn being moved,
-    // and the player who's turn it is requests a draw
-    // their draw request is automatically accepted
-    bool success = true;
+    // Returns true if each player has moved 50 times
+    // Without capturing a piece or moving a pawn
+    bool success = false;
 
+    // Initialise objects
+    gameboard board;
+    pawn whitePawn('W');
+    pawn blackPawn('B');
+    queen whiteQueen('W');
+    queen blackQueen('B');
+
+    // Place pieces
+    board.addPiece(3,0, &blackQueen);
+    board.addPiece(7,1, &whitePawn);
+    board.addPiece(7,6, &blackPawn);
+    board.addPiece(0,7, &whiteQueen);
+
+    // Test 1: Fails when no moves made
+    if (display) board.visualiseTextBoard();
+    bool test1 = !board.fiftyMoveRule();
+
+    // Test 2: Fails when 99 moves made
+    board.movePiece(3,0, 0,3);
+    if (display) board.visualiseTextBoard();
+    for (int i = 1; i < 50; i++) {
+        board.movePiece(0,3, 3,0);
+        board.movePiece(3,0, 0,3);
+    }
+    bool test2 = !board.fiftyMoveRule();
+
+    // Test 3: Succeeds when 100 moves made
+    board.movePiece(0,3, 3,0);
+    if (display) board.visualiseTextBoard();
+    bool test3 = board.fiftyMoveRule();
+
+    // Test 4: Fails when pawn moved
+    board.movePiece(7,1, 7,3);
+    if (display) board.visualiseTextBoard();
+    bool test4 = !board.fiftyMoveRule();
+
+    // Test 5: Succeeds after 100 moves
+    for (int i = 0; i < 50; i++) {
+        board.movePiece(0,7, 0,3);
+        board.movePiece(0,3, 0,7);
+    }
+    board.movePiece(0,7, 0,3);
+    if (display) board.visualiseTextBoard();
+    bool test5 = board.fiftyMoveRule();
+
+    // Test 6: Fails after capture
+    board.movePiece(0,3, 3,0);
+    if (display) board.visualiseTextBoard();
+    bool test6 = !board.fiftyMoveRule();
+
+    // Display results
+    if (display) {
+        if (test1) {
+            cout << "Test passed: False when no moves made" << endl;
+        } else {
+            cout << "Test failed: True when no moves made" << endl;
+        }
+
+        if (test2) {
+            cout << "Test passed: False when 99 moves made" << endl;
+        } else {
+            cout << "Test failed: True when 99 moves made" << endl;
+        }
+
+        if (test3) {
+            cout << "Test passed: True when 100 moves made" << endl;
+        } else {
+            cout << "Test failed: False when 100 moves made" << endl;
+        }
+
+        if (test4) {
+            cout << "Test passed: False when pawn moved" << endl;
+        } else {
+            cout << "Test failed: True when pawn moved" << endl;
+        }
+
+        if (test5) {
+            cout << "Test passed: True when 100 moves made" << endl;
+        } else {
+            cout << "Test failed: False when 100 moves made" << endl;
+        }
+
+        if (test6) {
+            cout << "Test passed: False when queen captured" << endl;
+        } else {
+            cout << "Test failed: True when queen captured" << endl;
+        }
+    }
+
+    success = test1 && test2 && test3 && test4 && test5 && test6;
     return success;
 }
 
