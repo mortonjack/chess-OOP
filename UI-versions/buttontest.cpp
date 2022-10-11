@@ -4,6 +4,7 @@
 #include "../include/uiboard.hpp"
 #include "../include/uitext.hpp"
 #include "../include/uibutton.hpp"
+#include "../include/uimovestack.hpp"
 #include "../include/gameboard.h"
 #include "../include/king.h"
 #include "../include/bishop.h"
@@ -23,17 +24,17 @@ int main()
     // GAME BOARD SETUP
 
     // Create a black and white king
-    rook whiteARook;
-    rook whiteHRook;
-    knight whiteBKnight;
-    knight whiteGKnight;
-    bishop whiteCBishop;
-    bishop whiteFBishop;
-    queen whiteQueen;
-    king whiteKing;
+    rook whiteARook('W');
+    rook whiteHRook('W');
+    knight whiteBKnight('W');
+    knight whiteGKnight('W');
+    bishop whiteCBishop('W');
+    bishop whiteFBishop('W');
+    queen whiteQueen('W');
+    king whiteKing('W');
 
-    pawn whiteDPawn;
-    pawn whiteEPawn;
+    pawn whiteDPawn('W');
+    pawn whiteEPawn('W');
 
     rook blackARook('B');
     rook blackHRook('B');
@@ -104,6 +105,9 @@ int main()
 
     const Vector2f BUTTON_DIMENSIONS = Vector2f(CONTROL_LENGTH,BUTTON_HEIGHT);
 
+
+    // UI ELEMENTS
+
     // Create the window
     RenderWindow window(sf::VideoMode(WINDOW_LENGTH, WINDOW_HEIGHT), "Chess-OOP");
 
@@ -115,12 +119,12 @@ int main()
 
     uitext matchTitle(Vector2f(CONTROL_X,TOP_TEXT_Y),"White vs. Black");
 
-    uitext movesText(Vector2f(CONTROL_X,GUTTER_HEIGHT),"1. e4 e5\n2. e4 e5\n3. e4 e5\n4. e4 e5\n5. e4 e5\n6. e4 e5");
+    uimovestack movesText(10, Vector2f(CONTROL_X,GUTTER_HEIGHT));
 
     uibutton saveButton  (Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT),"Save",BUTTON_DIMENSIONS);
-    uibutton loadButton  (Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*1),"Save",BUTTON_DIMENSIONS);
-    uibutton drawButton  (Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*2),"Save",BUTTON_DIMENSIONS);
-    uibutton resignButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*3),"Save",BUTTON_DIMENSIONS);
+    uibutton loadButton  (Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*1),"Load",BUTTON_DIMENSIONS);
+    uibutton drawButton  (Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*2),"Offer Draw",BUTTON_DIMENSIONS);
+    uibutton resignButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*3),"Resign",BUTTON_DIMENSIONS);
 
     uiboard.loadPieces(sourceBoard.board);
 
@@ -145,9 +149,11 @@ int main()
 
                     sourceBoard.movePiece(oldFile,oldRank, newFile, newRank);
                     uiboard.loadPieces(sourceBoard.board);
-                }
 
-                // if (saveButton.isHovered) { // Execute save function }
+                    movesText.updateMovesDisplayed(sourceBoard);
+
+                    if (saveButton.isHovered(event.mouseButton.x, event.mouseButton.y)) {} // Execute save function }
+                }
             }
 
             if (event.type == sf::Event::MouseMoved) {

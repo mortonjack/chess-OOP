@@ -12,6 +12,7 @@ gameboard::gameboard() {
     }
     // Initialise empty movenode
     prevMove = new movenode();
+    moveNumber = 1;
 }
 
 void gameboard::clearBoard() {
@@ -267,6 +268,7 @@ bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
 
     // Report successful move
     prevMove->addMove(oldFile, oldRank, newFile, newRank, enPassant, targetPiece);
+    moveNumber++;
     return true;
 }
 

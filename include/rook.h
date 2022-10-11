@@ -1,5 +1,5 @@
 #ifndef ROOK_H
-#define ROOH_H
+#define ROOK_H
 
 #include "piece.h"
 

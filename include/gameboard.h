@@ -8,6 +8,7 @@ class gameboard {
     public:
         piece* board[8][8]; // gameboard, stores piece locations
         movenode* prevMove;
+        int moveNumber;
     public:
         gameboard(); // initialise empty board
         void visualiseTextBoard();
