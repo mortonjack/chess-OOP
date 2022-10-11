@@ -9,11 +9,11 @@
 #include "collisiontest.h"
 #include "checktest.h"
 #include "checkmatetest.h"
-#include "boardnodetest.h"
+#include "movenodetest.h"
 #include "drawtest.h"
 
 int main() {
-    driver tests(15);
+    driver tests(12);
 
     // Piece tests
     bishoptest case1;
@@ -38,7 +38,7 @@ int main() {
     tests.addCase(&case9);
     checkmatetest case10;
     tests.addCase(&case10);
-    boardnodetest case11;
+    movenodetest case11;
     tests.addCase(&case11);
     drawtest case12;
     tests.addCase(&case12);

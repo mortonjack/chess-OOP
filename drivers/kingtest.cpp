@@ -3,14 +3,17 @@
 #include "../include/rook.h"
 #include "../include/bishop.h"
 #include "../include/knight.h"
+#include "../include/pawn.h"
+#include "../include/queen.h"
 #include "kingtest.h"
 #include <iostream>
 using namespace std;
 
-kingtest::kingtest(): kingtest(1) {}
-kingtest::kingtest(int length) {
+kingtest::kingtest() {
+    this->_length = 4;
     this->_failMessage = "King test failed";
     this->_passMessage = "King test succeeded";
+    initialiseResults();
 }
 
 bool kingtest::movementTest(bool display) {
@@ -19,7 +22,7 @@ bool kingtest::movementTest(bool display) {
 
     // Create the game board a white king.
     gameboard board;
-    king testKing = king();
+    king testKing('W');
 
     // Add the king to the game board
     board.addPiece(3,3,&testKing);
@@ -90,16 +93,16 @@ bool kingtest::castleTest(bool display) {
     // Create the game board a white king.
     gameboard board;
 
-    king whiteKing = king();
-    king whiteKingTwo = king();
-    king whiteKingThree = king();
+    king whiteKing('W');
+    king whiteKingTwo('W');
+    king whiteKingThree('W');
 
-    rook whiteARook = rook();
-    rook whiteHRook = rook();
-    rook whiteARookTwo = rook();
-    rook whiteHRookTwo = rook();
-    rook whiteARookThree = rook();
-    rook whiteHRookThree = rook();
+    rook whiteARook('W');
+    rook whiteHRook('W');
+    rook whiteARookTwo('W');
+    rook whiteHRookTwo('W');
+    rook whiteARookThree('W');
+    rook whiteHRookThree('W');
 
     rook blackRook('B');
     knight blackKnight('B');
@@ -248,9 +251,125 @@ bool kingtest::castleTest(bool display) {
     return success;
 }
 
-bool kingtest::runTests(bool display) {
-    bool success = true;
-    success = success && this->movementTest(display);
-    success = success && this->castleTest(display);
+bool kingtest::captureTest(bool display) {
+    bool success = false;
+
+    // Initialise objects
+    gameboard board;
+    king whiteKing('W');
+    pawn blackPawn('B');
+    knight blackKnight('B');
+    rook blackRook('B');
+    bishop blackBishop('B');
+    queen blackQueen('B');
+
+    // Place pieces
+    board.addPiece(2,3, &whiteKing);
+    board.addPiece(2,4, &blackPawn);
+    board.addPiece(3,5, &blackKnight);
+    board.addPiece(4,5, &blackBishop);
+    board.addPiece(5,6, &blackRook);
+    board.addPiece(7,7, &blackQueen);
+
+    if (display) board.visualiseTextBoard();
+    
+    // Test 1: King takes pawn
+    bool test1 = board.movePiece(2,3, 2,4);
+    if (display) board.visualiseTextBoard();
+
+    // Test 2: King takes knight
+    bool test2 = board.movePiece(2,4, 3,5);
+    if (display) board.visualiseTextBoard();
+
+    // Test 3: King takes bishop
+    bool test3 = board.movePiece(3,5, 4,5);
+    if (display) board.visualiseTextBoard();
+
+    // Test 4: King takes rook
+    bool test4 = board.movePiece(4,5, 5,6);
+    board.movePiece(7,7, 5,5);
+    if (display) board.visualiseTextBoard();
+
+    // Test 5: King takes queen
+    bool test5 = board.movePiece(5,6, 5,5);
+    if (display) board.visualiseTextBoard();
+
+    if (display) {
+        if (test1) {
+            cout << "Test passed: King takes pawn" << endl;
+        } else {
+            cout << "Test failed: King doesn't take pawn" << endl;
+        }
+
+        if (test2) {
+            cout << "Test passed: King takes knight" << endl;
+        } else {
+            cout << "Test failed: King doesn't take knight" << endl;
+        }
+
+        if (test3) {
+            cout << "Test passed: King takes bishop" << endl;
+        } else {
+            cout << "Test failed: King doesn't take bishop" << endl;
+        }
+
+        if (test4) {
+            cout << "Test passed: King takes rook" << endl;
+        } else {
+            cout << "Test failed: King doesn't take rook" << endl;
+        }
+
+        if (test5) {
+            cout << "Test passed: King takes queen" << endl;
+        } else {
+            cout << "Test failed: King doesn't take queen" << endl;
+        }
+    }
+    success = test1 && test2 && test3 && test4 && test5;
     return success;
+}
+
+bool kingtest::checkTest(bool display) {
+    bool success = false;
+
+    // Initialise objects
+    gameboard board;
+    king whiteKing('W');
+    king blackKing('B');
+
+    // Place objects
+    board.addPiece(3,3, &whiteKing);
+    board.addPiece(3,5, &blackKing);
+
+    // Test 1: Both not in check
+    if (display) board.visualiseTextBoard();
+    bool test1 = !board.isInCheck('W') && !board.isInCheck('B');
+
+    // Test 2: Can't move into each other
+    bool test2 = !board.movePiece(3,3, 3,4) && !board.movePiece(3,5, 2,4);
+    if (display) board.visualiseTextBoard();
+
+    if (display) {
+        if (test1) {
+            cout << "Test passed: Neither in check" << endl;
+        } else {
+            cout << "Test failed: King in check" << endl;
+        }
+
+        if (test2) {
+            cout << "Test passed: Can't move into check" << endl;
+        } else {
+            cout << "Test failed: Moves into check" << endl;
+        }
+    }
+
+    success = test1 && test2;
+    return success;
+}
+
+bool kingtest::runTests(bool display) {
+    
+    _results[3] = castleTest(display && !_results[3]);
+
+    return piecetest::runTests(display);
 }

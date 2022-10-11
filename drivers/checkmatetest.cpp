@@ -9,10 +9,11 @@
 #include <iostream>
 using namespace std;
 
-checkmatetest::checkmatetest(): checkmatetest(1) {}
-checkmatetest::checkmatetest(int length) {
+checkmatetest::checkmatetest() {
+    this->_length = 3;
     this->_failMessage = "Checkmate test failed";
     this->_passMessage = "Checkmate test succeeded";
+    initialiseResults();
 }
 
 bool checkmatetest::basicTest(bool display) {
@@ -126,12 +127,12 @@ bool checkmatetest::anarchyTest(bool display) {
     // Initialise objects
     gameboard board;
 
-    pawn whitePawnOne;
-    pawn whitePawnTwo;
-    king whiteKing;
-    knight whiteKnight;
-    rook whiteRook;
-    bishop whiteBishop;
+    pawn whitePawnOne('W');
+    pawn whitePawnTwo('W');
+    king whiteKing('W');
+    knight whiteKnight('W');
+    rook whiteRook('W');
+    bishop whiteBishop('W');
 
     king blackKing('B');
     rook blackRook('B');
@@ -224,8 +225,8 @@ bool checkmatetest::enPassantTest(bool display) {
     // Initialise objects
     gameboard board;
 
-    king whiteKing;
-    pawn whiteCPawn;
+    king whiteKing('W');
+    pawn whiteCPawn('W');
 
     king blackKing('B');
     pawn blackDPawn('B');
@@ -282,11 +283,10 @@ bool checkmatetest::enPassantTest(bool display) {
 }
 
 bool checkmatetest::runTests(bool display) {
-    bool success = true;
 
-    success = success && this->basicTest(display);
-    success = success && this->anarchyTest(display);
-    //success = success && this->enPassantTest(display);
+    _results[0] = basicTest(display && !_results[0]);
+    _results[1] = anarchyTest(display && !_results[1]);
+    _results[2] = enPassantTest(display && !_results[2]);
 
-    return success;
+    return result();
 }

@@ -2,12 +2,12 @@
 #define GAMEBOARD_H
 
 #include "piece.h"
-#include "boardnode.h"
+#include "movenode.h"
 
 class gameboard {
     public:
         piece* board[8][8]; // gameboard, stores piece locations
-        boardnode* prevBoard;
+        movenode* prevMove;
     public:
         gameboard(); // initialise empty board
         void visualiseTextBoard();
@@ -39,11 +39,10 @@ class gameboard {
         bool isThreatened(char color, int file, int rank);
 
         // Check if king is in check
-        bool isInCheck();
         bool isInCheck(char color);
 
         // Check if king is in checkmate
-        bool isInCheckmate();
+        bool isInMate(char color);
         bool isInCheckmate(char color);
 
         // Check for draws

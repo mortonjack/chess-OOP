@@ -1,16 +1,17 @@
 #ifndef KINGTEST_H
 #define KINGTEST_H
 
-#include "testcase.h"
+#include "piecetest.h"
 using namespace std;
 
-class kingtest : public testcase {
+class kingtest : public piecetest {
     public:
         kingtest();
-        kingtest(int length);
-        // display determines whether or not to output to stdout
-        bool movementTest(bool display); 
+        
+        bool movementTest(bool display);
         bool castleTest(bool display);
+        bool captureTest(bool display);
+        bool checkTest(bool display);
         bool runTests(bool display);
 };
 

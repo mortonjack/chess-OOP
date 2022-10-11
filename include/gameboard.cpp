@@ -1,16 +1,17 @@
 #include "gameboard.h"
-#include "pawn.h"
 #include <iostream>
 #include <cstdlib>
 using namespace std;
 
-gameboard::gameboard(): prevBoard(nullptr) {
+gameboard::gameboard() {
     // initialise empty board
     for (int rank = 0; rank < 8; rank++) {
         for (int file = 0; file < 8; file++) {
             this->board[file][rank] = nullptr;
         }
     }
+    // Initialise empty movenode
+    prevMove = new movenode();
 }
 
 void gameboard::clearBoard() {
@@ -19,8 +20,8 @@ void gameboard::clearBoard() {
             removePiece(file,rank);
         }
     }
-    delete prevBoard;
-    prevBoard = nullptr;
+    delete prevMove;
+    prevMove = new movenode();
 }
 
 void gameboard::removePiece(int file, int rank) {
@@ -60,7 +61,7 @@ piece* gameboard::targetWithEnPassant(int oldFile, int oldRank, int newFile, int
 
     // Did the piece move up 2 spots on the previous turn?
     if (!(enPassantTarget->getMoveCount() == 1)) return targetPiece;
-    if (prevBoard->prev()->getPiece(newFile, newRank*2 - oldRank) != enPassantTarget) return targetPiece; 
+    if (!(prevMove->getNewFile() == newFile && prevMove->getNewRank() == oldRank)) return targetPiece;
 
     // If so, target that pawn to be captured
     return enPassantTarget;
@@ -168,6 +169,8 @@ bool gameboard::validCapture(int oldFile, int oldRank, int newFile, int newRank)
     piece* targetPiece = targetWithEnPassant(oldFile, oldRank, newFile, newRank);
     bool enPassant = targetPiece != board[newFile][newRank];
 
+    if (sourcePiece->getColor() == targetPiece->getColor()) return false;
+
     // Call piece's capture validity function
     if (!sourcePiece->checkCaptureValidity(oldFile, oldRank, newFile, newRank)) {
         return false;
@@ -203,8 +206,6 @@ bool gameboard::validCapture(int oldFile, int oldRank, int newFile, int newRank)
 
 bool gameboard::validMovement(int oldFile, int oldRank, int newFile, int newRank) {
     // Checks if a proposed movement is valid
-    piece* sourcePiece = board[oldFile][oldRank];
-    piece* targetPiece = targetWithEnPassant(oldFile,oldRank, newFile,newRank);
 
     // Ensure all coordinates are valid
     if (oldRank < 0 || oldRank > 7 || oldFile < 0 || oldFile > 7 ||
@@ -212,14 +213,18 @@ bool gameboard::validMovement(int oldFile, int oldRank, int newFile, int newRank
         return false;
     }
 
+    piece* sourcePiece = board[oldFile][oldRank];
+
     // Check if piece exists
     if (sourcePiece == nullptr) return false;
+
+    piece* targetPiece = targetWithEnPassant(oldFile, oldRank, newFile, newRank);
 
     // Ensure the piece isn't moving to its current location
     if (oldRank == newRank && oldFile == newFile) return false;
 
     // Check if the piece's path is clear
-    if (!(checkPathClear(oldFile,oldRank, newFile,newRank))) return false; 
+    if (!(checkPathClear(oldFile,oldRank, newFile,newRank))) return false;
 
     // Check if capturing a piece
     if (targetPiece == nullptr) {
@@ -230,102 +235,39 @@ bool gameboard::validMovement(int oldFile, int oldRank, int newFile, int newRank
 }
 
 bool gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
-    // Initialise previous board upon first move
-    if (prevBoard == nullptr) {
-        prevBoard = new boardnode(board);
+    // Check validity of move
+    if (!validMovement(oldFile, oldRank, newFile, newRank)) return false;
+
+    // Check castle
+    if (isCastling(oldFile, oldRank, newFile, newRank)) {
+        castle(oldFile, newFile, newRank);
+        prevMove->addMove(oldFile, oldRank, newFile, newRank, false, nullptr);
+        return true;
     }
 
-    // Ensure all coordinates are valid
-    if (oldRank < 0 || oldRank > 7 || oldFile < 0 || oldFile > 7 ||
-        newRank < 0 || newRank > 7 || newFile < 0 || newFile > 7) {
-        return false;
+    // Store pieces
+    piece* sourcePiece = board[oldFile][oldRank];
+    piece* targetPiece = targetWithEnPassant(oldFile, oldRank, newFile, newRank);
+    bool enPassant = targetPiece != board[newFile][newRank];
+
+    // Check en passant
+    if (enPassant) {
+        removePiece(newFile, oldRank);
     }
 
-    if (board[oldFile][oldRank] != nullptr) { // check a piece exists at oldRank, oldFile
-        piece* sourcePiece = board[oldFile][oldRank];
-        piece* targetPiece = targetWithEnPassant(oldFile,oldRank, newFile,newRank);
-
-        // Validity Checks
-        if (oldRank == newRank && oldFile == newFile) return false; // Ensure that the piece has moved
-        if (!(checkPathClear(oldFile,oldRank, newFile,newRank))) return false; // Check if the piece's path is clear
-
-        // If there is not a piece at the new location...
-        if (targetPiece == nullptr) {
-
-            // If the player is trying to castle...
-            if (isCastling(oldFile,oldRank, newFile,newRank)) {
-                // perform castle
-                castle(oldFile,newFile,oldRank);
-
-                // report successful move
-                prevBoard->addBoard(board);
-                return true;
-            } else {
-                // Return false if the move isn't valid
-                if (!(sourcePiece->checkMoveValidity(oldFile,oldRank, newFile,newRank))) return false;     
-
-                // Move piece
-                addPiece(newFile, newRank, sourcePiece);
-                removePiece(oldFile, oldRank);
-            }
-
-            // Check if king is in check
-            if (isInCheck(sourcePiece->getColor())) {
-                // Undo move
-                removePiece(newFile, newRank);
-                addPiece(oldFile, oldRank, sourcePiece);
-                return false;
-            } else {
-                // increment move counter
-                sourcePiece->move();
-                // report successful move
-                prevBoard->addBoard(board);
-                return true;
-            }
-        // If there is a piece at the new location...
-        } else {
-            // If the piece is a different color...
-            if (sourcePiece->getColor() != targetPiece->getColor()) {
-                // Check if the capture is valid
-                if (!(sourcePiece->checkCaptureValidity(oldFile,oldRank, newFile,newRank))) return false;
-
-                // EXCEPTION: If en passant applies, capture via en passant
-                if (targetPiece != board[newFile][newRank]) {
-                    removePiece(newFile, oldRank);
-                }
-
-                // Move piece
-                addPiece(newFile, newRank, board[oldFile][oldRank]);
-                removePiece(oldFile, oldRank);
-            
-                // Check if king is in check
-                if (isInCheck(sourcePiece->getColor())) {
-                    // Undo move
-                    addPiece(oldFile, oldRank, sourcePiece);
-                    addPiece(newFile, newRank, targetPiece);
-
-                    // EXCEPTION: If en passant applies, capture via en passant
-                    if (targetPiece != board[newFile][newRank]) {
-                        addPiece(newFile, oldRank, targetPiece);
-                    }
-
-                    return false;
-                } else {
-                    // increment move counter
-                    sourcePiece->move();
-                    // capture piece
-                    targetPiece->capture();
-                    // report successful move
-                    prevBoard->addBoard(board);
-                    return true;
-                }
-            } else { // Piece at destination is the same colour as piece being moved
-                return false; // Don't move
-            }
-        }
-    } else { // if no piece exists at oldRank, oldFile
-        return false;
+    // Capture
+    if (targetPiece != nullptr) {
+        targetPiece->capture();
     }
+
+    // Move
+    sourcePiece->move();
+    removePiece(oldFile, oldRank);
+    addPiece(newFile, newRank, sourcePiece);
+
+    // Report successful move
+    prevMove->addMove(oldFile, oldRank, newFile, newRank, enPassant, targetPiece);
+    return true;
 }
 
 bool gameboard::checkPathClear(int oldFile, int oldRank, int newFile, int newRank) {
@@ -450,8 +392,6 @@ bool gameboard::isThreatened(char color, int file, int rank) {
     return false;
 }
 
-bool gameboard::isInCheck() {return isInCheck('W');}
-
 bool gameboard::isInCheck(char color) {
     // Check if king of color is in check
     int file;
@@ -465,117 +405,7 @@ bool gameboard::isInCheck(char color) {
     return isThreatened(color, file, rank);
 }
 
-bool gameboard::isInCheckmate() {return isInCheckmate('W');} 
-
-bool gameboard::isInCheckmate(char color) {
-    /*
-     * Returns true if color is in checkmate
-     * otherwise returns false
-     * 
-     * STEPS:
-     * 
-     * 1. Ask if king is in check
-     * 2. Remove king from board
-     * 3. Look for a free tile around the king which isn’t under attack
-     * 4. Add king back to board
-     * 5. Add generic piece to all points on the board (except kings location & places with the king’s pieces) and see if king is out of check
-     * 6. Find a piece which can move there
-     * 7. Remove & add piece there
-     * 8. Ask if king in check
-     */
-
-    // Step 1: Ask if king is in check
-    if (!isInCheck(color)) return false;
-    bool canEscape = false;
-
-    // Step 2: Remove king from board
-    int file;
-    int rank;
-    getKingCoords(color, &file, &rank);
-    if (file == -1 || rank == -1) return false; // no king exists
-    piece* theKing = board[file][rank];
-    removePiece(file, rank);
-
-    // Step 3: Look for a free tile around the king which isn't under attack
-    for (int i = -1; i <= 1; i++) {
-        for (int j = -1; j <= 1; j++) {
-            // Make sure within bounds of the gameboard
-            if (!(file+i < 0 || file+i > 7 || rank+j < 0 || rank+j > 7)) {
-                // Ensure king can move to this position
-                if (board[file+i][rank+j] == nullptr || 
-                    board[file+i][rank+j]->getColor() != color) {
-                    // If this tile isn't threatened, king can escape check
-                    if (!isThreatened(color, file+i, rank+j)) canEscape = true;
-                }
-            }
-        }
-    }
-
-    // Step 4: Add king back to board
-    addPiece(file, rank, theKing);
-    if (canEscape) return false;
-
-    // Step 5: Add generic piece to all points on the board and see if king is in check
-    pawn somePawn(color);
-    for (int i = 0; i < 8; i++) {
-        for (int j = 0; j < 8; j++) {
-            // Check friendly piece doesn't already exist there
-            if (board[i][j] == nullptr || board[i][j]->getColor() != color) {
-                // Save current piece
-                piece* targetPiece = board[i][j];
-                // Add generic piece to this location
-                addPiece(i, j, &somePawn);
-                // See if king is out of check
-                if (!isInCheck(color)) {
-                    // Step 6: Find a piece which can move here
-                    for (int f = 0; f < 8 && !canEscape; f++) {
-                        for (int r = 0; r < 8 && !canEscape; r++) {
-                            if (board[f][r] != nullptr) {
-                                // Check piece is friendly
-                                canEscape = board[f][r]->getColor() == color;
-                                if (targetPiece == nullptr) {
-                                    // Check if piece can move to i, j
-                                    canEscape = canEscape && 
-                                    board[f][r]->checkMoveValidity(f,r, i,j);
-                                } else {
-                                    // Check if piece can capture existing piece at i, j
-                                    canEscape = canEscape &&
-                                    board[f][r]->checkCaptureValidity(f,r, i,j);
-                                }
-                                // Check path clear
-                                canEscape = canEscape && checkPathClear(f,r, i,j);
-                            }
-
-                            // Step 7: Remove & add piece there
-                            if (canEscape) {
-                                addPiece(i, j, board[f][r]);
-                                removePiece(f, r);
-                                // Step 8: Ask if king in check
-                                if (isInCheck(color)) {
-                                    canEscape = false;
-                                }
-                                // Add piece back
-                                addPiece(f,r, board[i][j]);
-                                removePiece(i, j);
-                            }
-                        }
-                    }
-                }
-                // Put existing piece back
-                addPiece(i, j, targetPiece);
-                if (canEscape) return false;
-            }
-        }
-    }
-
-    // No way out of check (return true)
-    return true;
-}
-
-bool gameboard::isInStalemate(char color) {
-    // Check not in check
-    if (isInCheck(color)) return false;
-
+bool gameboard::isInMate(char color) {
     // Cycles through all friendly pieces
     for (int f = 0; f < 8; f++) {
         for (int r = 0; r < 8; r++) {
@@ -591,6 +421,22 @@ bool gameboard::isInStalemate(char color) {
         }
     }
     return true;
+}
+
+bool gameboard::isInCheckmate(char color) {
+    // Checks if a colour is in checkmate
+    // No legal moves, in check
+
+    if (!isInCheck(color)) return false;
+    return isInMate(color);
+}
+
+bool gameboard::isInStalemate(char color) {
+    // Checks if a colour is in stalemate
+    // No legal moves, not in check
+
+    if (isInCheck(color)) return false;
+    return isInMate(color);
 }
 
 bool gameboard::threefoldRepetition(char color) {

@@ -9,19 +9,28 @@ class piece {
         char _color;
         int _moveCount;
     public:
-        piece();
-        piece(char name, char color);
+        // Constructor
+        piece(char type, char color);
+
+        // Capture
         void capture();
         bool captured();
+
+        // Validity checks
         virtual bool checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank) = 0;
-        virtual bool checkCaptureValidity(int oldFile, int oldRank, int newFile, int newRank); // A piece's valid captures is the same as their valid moves, by default
+        virtual bool checkCaptureValidity(int oldFile, int oldRank, int newFile, int newRank); 
+
+        // Get info
         char getName();
         char getType();
         char getColor();
         int getMoveCount();
+
+        // Update info
         void move();
         void reverseMove();
         void reset();
+        void swapColor();
 };
 
 #endif//PIECE_H

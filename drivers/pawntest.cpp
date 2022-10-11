@@ -1,13 +1,15 @@
 #include "../include/gameboard.h"
 #include "../include/pawn.h"
+#include "../include/king.h"
 #include "pawntest.h"
 #include <iostream>
 using namespace std;
 
-pawntest::pawntest(): pawntest(1) {}
-pawntest::pawntest(int length) {
+pawntest::pawntest() {
+    this->_length = 4;
     this->_failMessage = "Pawn test failed";
     this->_passMessage = "Pawn test succeeded";
+    initialiseResults();
 }
 
 bool pawntest::movementTest(bool display) {
@@ -16,8 +18,8 @@ bool pawntest::movementTest(bool display) {
 
     // Create the game board and two pawns.
     gameboard board;
-    pawn whiteCpawn = pawn();
-    pawn blackFPawn = pawn('B');
+    pawn whiteCpawn('W');
+    pawn blackFPawn('B');
     piece* pieces[] = {&whiteCpawn, &blackFPawn};
 
     // Add the pawns to the game board
@@ -98,10 +100,10 @@ bool pawntest::captureTest(bool display) {
 
     // Create the game board and two pawns.
     gameboard board;
-    pawn whiteDpawn = pawn();
-    pawn whiteEpawn = pawn();
-    pawn blackDpawn = pawn('B');
-    pawn blackEpawn = pawn('B');
+    pawn whiteDpawn('W');
+    pawn whiteEpawn('W');
+    pawn blackDpawn('B');
+    pawn blackEpawn('B');
     piece* pieces[] = {&whiteDpawn, &whiteEpawn, &blackDpawn, &blackEpawn};
 
     // Add the pawns to the game board
@@ -312,10 +314,79 @@ bool pawntest::enPassantTest(bool display) {
     return success;
 }
 
-bool pawntest::runTests(bool display) {
-    bool success = true;
-    success = success && this->movementTest(display);
-    success = success && this->captureTest(display);
-    success = success && this->enPassantTest(display);
+bool pawntest::checkTest(bool display) {
+    bool success = false;
+
+    // Initialise objects
+    gameboard board;
+    pawn whitePawnOne('W');
+    pawn whitePawnTwo('W');
+    pawn whitePawnThree('W');
+    pawn whitePawnFour('W');
+    king whiteKing('W');
+    king blackKing('B');
+
+    // Place pieces
+    board.addPiece(1,7, &whiteKing);
+    board.addPiece(1,4, &blackKing);
+    board.addPiece(1,3, &whitePawnFour);
+    board.addPiece(1,2, &whitePawnThree);
+    board.addPiece(0,2, &whitePawnTwo);
+    board.addPiece(2,2, &whitePawnOne);
+
+    // Test 1: Not in check nor mate
+    bool test1 = !board.isInMate('B') && !board.isInCheck('B');
+    if (display) board.visualiseTextBoard();
+
+    // Test 2: Stalemate
+    board.movePiece(1,7, 1,6);
+    if (display) board.visualiseTextBoard();
+    bool test2 = board.isInStalemate('B');
+
+    // Test 3: Checkmate
+    board.movePiece(2,2, 2,3);
+    if (display) board.visualiseTextBoard();
+    bool test3 = board.isInCheckmate('B');
+
+    // Test 4: Check
+    board.movePiece(1,6, 1,7);
+    if (display) board.visualiseTextBoard();
+    bool test4 = board.isInCheck('B') && !board.isInMate('B');
+
+    // Display results
+    if (display) {
+        if (test1) {
+            cout << "Test passed: Not in check nor mate" << endl;
+        } else {
+            cout << "Test failed: In check and/or mate" << endl;
+        }
+
+        if (test2) {
+            cout << "Test passed: Stalemate" << endl;
+        } else {
+            cout << "Test failed: Not in stalemate" << endl;
+        }
+
+        if (test3) {
+            cout << "Test passed: Checkmate" << endl;
+        } else {
+            cout << "Test failed: Not in checkmate" << endl;
+        }
+
+        if (test4) {
+            cout << "Test passed: Check" << endl;
+        } else {
+            cout << "Test failed: Not in check, or in mate" << endl;
+        }
+    }
+
+    success = test1 && test2 && test3 && test4;
     return success;
+}
+
+bool pawntest::runTests(bool display) {
+
+    _results[3] = enPassantTest(display && !_results[3]);
+
+    return piecetest::runTests(display);
 }

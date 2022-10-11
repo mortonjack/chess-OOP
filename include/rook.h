@@ -5,9 +5,8 @@
 
 class rook : public piece {
     public:
-        rook(); // Default constructor (pieces are white by default)
-        rook(char color); // Colored constructor
+        rook(char color);
         bool checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank);
 };
 
-#endif
+#endif//ROOK_H
