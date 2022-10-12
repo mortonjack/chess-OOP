@@ -112,6 +112,7 @@ void movenode::reverseBoard(piece* board[8][8], int moves) {
 void movenode::unreverseBoard(piece* board[8][8], int moves) {
     // Un-reverses the input board by [moves] moves
     if (moves > 1) _prevNode->unreverseBoard(board, moves-1);
+    if (moves == 0) return;
 
     piece* sourcePiece = board[_oldFile][_oldRank];
 

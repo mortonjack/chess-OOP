@@ -27,6 +27,7 @@ class gameboard {
 
         // Change the target piece to the pawn targetted with en passant, if applicable
         piece* targetWithEnPassant(int oldFile, int oldRank, int newFile, int newRank);
+        piece* targetWithEnPassant(int oldFile, int oldRank, int newFile, int newRank, piece* board[8][8], movenode* node);
 
         // Checks if the player is trying to perform a valid castle, and handles the castle
         bool isCastling(int oldFile, int oldRank, int newFile, int newRank);
@@ -48,7 +49,8 @@ class gameboard {
 
         // Check for draws
         bool isInStalemate(char color);
-        bool threefoldRepetition(char color);
+        bool threefoldRepetition();
+        bool fiftyMoveRule();
 
         // For drivers: ensure board is set up correctly
         bool testDriver(piece* pieces[], int* coords, int length); 
