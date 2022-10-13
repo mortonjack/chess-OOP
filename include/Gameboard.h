@@ -5,9 +5,10 @@
 #include "MoveNode.h"
 
 class Gameboard {
-    private:
+    public:
         Piece* board[8][8]; // Gameboard, stores Piece locations
         MoveNode* prevMove;
+    
     public:
         Gameboard(); // initialise empty board
         void visualiseTextBoard();
@@ -23,6 +24,9 @@ class Gameboard {
         bool validMove(int oldFile, int oldRank, int newFile, int newRank);
         bool validCapture(int oldFile, int oldRank, int newFile, int newRank);
         bool validMovement(int oldFile, int oldRank, int newFile, int newRank);
+
+        // Piece getter
+        Piece* getPiece(int file, int rank);
 
         // Change the target Piece to the Pawn targetted with en passant, if applicable
         Piece* targetWithEnPassant(int oldFile, int oldRank, int newFile, int newRank);

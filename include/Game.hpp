@@ -4,11 +4,9 @@
 
 
 class Game{
-    public:
+    private:
         // Add list of pieces, give the pieces to player classes and then add to board
         Gameboard* gameboard;
-
-        int moveNumber;
         char colorToMove = 'W';
 
     public:
@@ -23,10 +21,10 @@ class Game{
         // Attempt to make a move, returning true is the move is successful and false if it is unsuccessful
         bool move(int oldFile, int oldRank, int newFile, int newRank) {
             // If the player not trying to move a piece, return false
-            if (gameboard->board[oldFile][oldRank] == nullptr) return false;
+            if (gameboard->getPiece(oldFile,oldRank) == nullptr) return false;
 
             // If the piece being moved does not belong to the player-to-move, return false
-            if (gameboard->board[oldFile][oldRank]->getColor() != colorToMove) return false;
+            if (gameboard->getPiece(oldFile,oldRank)->getColor() != colorToMove) return false;
 
             // Attempt to move, applying all rules of the game logic
             bool successfulMove = gameboard->movePiece(oldFile,oldRank, newFile, newRank);
@@ -34,11 +32,14 @@ class Game{
             // If the move is successful...
             if (successfulMove) {
                 colorToMove = color2OpponentColor(colorToMove); // Change the player-to-move
-                if (colorToMove == 'B') moveNumber++;
             }
 
             // Return whether the move was successful
             return successfulMove;
+        }
+
+        Gameboard* getBoard() {
+            return this->gameboard;
         }
 
     private:

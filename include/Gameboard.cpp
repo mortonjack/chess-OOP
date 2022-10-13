@@ -34,6 +34,11 @@ void Gameboard::addPiece(int file, int rank, Piece* newPiece) {
     board[file][rank] = newPiece;
 }
 
+Piece* Gameboard::getPiece(int file, int rank) {
+    // Return the piece at the rank and file
+    return board[file][rank];
+}
+
 Piece* Gameboard::targetWithEnPassant(int oldFile, int oldRank, int newFile, int newRank) {
     return targetWithEnPassant(oldFile, oldRank, newFile, newRank, this->board, this->prevMove);
 }

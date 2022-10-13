@@ -70,13 +70,13 @@ class UIBoard : public Drawable, public Transformable
             }
         }
 
-        bool loadPieces(Piece* board[8][8]) {
+        bool loadPieces(Gameboard* gameboard) {
             pieceCount = 0;
 
             for (int file = 0; file < 8; file++) {
                 for (int rank = 0; rank < 8; rank++) {
-                    if (board[file][rank] != nullptr) {
-                        Sprite* sprite = piece2Sprite(board[file][rank]);
+                    if (gameboard->getPiece(file,rank) != nullptr) {
+                        Sprite* sprite = piece2Sprite(gameboard->getPiece(file,rank));
                         sprite->setPosition(coords2Position(Vector2i(file,rank)));
 
                         pieces[pieceCount] = sprite;

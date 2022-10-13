@@ -95,11 +95,11 @@ class UI {
         Rook whiteRook('W');
         Queen whiteQueen('W');
         
-        game->gameboard->addPiece(0,0, &blackKing);
-        game->gameboard->addPiece(7,0, &whiteRook);
-        game->gameboard->addPiece(7,7, &whiteQueen);
+        game->getBoard()->addPiece(0,0, &blackKing);
+        game->getBoard()->addPiece(7,0, &whiteRook);
+        game->getBoard()->addPiece(7,7, &whiteQueen);
 
-        uiBoard->loadPieces(game->gameboard->board);
+        uiBoard->loadPieces(game->getBoard());
 
         while (window->isOpen())
         {
@@ -126,11 +126,11 @@ class UI {
                         bool successfulMove = game->move(oldFile,oldRank, newFile, newRank);
                         
                         if (successfulMove) {
-                            uiBoard->loadPieces(game->gameboard->board);
-                            movesText->updateMovesDisplayed(game->gameboard);
+                            uiBoard->loadPieces(game->getBoard());
+                            movesText->updateMovesDisplayed(game->getBoard());
 
-                            if (game->gameboard->isInCheckmate('B')) { displayWin('W'); }
-                            if (game->gameboard->isInCheckmate('W')) { displayWin('B'); }
+                            if (game->getBoard()->isInCheckmate('B')) { displayWin('W'); }
+                            if (game->getBoard()->isInCheckmate('W')) { displayWin('B'); }
                         }
                     }
 
