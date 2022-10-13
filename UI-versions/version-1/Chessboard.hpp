@@ -52,17 +52,17 @@ public:
 
     bool loadPieces(int radius) {
         for (int f = 0; f < 8; f++) {
-            sf::CircleShape *piece = new sf::CircleShape;
+            sf::CircleShape *Piece = new sf::CircleShape;
 
-            piece->setRadius(radius);
-            piece->setOrigin(radius,radius);
-            piece->setPosition(coords2Position(f, 0));
+            Piece->setRadius(radius);
+            Piece->setOrigin(radius,radius);
+            Piece->setPosition(coords2Position(f, 0));
 
-            piece->setFillColor(white);
-            piece->setOutlineThickness(3);
-            piece->setOutlineColor(black);
+            Piece->setFillColor(white);
+            Piece->setOutlineThickness(3);
+            Piece->setOutlineColor(black);
 
-            pieces[f] = piece;
+            pieces[f] = Piece;
         }
 
         return true;
@@ -146,7 +146,7 @@ public:
         // Store the clicked socation as the source coordiantes
         sourceCoords = coords;
 
-        // Select the piece on this tile
+        // Select the Piece on this tile
         sourcePiece = coords2Piece(sourceCoords.x, sourceCoords.y);
 
         // Color the tile red
@@ -163,10 +163,10 @@ public:
         // Remove the color of the previously selected tile
         colorTile(sourceCoords.x, sourceCoords.y, coords2TileColor(sourceCoords.x, sourceCoords.y));
 
-        // If our source piece is empty, we are moving nothing.
+        // If our source Piece is empty, we are moving nothing.
         if (sourcePiece == nullptr) return;
 
-        // Move the piece where the player has clicked
+        // Move the Piece where the player has clicked
         sourcePiece->setPosition(coords2Position(coords.x, coords.y));
     }
 

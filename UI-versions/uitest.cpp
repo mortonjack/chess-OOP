@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
-#include "../include/uiboard.hpp"
-#include "../include/gameboard.h"
+#include "../include/UIBoard.hpp"
+#include "../include/Gameboard.h"
 
 // UI Test
 int main()
@@ -16,7 +16,7 @@ int main()
     sf::RenderWindow window(sf::VideoMode(windowLength, boardWidth), "Chess-OOP");
 
     // Create the chess board and some pieces with radius 20px
-    uiboard board(boardLength,boardWidth);
+    UIBoard board(boardLength,boardWidth);
 
     // Run the main loop
     while (window.isOpen())

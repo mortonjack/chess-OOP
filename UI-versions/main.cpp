@@ -1,9 +1,9 @@
-#include "../include/ui.hpp"
+#include "../include/UI.hpp"
 
 // UI Test
 int main()
 {
-    ui UI;
+    UI UI;
 
     return 0;
 }

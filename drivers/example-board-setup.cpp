@@ -1,11 +1,11 @@
-#include "../include/piece.h"
-#include "../include/gameboard.h"
-#include "../include/king.h"
-#include "../include/queen.h"
-#include "../include/rook.h"
-#include "../include/bishop.h"
-#include "../include/knight.h"
-#include "../include/pawn.h"
+#include "../include/Piece.h"
+#include "../include/Gameboard.h"
+#include "../include/King.h"
+#include "../include/Queen.h"
+#include "../include/Rook.h"
+#include "../include/Bishop.h"
+#include "../include/Knight.h"
+#include "../include/Pawn.h"
 #include <iostream>
 using namespace std;
 
@@ -16,40 +16,40 @@ using namespace std;
 
 // Tests whether the rank and file system matches the intuition of ranks and files
 int main() {
-    // Create the game board
-    gameboard board;
+    // Create the Game board
+    Gameboard board;
 
     // Create kings
-    king whiteKing('W');
-    king blackKing('B');
+    King whiteKing('W');
+    King blackKing('B');
 
     // Create queens
-    queen whiteQueen('W');
-    queen blackQueen('B');
+    Queen whiteQueen('W');
+    Queen blackQueen('B');
 
     // Create bishops
-    bishop whiteCBishop('W');
-    bishop whiteFBishop('W');
-    bishop blackCBishop('B');
-    bishop blackFBishop('B');
+    Bishop whiteCBishop('W');
+    Bishop whiteFBishop('W');
+    Bishop blackCBishop('B');
+    Bishop blackFBishop('B');
 
     // Create knights
-    knight whiteBKnight('W');
-    knight whiteGKnight('W');
-    knight blackBKnight('B');
-    knight blackGKnight('B');
+    Knight whiteBKnight('W');
+    Knight whiteGKnight('W');
+    Knight blackBKnight('B');
+    Knight blackGKnight('B');
 
     // Create rooks
-    rook whiteARook('W');
-    rook whiteHRook('W');
-    rook blackARook('B');
-    rook blackHRook('B');
+    Rook whiteARook('W');
+    Rook whiteHRook('W');
+    Rook blackARook('B');
+    Rook blackHRook('B');
 
     // Create e-file and d-file pawns
-    pawn whiteEPawn('W');
-    pawn whiteDPawn('W');
-    pawn blackEPawn('B');
-    pawn blackDPawn('B');
+    Pawn whiteEPawn('W');
+    Pawn whiteDPawn('W');
+    Pawn blackEPawn('B');
+    Pawn blackDPawn('B');
 
     // Add the white pieces
     board.addPiece(0,0,&whiteARook);

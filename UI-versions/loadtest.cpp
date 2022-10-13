@@ -1,44 +1,44 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "../include/uiboard.hpp"
-#include "../include/gameboard.h"
-#include "../include/king.h"
-#include "../include/bishop.h"
-#include "../include/rook.h"
-#include "../include/queen.h"
-#include "../include/pawn.h"
-#include "../include/knight.h"
+#include "../include/UIBoard.hpp"
+#include "../include/Gameboard.h"
+#include "../include/King.h"
+#include "../include/Bishop.h"
+#include "../include/Rook.h"
+#include "../include/Queen.h"
+#include "../include/Pawn.h"
+#include "../include/Knight.h"
 
 // UI Test
 int main()
 {
     // Create empty board
-    gameboard sourceBoard;
+    Gameboard sourceBoard;
 
-    // Create a black and white king
-    rook whiteARook;
-    rook whiteHRook;
-    knight whiteBKnight;
-    knight whiteGKnight;
-    bishop whiteCBishop;
-    bishop whiteFBishop;
-    queen whiteQueen;
-    king whiteKing;
+    // Create a black and white King
+    Rook whiteARook;
+    Rook whiteHRook;
+    Knight whiteBKnight;
+    Knight whiteGKnight;
+    Bishop whiteCBishop;
+    Bishop whiteFBishop;
+    Queen whiteQueen;
+    King whiteKing;
 
-    pawn whiteDPawn;
-    pawn whiteEPawn;
+    Pawn whiteDPawn;
+    Pawn whiteEPawn;
 
-    rook blackARook('B');
-    rook blackHRook('B');
-    knight blackBKnight('B');
-    knight blackGKnight('B');
-    bishop blackCBishop('B');
-    bishop blackFBishop('B');
-    queen blackQueen('B');
-    king blackKing('B');
+    Rook blackARook('B');
+    Rook blackHRook('B');
+    Knight blackBKnight('B');
+    Knight blackGKnight('B');
+    Bishop blackCBishop('B');
+    Bishop blackFBishop('B');
+    Queen blackQueen('B');
+    King blackKing('B');
 
-    pawn blackDPawn('B');
-    pawn blackEPawn('B');
+    Pawn blackDPawn('B');
+    Pawn blackEPawn('B');
 
     sourceBoard.addPiece(0,0,&whiteARook);
     sourceBoard.addPiece(1,0,&whiteBKnight);
@@ -75,9 +75,9 @@ int main()
     sf::RenderWindow window(sf::VideoMode(windowLength, boardWidth), "Chess-OOP");
 
     // Create the chess board and some pieces with radius 20px
-    uiboard uiboard(boardLength,boardWidth);
+    UIBoard UIBoard(boardLength,boardWidth);
  
-    uiboard.loadPieces(sourceBoard.board);
+    UIBoard.loadPieces(sourceBoard.board);
 
     // Run the main loop
     while (window.isOpen())
@@ -91,22 +91,22 @@ int main()
 
             // Handle the appropriate behavior for clicking a tile
             if (event.type == sf::Event::MouseButtonPressed) {
-                if (uiboard.tileClick(event.mouseButton.x, event.mouseButton.y)) {
-                    int oldFile = uiboard.getSourceCoords().x;
-                    int oldRank = uiboard.getSourceCoords().y;
+                if (UIBoard.tileClick(event.mouseButton.x, event.mouseButton.y)) {
+                    int oldFile = UIBoard.getSourceCoords().x;
+                    int oldRank = UIBoard.getSourceCoords().y;
 
-                    int newFile = uiboard.getTargetCoords().x;
-                    int newRank = uiboard.getTargetCoords().y;
+                    int newFile = UIBoard.getTargetCoords().x;
+                    int newRank = UIBoard.getTargetCoords().y;
 
                     sourceBoard.movePiece(oldFile,oldRank, newFile, newRank);
-                    uiboard.loadPieces(sourceBoard.board);
+                    UIBoard.loadPieces(sourceBoard.board);
                 }
             }
         }
 
         // Draw the UI
         window.clear();
-        window.draw(uiboard);
+        window.draw(UIBoard);
         window.display();
     }
 

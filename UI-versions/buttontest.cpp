@@ -1,17 +1,17 @@
 
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "../include/uiboard.hpp"
-#include "../include/uitext.hpp"
-#include "../include/uibutton.hpp"
-#include "../include/uimovestack.hpp"
-#include "../include/gameboard.h"
-#include "../include/king.h"
-#include "../include/bishop.h"
-#include "../include/rook.h"
-#include "../include/queen.h"
-#include "../include/pawn.h"
-#include "../include/knight.h"
+#include "../include/UIBoard.hpp"
+#include "../include/UIText.hpp"
+#include "../include/UIButton.hpp"
+#include "../include/UIMoveStack.hpp"
+#include "../include/Gameboard.h"
+#include "../include/King.h"
+#include "../include/Bishop.h"
+#include "../include/Rook.h"
+#include "../include/Queen.h"
+#include "../include/Pawn.h"
+#include "../include/Knight.h"
 
 using namespace sf;
 
@@ -19,34 +19,34 @@ using namespace sf;
 int main()
 {
     // Create empty board
-    gameboard sourceBoard;
+    Gameboard sourceBoard;
 
     // GAME BOARD SETUP
 
-    // Create a black and white king
-    rook whiteARook('W');
-    rook whiteHRook('W');
-    knight whiteBKnight('W');
-    knight whiteGKnight('W');
-    bishop whiteCBishop('W');
-    bishop whiteFBishop('W');
-    queen whiteQueen('W');
-    king whiteKing('W');
+    // Create a black and white King
+    Rook whiteARook('W');
+    Rook whiteHRook('W');
+    Knight whiteBKnight('W');
+    Knight whiteGKnight('W');
+    Bishop whiteCBishop('W');
+    Bishop whiteFBishop('W');
+    Queen whiteQueen('W');
+    King whiteKing('W');
 
-    pawn whiteDPawn('W');
-    pawn whiteEPawn('W');
+    Pawn whiteDPawn('W');
+    Pawn whiteEPawn('W');
 
-    rook blackARook('B');
-    rook blackHRook('B');
-    knight blackBKnight('B');
-    knight blackGKnight('B');
-    bishop blackCBishop('B');
-    bishop blackFBishop('B');
-    queen blackQueen('B');
-    king blackKing('B');
+    Rook blackARook('B');
+    Rook blackHRook('B');
+    Knight blackBKnight('B');
+    Knight blackGKnight('B');
+    Bishop blackCBishop('B');
+    Bishop blackFBishop('B');
+    Queen blackQueen('B');
+    King blackKing('B');
 
-    pawn blackDPawn('B');
-    pawn blackEPawn('B');
+    Pawn blackDPawn('B');
+    Pawn blackEPawn('B');
 
     sourceBoard.addPiece(0,0,&whiteARook);
     sourceBoard.addPiece(1,0,&whiteBKnight);
@@ -112,21 +112,21 @@ int main()
     RenderWindow window(sf::VideoMode(WINDOW_LENGTH, WINDOW_HEIGHT), "Chess-OOP");
 
     // Create the chess board and some pieces with radius 20px
-    uiboard uiboard(BOARD_LENGTH,BOARD_HEIGHT,Vector2i(PADDING,GUTTER_HEIGHT));
+    UIBoard UIBoard(BOARD_LENGTH,BOARD_HEIGHT,Vector2i(PADDING,GUTTER_HEIGHT));
 
-    uitext whiteName(Vector2f(PADDING,TOP_TEXT_Y),"White");
-    uitext blackName(Vector2f(PADDING,BOTTOM_TEXT_Y),"Black");
+    UIText whiteName(Vector2f(PADDING,TOP_TEXT_Y),"White");
+    UIText blackName(Vector2f(PADDING,BOTTOM_TEXT_Y),"Black");
 
-    uitext matchTitle(Vector2f(CONTROL_X,TOP_TEXT_Y),"White vs. Black");
+    UIText matchTitle(Vector2f(CONTROL_X,TOP_TEXT_Y),"White vs. Black");
 
-    uimovestack movesText(10, Vector2f(CONTROL_X,GUTTER_HEIGHT));
+    UIMoveStack movesText(10, Vector2f(CONTROL_X,GUTTER_HEIGHT));
 
-    uibutton saveButton  (Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT),"Save",BUTTON_DIMENSIONS);
-    uibutton loadButton  (Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*1),"Load",BUTTON_DIMENSIONS);
-    uibutton drawButton  (Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*2),"Offer Draw",BUTTON_DIMENSIONS);
-    uibutton resignButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*3),"Resign",BUTTON_DIMENSIONS);
+    UIButton saveButton  (Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT),"Save",BUTTON_DIMENSIONS);
+    UIButton loadButton  (Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*1),"Load",BUTTON_DIMENSIONS);
+    UIButton drawButton  (Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*2),"Offer Draw",BUTTON_DIMENSIONS);
+    UIButton resignButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*3),"Resign",BUTTON_DIMENSIONS);
 
-    uiboard.loadPieces(sourceBoard.board);
+    UIBoard.loadPieces(sourceBoard.board);
 
     // Run the main loop
     while (window.isOpen())
@@ -140,15 +140,15 @@ int main()
 
             // Handle the appropriate behavior for clicking a tile
             if (event.type == sf::Event::MouseButtonPressed) {
-                if (uiboard.tileClick(event.mouseButton.x, event.mouseButton.y)) {
-                    int oldFile = uiboard.getSourceCoords().x;
-                    int oldRank = uiboard.getSourceCoords().y;
+                if (UIBoard.tileClick(event.mouseButton.x, event.mouseButton.y)) {
+                    int oldFile = UIBoard.getSourceCoords().x;
+                    int oldRank = UIBoard.getSourceCoords().y;
 
-                    int newFile = uiboard.getTargetCoords().x;
-                    int newRank = uiboard.getTargetCoords().y;
+                    int newFile = UIBoard.getTargetCoords().x;
+                    int newRank = UIBoard.getTargetCoords().y;
 
                     sourceBoard.movePiece(oldFile,oldRank, newFile, newRank);
-                    uiboard.loadPieces(sourceBoard.board);
+                    UIBoard.loadPieces(sourceBoard.board);
 
                     movesText.updateMovesDisplayed(&sourceBoard);
 
@@ -167,7 +167,7 @@ int main()
 
         // Draw the UI
         window.clear(Color{ 0x151515FF });
-        window.draw(uiboard);
+        window.draw(UIBoard);
         window.draw(whiteName);
         window.draw(blackName);
         window.draw(matchTitle);

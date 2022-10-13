@@ -39,8 +39,8 @@ int main()
         window.clear();
         window.draw(chessboard);
 
-        // BROKEN piece.setPosition(chessboard.coords2Position(ballFile,ballRank));
-        // BROKEN window.draw(piece);
+        // BROKEN Piece.setPosition(chessboard.coords2Position(ballFile,ballRank));
+        // BROKEN window.draw(Piece);
         window.display();
     }
 
