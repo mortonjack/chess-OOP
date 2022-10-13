@@ -5,7 +5,7 @@
 #include "MoveNode.h"
 
 class Gameboard {
-    public:
+    private:
         Piece* board[8][8]; // Gameboard, stores Piece locations
         MoveNode* prevMove;
     
@@ -27,6 +27,7 @@ class Gameboard {
 
         // Piece getter
         Piece* getPiece(int file, int rank);
+        MoveNode* getPrevMove();
 
         // Change the target Piece to the Pawn targetted with en passant, if applicable
         Piece* targetWithEnPassant(int oldFile, int oldRank, int newFile, int newRank);

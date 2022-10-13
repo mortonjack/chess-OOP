@@ -39,6 +39,10 @@ Piece* Gameboard::getPiece(int file, int rank) {
     return board[file][rank];
 }
 
+MoveNode* Gameboard::getPrevMove() {
+    return prevMove;
+}
+
 Piece* Gameboard::targetWithEnPassant(int oldFile, int oldRank, int newFile, int newRank) {
     return targetWithEnPassant(oldFile, oldRank, newFile, newRank, this->board, this->prevMove);
 }

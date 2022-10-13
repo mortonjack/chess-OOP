@@ -35,7 +35,7 @@ class UIMoveStack : public Drawable, public Transformable
         
     void updateMovesDisplayed(Gameboard* gameboard) {
         // Get the rank, file and piece type of the most recent move
-        MoveNode* move = gameboard->prevMove;
+        MoveNode* move = gameboard->getPrevMove();
 
         int file = move->getNewFile();
         int rank = move->getNewRank();

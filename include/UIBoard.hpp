@@ -10,9 +10,6 @@ class UIBoard : public Drawable, public Transformable
         int _length;
         int _width;
 
-        int _tileLength;
-        int _tileWidth;
-
         // Color constants
         const Color _whiteColor = Color{ 0xF5F5F5FF };
         const Color _blackColor = Color{ 0x454545FF };
@@ -38,8 +35,8 @@ class UIBoard : public Drawable, public Transformable
             _length = length;
             _width = width;
 
-            _tileLength = length/8;
-            _tileWidth = width/8;
+            int _tileLength = length/8;
+            int _tileWidth = width/8;
 
             int offsetX = offset.x;
             int offsetY = offset.y;
