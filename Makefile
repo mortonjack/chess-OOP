@@ -3,7 +3,7 @@ driver:
 	./drivers/test.out
 
 ui-driver:
-	@g++ -Wall -std=c++11 UI-versions/main.cpp -std=c++11 include/Piece.cpp include/Rook.cpp include/Bishop.cpp include/Knight.cpp include/Pawn.cpp include/Queen.cpp include/King.cpp include/MoveNode.cpp include/Gameboard.cpp -lsfml-graphics -lsfml-window -lsfml-system -o drivers/test.out
+	@g++ -Wall -std=c++11 main.cpp -std=c++11 include/Piece.cpp include/Rook.cpp include/Bishop.cpp include/Knight.cpp include/Pawn.cpp include/Queen.cpp include/King.cpp include/MoveNode.cpp include/Gameboard.cpp -lsfml-graphics -lsfml-window -lsfml-system -o drivers/test.out
 	./drivers/test.out
 
 clear-drivers:
