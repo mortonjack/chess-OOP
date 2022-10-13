@@ -18,7 +18,7 @@
 #include "Knight.h"
 
 class UI {
-    public:
+    private:
         RenderWindow* window;
 
         Game* game;
@@ -40,6 +40,7 @@ class UI {
 
         bool isAlertDisplayed = false;
 
+    public:
     UI() {
         game = new Game();
         setupControls();
@@ -128,9 +129,6 @@ class UI {
                         if (successfulMove) {
                             uiBoard->loadPieces(game->getBoard());
                             movesText->updateMovesDisplayed(game->getBoard());
-
-                            if (game->getBoard()->isInCheckmate('B')) { displayWin('W'); }
-                            if (game->getBoard()->isInCheckmate('W')) { displayWin('B'); }
                         }
                     }
 
@@ -144,9 +142,7 @@ class UI {
                     */
 
                    // If the Game alert is displayed...
-                    if (isAlertDisplayed) {
-                        if (alert->secondaryButton->isHovered(x,y)) { window->close(); }
-                    }
+
                 }
 
                 if (event.type == sf::Event::MouseMoved) {
@@ -159,10 +155,8 @@ class UI {
         }
     }
 
-    void displayWin(char color) {
-        if (color == 'W') {
-            isAlertDisplayed = true;
-        }
+    void displayWin() {
+        
     }
 
     void updateButtonStates(sf::Event event) {
@@ -173,6 +167,10 @@ class UI {
 
         alert->primaryButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
         alert->secondaryButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
+
+        if (isAlertDisplayed) {
+            if (alert->secondaryButton->isHovered(event.mouseMove.x,event.mouseMove.y)) { window->close(); }
+        }
     }
 
     void drawControls() {
