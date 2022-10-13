@@ -14,7 +14,7 @@ class State {
     private:
         string file;
         Piece* currentBoard()[8][8];
-        MoveNode* prevMove();
+        MoveNode* _prevMove();
     public:
         // Constructors
         State();
@@ -26,6 +26,8 @@ class State {
 
         // Save to file
         void saveState();
+        void saveBoard();
+        void saveMoves();
 
 }
 
