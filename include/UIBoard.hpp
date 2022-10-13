@@ -5,7 +5,7 @@ using namespace sf;
 
 class UIBoard : public Drawable, public Transformable
 {
-    protected:
+    private:
         // Board size constants
         int _length;
         int _width;
@@ -22,7 +22,6 @@ class UIBoard : public Drawable, public Transformable
         Vector2i _sourceCoords;
         Vector2i _targetCoords;
 
-    public:
         Sprite* pieces[32] = {nullptr};
         int pieceCount = 0;
 
@@ -30,7 +29,6 @@ class UIBoard : public Drawable, public Transformable
         VertexArray vertices;
 
     public:
-        UIBoard(): UIBoard(512,512,Vector2i(0,0)) {}
         UIBoard(int length, int width, Vector2i offset) {
             _length = length;
             _width = width;
@@ -128,7 +126,6 @@ class UIBoard : public Drawable, public Transformable
             sprite->setOrigin(32,32);
             return sprite;
         }
-
 
         // POSITION-COORDS CONVERTERS
         Vector2i position2coords(int x, int y) {  
