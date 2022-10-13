@@ -5,10 +5,9 @@
 #include "MoveNode.h"
 
 class Gameboard {
-    public:
+    private:
         Piece* board[8][8]; // Gameboard, stores Piece locations
         MoveNode* prevMove;
-        int moveNumber;
     public:
         Gameboard(); // initialise empty board
         void visualiseTextBoard();
