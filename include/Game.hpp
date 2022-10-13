@@ -41,14 +41,11 @@ class Game{
             return successfulMove;
         }
 
+    private:
+        // Convereter between colors
         char color2OpponentColor(char color) { return color == 'W' ? 'B' : 'W'; }
-
-        //who is winner or if draw
-        void displayWin(char winnerColor) {}
-        void displayDraw() {}
-
         
-        //destructor
+        // Destructor
         ~Game();
 
 };
