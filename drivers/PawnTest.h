@@ -11,6 +11,7 @@ class PawnTest : public PieceTest {
         bool CaptureTest(bool display);
         bool checkTest(bool display);
         bool enPassantTest(bool display);
+        bool promotionTest(bool display);
         bool runTests(bool display); 
 };
 
