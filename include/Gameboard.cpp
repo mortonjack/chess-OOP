@@ -1,4 +1,5 @@
 #include "Gameboard.h"
+#include "Queen.h"
 #include <iostream>
 #include <cstdlib>
 using namespace std;
@@ -174,6 +175,13 @@ bool Gameboard::validMove(int oldFile, int oldRank, int newFile, int newRank) {
     // All checks passed. Return true
     removePiece(newFile, newRank);
     addPiece(oldFile, oldRank, sourcePiece);
+
+    if(newFile==8 && sourcePiece->getType()=='p'){
+        removePiece(newFile,newRank);
+        Queen* promotePiece = new Queen(sourcePiece->getColor());
+        addPiece(newFile,newRank,promotePiece);
+    }
+
     return true;
 }
 
