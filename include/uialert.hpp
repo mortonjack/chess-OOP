@@ -16,26 +16,33 @@ class uialert : public Drawable, public Transformable
 {
     public:
         // Color constants
-        uitext* textComponent; 
+        uitext* titleComponent; 
+        uitext* subtitleComponent; 
         uibutton* primaryButton;
         uibutton* secondaryButton;
         RectangleShape* alertComponent;
 
-        uialert(Vector2f position, string message, string primaryButtonText, string secondaryButtonText): uialert(position, message, primaryButtonText, secondaryButtonText, Color{ 0xD50000FF }, Color{ 0x454545FF }, 35, Color{ 0xF5F5F5FF }) {}
-
-        uialert(Vector2f position, string message, string primaryButtonText, string secondaryButtonText, Color alertColor, Color buttonColor, int fontSize, Color fontColor) {
+        uialert(Vector2f position, string titleText, string subtitleText, string primaryButtonText, string secondaryButtonText, Color alertColor = Color{ 0x151515FF }, Color buttonColor = Color{ 0x454545FF }, Color fontColor = Color{ 0xF5F5F5FF }) {
             // Alerts are a hard-coded 480x320px size
-            alertComponent = new RectangleShape(Vector2f(480,320));
+            alertComponent = new RectangleShape(Vector2f(480,400));
             alertComponent->setPosition(position);
             alertComponent->setFillColor(alertColor);
 
-            // Create text component
-            textComponent = new uitext(position, message, fontSize, fontColor);
+            // Create text components
+            titleComponent = new uitext(Vector2f(position.x, position.y-140), titleText, 58, fontColor);
+            subtitleComponent = new uitext(Vector2f(position.x, position.y-85), subtitleText, 25, fontColor);
 
-            // Center text
-            const sf::FloatRect bounds(textComponent->element.getLocalBounds());
+            // Center text controls
+            const sf::FloatRect titleBounds(titleComponent->element.getLocalBounds());
+            const sf::FloatRect subtitleBounds(subtitleComponent->element.getLocalBounds());
             const sf::Vector2f box(alertComponent->getSize());
-            textComponent->element.setOrigin((bounds.width - box.x) / 2 + bounds.left, (bounds.height - box.y) / 2 + bounds.top);
+
+            titleComponent->element.setOrigin((int)((titleBounds.width - box.x) / 2 + titleBounds.left), ((int)(titleBounds.height - box.y) / 2 + titleBounds.top));
+            subtitleComponent->element.setOrigin((int)((subtitleBounds.width - box.x) / 2 + subtitleBounds.left), ((int)(subtitleBounds.height - box.y) / 2 + subtitleBounds.top)); 
+
+            // Create button components
+            primaryButton = new uibutton(Vector2f(position.x+25, position.y+400-50-70-70), primaryButtonText, Vector2f(430,70));
+            secondaryButton = new uibutton(Vector2f(position.x+25, position.y+400-70-25), secondaryButtonText, Vector2f(430,70));    
         }
 
 
@@ -47,7 +54,10 @@ class uialert : public Drawable, public Transformable
 
         // draw the vertex array
         target.draw(*alertComponent);
-        target.draw(*textComponent);
+        target.draw(*titleComponent);
+        target.draw(*subtitleComponent);
+        target.draw(*primaryButton);
+        target.draw(*secondaryButton);
     }
 };
 

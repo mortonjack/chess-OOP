@@ -36,7 +36,9 @@ class ui {
         uibutton* drawButton;
         uibutton* resignButton;
 
-        uialert* winAlert;
+        uialert* alert;
+
+        bool isAlertDisplayed = false;
 
     ui() {
         userGame = new game();
@@ -84,16 +86,18 @@ class ui {
         drawButton = new uibutton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*2),"Offer Draw",BUTTON_DIMENSIONS);
         resignButton = new uibutton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*3),"Resign",BUTTON_DIMENSIONS);
 
-        winAlert = new uialert(Vector2f(PADDING+80,GUTTER_HEIGHT+160), "Alert","Play Again","Quit");
+        alert = new uialert(Vector2f(PADDING+80,GUTTER_HEIGHT+120), "White wins!", "By checkmate", "Play Again","Quit");
     }
 
     // Manages the game's functionality
     void run() {
-        king whiteKing('W');
+        king blackKing('B');
         rook whiteRook('W');
+        queen whiteQueen('W');
         
-        userGame->board->addPiece(0,0, &whiteKing);
+        userGame->board->addPiece(0,0, &blackKing);
         userGame->board->addPiece(7,0, &whiteRook);
+        userGame->board->addPiece(7,7, &whiteQueen);
 
         userBoard->loadPieces(userGame->board->board);
 
@@ -108,7 +112,10 @@ class ui {
 
                 // Handle the appropriate behavior for clicking a tile
                 if (event.type == sf::Event::MouseButtonPressed) {
-                    bool makeMove = userBoard->tileClick(event.mouseButton.x, event.mouseButton.y);
+                    int x = event.mouseButton.x;
+                    int y = event.mouseButton.y;
+
+                    bool makeMove = userBoard->tileClick(x,y);
                     if(makeMove) {
                         int oldFile = userBoard->getSourceCoords().x;
                         int oldRank = userBoard->getSourceCoords().y;
@@ -116,18 +123,14 @@ class ui {
                         int newFile = userBoard->getTargetCoords().x;
                         int newRank = userBoard->getTargetCoords().y;
 
-                        bool successfulMove = userGame->board->movePiece(oldFile,oldRank, newFile, newRank);
+                        bool successfulMove = userGame->move(oldFile,oldRank, newFile, newRank);
                         
                         if (successfulMove) {
                             userBoard->loadPieces(userGame->board->board);
                             movesText->updateMovesDisplayed(userGame->board);
 
-                            /* Checks for game ending 
-
-                            if (userGame->board->isInCheckmate(game->colorToMove)) { game->displayWin(game->oppositeColor); }
-                            if (userGame->board->isInStalemate) { game->displayDraw(); }
-
-                            */
+                            if (userGame->board->isInCheckmate('B')) { displayWin('W'); }
+                            if (userGame->board->isInCheckmate('W')) { displayWin('B'); }
                         }
                     }
 
@@ -140,19 +143,36 @@ class ui {
 
                     */
 
+                   // If the game alert is displayed...
+                    if (isAlertDisplayed) {
+                        if (alert->secondaryButton->isHovered(x,y)) { window->close(); }
+                    }
                 }
 
                 if (event.type == sf::Event::MouseMoved) {
-                    saveButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
-                    loadButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
-                    drawButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
-                    resignButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
+                    updateButtonStates(event);
                 }
 
             }
 
             drawControls();
         }
+    }
+
+    void displayWin(char color) {
+        if (color == 'W') {
+            isAlertDisplayed = true;
+        }
+    }
+
+    void updateButtonStates(sf::Event event) {
+        saveButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
+        loadButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
+        drawButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
+        resignButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
+
+        alert->primaryButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
+        alert->secondaryButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
     }
 
     void drawControls() {
@@ -177,7 +197,7 @@ class ui {
         window->draw(*resignButton);
 
         // If a player has won, display the nessecary alert
-        window->draw(*winAlert);
+        if (isAlertDisplayed) window->draw(*alert);
 
         // Update the window
         window->display();

@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
+#include <cmath>
 using namespace sf;
 using namespace std;
 
@@ -16,9 +17,7 @@ class uitext : public Drawable, public Transformable
 
         uitext(): uitext(Vector2f(0,0), "") {}
 
-        uitext(Vector2f position, string text): uitext(position, text, 35, Color{ 0xF2DBB4FF }) {}
-
-        uitext(Vector2f position, string text, int fontSize, Color fontColor) {
+        uitext(Vector2f position, string text, int fontSize = 35, Color fontColor = Color{ 0xF5f5f5FF }) {
             // Load text font
             font.loadFromFile("./assets/Pixeloid-Mono.ttf");
 
@@ -34,8 +33,8 @@ class uitext : public Drawable, public Transformable
             // Set character size;
             element.setCharacterSize(fontSize);
 
-            // Set text position
-            element.setPosition(position);
+            // Set text position (rounded to the nearest pixel)
+            element.setPosition((int)position.x,(int)(position.y));
         }
         
     // DRAW FUNCTION

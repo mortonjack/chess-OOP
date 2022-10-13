@@ -17,9 +17,7 @@ class uibutton : public Drawable, public Transformable
         Color standardColor;
         Color inverseColor;
 
-        uibutton(Vector2f position, string text, Vector2f dimensions): uibutton(position, text, dimensions, Color{ 0x454545FF }, 35, Color{ 0xF2DBB4FF }) {}
-
-        uibutton(Vector2f position, string text, Vector2f dimensions, Color buttonColor, int fontSize, Color fontColor) {
+        uibutton(Vector2f position, string text, Vector2f dimensions, Color buttonColor = Color{ 0x454545FF }, int fontSize = 35, Color fontColor = Color{ 0xF5F5F5FF }) {
             // Setup colors
             standardColor = buttonColor;
             inverseColor = fontColor;
