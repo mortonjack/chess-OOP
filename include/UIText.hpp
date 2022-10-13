@@ -8,42 +8,43 @@
 using namespace sf;
 using namespace std;
 
+// Text to use in any SFML app
 class UIText : public Drawable, public Transformable
 {
     public:
         Text element;
-        Font font;
-        string text;
+    
+    private:
+        Font _font;
 
-        UIText(): UIText(Vector2f(0,0), "") {}
+    public:
+    UIText(): UIText(Vector2f(0,0), "") {}
 
-        UIText(Vector2f position, string text, int fontSize = 35, Color fontColor = Color{ 0xF5f5f5FF }) {
-            // Load text font
-            font.loadFromFile("./assets/Pixeloid-Mono.ttf");
+    UIText(Vector2f position, string text, int fontSize = 35, Color fontColor = Color{ 0xF5f5f5FF }) {
+        // Load and text font
+        _font.loadFromFile("./assets/Pixeloid-Mono.ttf");
+        element.setFont(_font);
 
-            // Set text font
-            element.setFont(font);
+        // Set color
+        element.setFillColor(fontColor);
 
-            // Set color
-            element.setFillColor(fontColor);
+        // Set text content
+        element.setString(text);
 
-            // Set text content
-            element.setString(text);
+        // Set font size;
+        element.setCharacterSize(fontSize);
 
-            // Set character size;
-            element.setCharacterSize(fontSize);
-
-            // Set text position (rounded to the nearest pixel)
-            element.setPosition((int)position.x,(int)(position.y));
-        }
+        // Set text position (rounded to the nearest pixel)
+        element.setPosition((int)position.x,(int)(position.y));
+    }
         
-    // DRAW FUNCTION
+    // Draws the text
     virtual void draw(RenderTarget& target, RenderStates states) const
     {
-        // apply the transform
+        // Apply any transformation
         states.transform *= getTransform();
 
-        // draw the vertex array
+        // Draw the text
         target.draw(element);
     }
 };

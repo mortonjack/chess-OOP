@@ -72,6 +72,8 @@ Piece* Gameboard::targetWithEnPassant(int oldFile, int oldRank, int newFile, int
     return enPassantTarget;
 }
 
+
+
 bool Gameboard::isCastling(int oldFile, int oldRank, int newFile, int newRank) {
     Piece* sourcePiece = board[oldFile][oldRank];
 

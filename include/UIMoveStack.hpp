@@ -11,75 +11,92 @@
 using namespace sf;
 using namespace std;
 
+// A stack of chess moves, to be used in the game
 class UIMoveStack : public Drawable, public Transformable
 {
     public:
         UIText* textComponent;
 
-        int moveCapacity;
-        int pastMoves = 0;
-        vector<string> moveHistory;
+    private:
+        int _moveCapacity;
+        int _pastMoves = 0;
+        vector<string> _moveHistory;
 
-        UIMoveStack(int capacity, Vector2f position) {
-            textComponent = new UIText(position, "");
-            moveCapacity = capacity;
-        }
+    public:
+    // Constructor
+    UIMoveStack(Vector2f position, int capacity, int fontSize = 35, Color fontColor = Color{ 0xF5F5F5FF }) {
+        // Create the text for the move stack
+        textComponent = new UIText(position, "", fontSize, fontColor);
 
-        UIMoveStack(int capacity, Vector2f position, int fontSize, Color fontColor) {
-            textComponent = new UIText(position, "", fontSize, fontColor);
-            moveCapacity = capacity;
-        }
+        // Store the number of moves this stack can hold
+        _moveCapacity = capacity;
+    }
 
         
     void updateMovesDisplayed(Gameboard* board) {
+        // Get the rank, file and piece type of the most recent move
         MoveNode* move = board->prevMove;
 
         int file = move->getNewFile();
         int rank = move->getNewRank();
         char pieceType = board->board[file][rank]->getType();
 
+        // Create a string describing the move recent move
         string moveString = pieceType2String(pieceType) + file2String(file) + rank2String(rank);
 
         // If our move histroy is overflowing, remove the first element
-        if(moveHistory.size() > moveCapacity) {
-            moveHistory.erase(moveHistory.begin());
-            moveHistory.erase(moveHistory.begin() + 1);
-            pastMoves++;
+        if(_moveHistory.size() > _moveCapacity) {
+            _moveHistory.erase(_moveHistory.begin());
+            _moveHistory.erase(_moveHistory.begin() + 1);
+            _pastMoves++;
         }
-        moveHistory.push_back(moveString);
 
+        // Add the most recent move to our move histroy
+        _moveHistory.push_back(moveString);
+
+        // Reset text stack and move number counter
         textComponent->element.setString("");
         int moveNumber = 1;
 
-        for (int i = 0; i < moveHistory.size(); i += 2) {
+        // For each pair of moves
+        for (int i = 0; i < _moveHistory.size(); i += 2) {
+            // Determine the move made by white and black, making the black move blank if it has not been made yet
             string whiteMove;
             string blackMove;
 
-            if (i == moveHistory.size() - 1) {
-                whiteMove = moveHistory[i];
+            if (i == _moveHistory.size() - 1) {
+                whiteMove = _moveHistory[i];
                 blackMove = "";
             } else {
-                whiteMove = moveHistory[i];
-                blackMove = moveHistory[i+1];
+                whiteMove = _moveHistory[i];
+                blackMove = _moveHistory[i+1];
             }
             
-            string moveString = to_string(moveNumber+pastMoves) + ". " + whiteMove + " " + blackMove + "\n";
+            // Create a string describing the most recent move pair
+            string moveString = to_string(moveNumber+_pastMoves) + ". " + whiteMove + " " + blackMove + "\n";
             string newString = textComponent->element.getString().toAnsiString() + moveString;
             
+            // Update the move stack string
             textComponent->element.setString(newString);
 
+            // Increment the move number being counted
             moveNumber++;
         }
     }
 
+    private:
+    // Converts from a rank's array number to its string value
     string rank2String(int rank) { return to_string(rank + 1); }
 
+    // Converts from a file's string to its string value
     string file2String(int file) { return string(1,file+97); }
 
+    // Converts from a piece's type to its string value
     string pieceType2String(char type) { return (type == 'p') ? "" : string(1,toupper(type)); }
 
+    public:
 
-    // DRAW FUNCTION
+    // Draws the UI move stack
     virtual void draw(RenderTarget& target, RenderStates states) const
     {
         // apply the transform

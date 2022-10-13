@@ -79,7 +79,7 @@ class UI {
         blackText = new UIText(Vector2f(PADDING,BOTTOM_TEXT_Y),"Black");
         matchText = new UIText(Vector2f(CONTROL_X,TOP_TEXT_Y),"White vs. Black");
 
-        movesText = new UIMoveStack(10, Vector2f(CONTROL_X,GUTTER_HEIGHT));
+        movesText = new UIMoveStack(Vector2f(CONTROL_X,GUTTER_HEIGHT),10);
 
         saveButton = new UIButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT),"Save",BUTTON_DIMENSIONS);
         loadButton = new UIButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*1),"Load",BUTTON_DIMENSIONS);

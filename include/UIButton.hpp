@@ -9,7 +9,7 @@
 using namespace std;
 using namespace sf;
 
-
+// A button to use in any SFML app
 class UIButton : public Drawable, public Transformable
 {
     public:
@@ -67,13 +67,12 @@ class UIButton : public Drawable, public Transformable
     // Draws the button
     virtual void draw(RenderTarget& target, RenderStates states) const
     {
-        // apply the transform
+        // Apply any transformation
         states.transform *= getTransform();
 
-        // draw the vertex array
+        // Draw the button
         target.draw(*buttonComponent);
         target.draw(*textComponent);
-
     }
 };
 
