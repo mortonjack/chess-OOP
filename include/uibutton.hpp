@@ -12,7 +12,7 @@ class uibutton : public Drawable, public Transformable
 {
     public:
         uitext* textComponent;
-        RectangleShape buttonComponent;
+        RectangleShape* buttonComponent;
 
         Color standardColor;
         Color inverseColor;
@@ -20,23 +20,28 @@ class uibutton : public Drawable, public Transformable
         uibutton(Vector2f position, string text, Vector2f dimensions): uibutton(position, text, dimensions, Color{ 0x454545FF }, 35, Color{ 0xF2DBB4FF }) {}
 
         uibutton(Vector2f position, string text, Vector2f dimensions, Color buttonColor, int fontSize, Color fontColor) {
+            // Setup colors
             standardColor = buttonColor;
             inverseColor = fontColor;
 
+            // Create button component
+            buttonComponent = new RectangleShape(dimensions);
+
+            buttonComponent->setPosition(position);
+            buttonComponent->setFillColor(buttonColor);
+
+            // Create text component
             textComponent = new uitext(position, text, fontSize, fontColor);
 
-            buttonComponent.setSize(dimensions);
-            buttonComponent.setPosition(position);
-            buttonComponent.setFillColor(buttonColor);
-
+            // Center text
             const sf::FloatRect bounds(textComponent->element.getLocalBounds());
-            const sf::Vector2f box(buttonComponent.getSize());
+            const sf::Vector2f box(buttonComponent->getSize());
             textComponent->element.setOrigin((bounds.width - box.x) / 2 + bounds.left, (bounds.height - box.y) / 2 + bounds.top);
         }
 
         // Retursn whether the button is hovered over
         bool isHovered(int x, int y) {
-            bool hovered = ((x > buttonComponent.getPosition().x && x < buttonComponent.getPosition().x + buttonComponent.getSize().x) && (y > buttonComponent.getPosition().y && y < buttonComponent.getPosition().y + buttonComponent.getSize().y));
+            bool hovered = ((x > buttonComponent->getPosition().x && x < buttonComponent->getPosition().x + buttonComponent->getSize().x) && (y > buttonComponent->getPosition().y && y < buttonComponent->getPosition().y + buttonComponent->getSize().y));
             return hovered;
         }
 
@@ -44,10 +49,10 @@ class uibutton : public Drawable, public Transformable
             bool invert = isHovered(x,y);
             
             if (!invert) {
-                buttonComponent.setFillColor(standardColor);
+                buttonComponent->setFillColor(standardColor);
                 textComponent->element.setFillColor(inverseColor);
             } else {
-                buttonComponent.setFillColor(inverseColor);   
+                buttonComponent->setFillColor(inverseColor);   
                 textComponent->element.setFillColor(standardColor);            
             }
         }
@@ -59,7 +64,7 @@ class uibutton : public Drawable, public Transformable
         states.transform *= getTransform();
 
         // draw the vertex array
-        target.draw(buttonComponent);
+        target.draw(*buttonComponent);
         target.draw(*textComponent);
 
     }

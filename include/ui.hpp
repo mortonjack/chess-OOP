@@ -7,6 +7,7 @@
 #include "uitext.hpp"
 #include "uibutton.hpp"
 #include "uimovestack.hpp"
+#include "uialert.hpp"
 
 #include "gameboard.h"
 #include "king.h"
@@ -35,6 +36,7 @@ class ui {
         uibutton* drawButton;
         uibutton* resignButton;
 
+        uialert* winAlert;
 
     ui() {
         userGame = new game();
@@ -81,6 +83,8 @@ class ui {
         loadButton = new uibutton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*1),"Load",BUTTON_DIMENSIONS);
         drawButton = new uibutton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*2),"Offer Draw",BUTTON_DIMENSIONS);
         resignButton = new uibutton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*3),"Resign",BUTTON_DIMENSIONS);
+
+        winAlert = new uialert(Vector2f(PADDING+80,GUTTER_HEIGHT+160), "Alert","Play Again","Quit");
     }
 
     // Manages the game's functionality
@@ -147,18 +151,35 @@ class ui {
 
             }
 
-            // Draw the UI
-            window->clear(Color{ 0x151515FF });
-            window->draw(*userBoard);
-            window->draw(*whiteText);
-            window->draw(*blackText);
-            window->draw(*matchText);
-            window->draw(*saveButton);
-            window->draw(*loadButton);
-            window->draw(*drawButton);
-            window->draw(*resignButton);
-            window->draw(*movesText);
-            window->display();
+            drawControls();
         }
+    }
+
+    void drawControls() {
+        // Make the UI a dark grey
+        window->clear(Color{ 0x151515FF });
+
+        // Draw the board
+        window->draw(*userBoard);
+
+        // Draw the player names and matchup text
+        window->draw(*whiteText);
+        window->draw(*blackText);
+        window->draw(*matchText);
+
+        // Draw the move-tracking text
+        window->draw(*movesText);
+
+        // Draw the buttons
+        window->draw(*saveButton);
+        window->draw(*loadButton);
+        window->draw(*drawButton);
+        window->draw(*resignButton);
+
+        // If a player has won, display the nessecary alert
+        window->draw(*winAlert);
+
+        // Update the window
+        window->display();
     }
 };
