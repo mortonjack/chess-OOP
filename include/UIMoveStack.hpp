@@ -31,8 +31,7 @@ class UIMoveStack : public Drawable, public Transformable
         // Store the number of moves this stack can hold
         _moveCapacity = capacity;
     }
-
-        
+ 
     void updateMovesDisplayed(Gameboard* gameboard) {
         // Get the rank, file and piece type of the most recent move
         MoveNode* move = gameboard->getPrevMove();

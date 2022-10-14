@@ -1,12 +1,13 @@
 #include "../include/Gameboard.h"
 #include "../include/Pawn.h"
 #include "../include/King.h"
+#include "../include/Rook.h"
 #include "PawnTest.h"
 #include <iostream>
 using namespace std;
 
 PawnTest::PawnTest() {
-    this->_length = 4;
+    this->_length = 5;
     this->_failMessage = "Pawn test failed";
     this->_passMessage = "Pawn test succeeded";
     initialiseResults();
@@ -384,9 +385,86 @@ bool PawnTest::checkTest(bool display) {
     return success;
 }
 
+bool PawnTest::promotionTest(bool display) {
+    // Checks pawns are promoted to queens 
+    // when reaching the other side of the board
+    bool success = false;
+
+    // Initialise objects
+    Gameboard board;
+    Pawn whitePawnOne('W');
+    Pawn whitePawnTwo('W');
+    Pawn blackPawnOne('B');
+    Pawn blackPawnTwo('B');
+    Rook whiteRook('W');
+    Rook blackRook('B');
+
+    // Place pieces
+    board.addPiece(0,6, &whitePawnOne);
+    board.addPiece(1,6, &whitePawnTwo);
+    board.addPiece(2,7, &blackRook);
+    board.addPiece(7,1, &blackPawnOne);
+    board.addPiece(6,1, &blackPawnTwo);
+    board.addPiece(5,0, &whiteRook);
+
+    if (display) board.visualiseTextBoard();
+
+    // Test 1: White pawn promotes
+    board.movePiece(0,6, 0,7);
+    bool test1 = board.getPiece(0,7)->getType() == 'q';
+    if (display) board.visualiseTextBoard();
+
+    // Test 2: White pawn promotes on capture
+    board.movePiece(1,6, 2,7);
+    bool test2 = board.getPiece(2,7)->getType() == 'q';
+    if (display) board.visualiseTextBoard();
+
+    // Test 3: Black pawn promotes
+    board.movePiece(7,1, 7,0);
+    bool test3 = board.getPiece(7,0)->getType() == 'q';
+    if (display) board.visualiseTextBoard();
+
+    // Test 4: Black pawn promotes on capture
+    board.movePiece(6,1, 5,0);
+    bool test4 = board.getPiece(5,0)->getType() == 'q';
+    if (display) board.visualiseTextBoard();
+
+    // Display results
+    if (display) {
+        if (test1) {
+            cout << "Test passed: White pawn promotes when reaching end of board" << endl;
+        } else {
+            cout << "Test failed: White pawn doesn't promote to queen when reaching end of board" << endl;
+        }
+
+        if (test2) {
+            cout << "Test passed: White pawn promotes when capturing" << endl;
+        } else {
+            cout << "Test failed: White pawn doesn't promote when capturing" << endl;
+        }
+        
+        if (test3) {
+            cout << "Test passed: Black pawn promotes when reaching end of board" << endl;
+        } else {
+            cout << "Test failed: Black pawn doesn't promote to queen when reaching end of board" << endl;
+        }
+
+        if (test4) {
+            cout << "Test passed: Black pawn promotes when capturing" << endl;
+        } else {
+            cout << "Test failed: Black pawn doesn't promote when capturing" << endl;
+        }
+    }
+
+    // Return
+    success = test1 && test2 && test3 && test4;
+    return success;
+}
+
 bool PawnTest::runTests(bool display) {
 
     _results[3] = enPassantTest(display && !_results[3]);
+    _results[4] = promotionTest(display && !_results[4]);
 
     return PieceTest::runTests(display);
 }

@@ -1,5 +1,11 @@
 #include <string>
 #include "../include/Gameboard.h"
+#include "../include/Bishop.h"
+#include "../include/Rook.h"
+#include "../include/Knight.h"
+#include "../include/Pawn.h"
+#include "../include/King.h"
+#include "../include/Queen.h"
 
 
 class Game{
@@ -13,14 +19,7 @@ class Game{
 
     public:
     // Constructor
-    Game() {
-        // Create a new game board
-        gameboard = new Gameboard();
-
-        // To start, it is white-to-move
-        colorToMove = 'W';
-    }
-    
+    Game() { }
 
     // Attempt to make a move, returning true is the move is successful and false if it is unsuccessful
     bool move(int oldFile, int oldRank, int newFile, int newRank) {
@@ -75,8 +74,52 @@ class Game{
         return color2OpponentColor(colorToMove);
     }
 
-
     // Returns this game's game board
+    void setupBoard(){
+        // Create a new game board
+        gameboard = new Gameboard();
+
+        // To start, it is white-to-move
+        colorToMove = 'W';
+
+        // Add pieces to the game board
+        Pawn* whiteAPawn = new Pawn('W');       gameboard->addPiece(0,1,whiteAPawn);
+        Pawn* whiteBPawn = new Pawn('W');       gameboard->addPiece(1,1,whiteBPawn);
+        Pawn* whiteCPawn = new Pawn('W');       gameboard->addPiece(2,1,whiteCPawn);
+        Pawn* whiteDPawn = new Pawn('W');       gameboard->addPiece(3,1,whiteDPawn);
+        Pawn* whiteEPawn = new Pawn('W');       gameboard->addPiece(4,1,whiteEPawn);
+        Pawn* whiteFPawn = new Pawn('W');       gameboard->addPiece(5,1,whiteFPawn);
+        Pawn* whiteGPawn = new Pawn('W');       gameboard->addPiece(6,1,whiteGPawn);
+        Pawn* whiteHPawn = new Pawn('W');       gameboard->addPiece(7,1,whiteHPawn);
+
+        Pawn* blackAPawn = new Pawn('B');       gameboard->addPiece(0,6,blackAPawn);
+        Pawn* blackBPawn = new Pawn('B');       gameboard->addPiece(1,6,blackBPawn);
+        Pawn* blackCPawn = new Pawn('B');       gameboard->addPiece(2,6,blackCPawn);
+        Pawn* blackDPawn = new Pawn('B');       gameboard->addPiece(3,6,blackDPawn);
+        Pawn* blackEPawn = new Pawn('B');       gameboard->addPiece(4,6,blackEPawn);
+        Pawn* blackFPawn = new Pawn('B');       gameboard->addPiece(5,6,blackFPawn);
+        Pawn* blackGPawn = new Pawn('B');       gameboard->addPiece(6,6,blackGPawn);
+        Pawn* blackHPawn = new Pawn('B');       gameboard->addPiece(7,6,blackHPawn);
+
+        Rook* whiteARook = new Rook('W');       gameboard->addPiece(0,0,whiteARook);
+        Knight* whiteBKnight = new Knight('W'); gameboard->addPiece(1,0,whiteBKnight);
+        Bishop* whiteCBishop = new Bishop('W'); gameboard->addPiece(2,0,whiteCBishop);
+        Queen* whiteDQueen = new Queen('W');    gameboard->addPiece(3,0,whiteDQueen);
+        King* whiteEKing = new King('W');       gameboard->addPiece(4,0,whiteEKing);
+        Bishop* whiteFBishop = new Bishop('W'); gameboard->addPiece(5,0,whiteFBishop);
+        Knight* whiteGKnight = new Knight('W'); gameboard->addPiece(6,0,whiteGKnight);
+        Rook* whiteHRook = new Rook('W');       gameboard->addPiece(7,0,whiteHRook);
+
+        Rook* blackARook = new Rook('B');       gameboard->addPiece(0,7,blackARook);
+        Knight* blackBKnight = new Knight('B'); gameboard->addPiece(1,7,blackBKnight);
+        Bishop* blackCBishop = new Bishop('B'); gameboard->addPiece(2,7,blackCBishop);
+        Queen* blackDQueen = new Queen('B');    gameboard->addPiece(3,7,blackDQueen);
+        King* blackEKing = new King('B');       gameboard->addPiece(4,7,blackEKing);
+        Bishop* blackFBishop = new Bishop('B'); gameboard->addPiece(5,7,blackFBishop);
+        Knight* blackGKnight = new Knight('B'); gameboard->addPiece(6,7,blackGKnight);
+        Rook* blackHRook = new Rook('B');       gameboard->addPiece(7,7,blackHRook);
+    }
+
     Gameboard* getBoard() {
         return this->gameboard;
     }

@@ -177,12 +177,6 @@ bool Gameboard::validMove(int oldFile, int oldRank, int newFile, int newRank) {
     removePiece(newFile, newRank);
     addPiece(oldFile, oldRank, sourcePiece);
 
-    if(newFile==8 && sourcePiece->getType()=='p'){
-        removePiece(newFile,newRank);
-        Queen* promotePiece = new Queen(sourcePiece->getColor());
-        addPiece(newFile,newRank,promotePiece);
-    }
-
     return true;
 }
 
@@ -289,8 +283,18 @@ bool Gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
     removePiece(oldFile, oldRank);
     addPiece(newFile, newRank, sourcePiece);
 
+
     // Report successful move
     prevMove->addMove(oldFile, oldRank, newFile, newRank, enPassant, targetPiece);
+
+      if(sourcePiece->getType()=='p'&&
+        ((newRank==7 && sourcePiece->getColor()=='W')||(newRank==0 && sourcePiece->getColor()=='B'))){
+        Queen* promotePiece = new Queen(sourcePiece->getColor());
+        removePiece(newFile,newRank);
+        addPiece(newFile,newRank,promotePiece);
+    }
+    
+
     return true;
 }
 
@@ -497,6 +501,7 @@ bool Gameboard::threefoldRepetition() {
             prevMove->unreverseBoard(oldBoard, depth);
             return false;
         }
+
         node->reverseBoard(oldBoard, 2);
         depth += 2;
         node = prevMove->prev(depth);
@@ -523,6 +528,7 @@ bool Gameboard::threefoldRepetition() {
                         }
                     }
 
+
                     // En Passant Check
                     if (targetWithEnPassant(i,j, i+1,j+1, oldBoard, node) != oldBoard[i+1][j+1]
                     || targetWithEnPassant(i,j, i-1,j+1, oldBoard, node) != oldBoard[i-1][j+1]
@@ -531,7 +537,7 @@ bool Gameboard::threefoldRepetition() {
                         possibleThreefold = false;
                         prevMove->unreverseBoard(oldBoard, depth);
                         return false;
-                    }
+                    } 
 
                     // Castle Check
                     if (blackLongCastle != isCastling(4,7,2,7)
@@ -541,7 +547,7 @@ bool Gameboard::threefoldRepetition() {
                         possibleThreefold = false;
                         prevMove->unreverseBoard(oldBoard, depth);
                         return false;
-                    }
+                    } 
                 }
             }
         }

@@ -29,7 +29,7 @@ class UI {
         UIText* blackText;
         UIText* matchText;
 
-        UIMoveStack* movesText;
+        UIMoveStack* moveStack;
 
         UIButton* saveButton;
         UIButton* loadButton;
@@ -80,7 +80,7 @@ class UI {
         blackText = new UIText(Vector2f(PADDING,BOTTOM_TEXT_Y),"Black");
         matchText = new UIText(Vector2f(CONTROL_X,TOP_TEXT_Y),"White vs. Black");
 
-        movesText = new UIMoveStack(Vector2f(CONTROL_X,GUTTER_HEIGHT),10);
+        moveStack = new UIMoveStack(Vector2f(CONTROL_X,GUTTER_HEIGHT),10);
 
         saveButton = new UIButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT),"Save",BUTTON_DIMENSIONS);
         loadButton = new UIButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*1),"Load",BUTTON_DIMENSIONS);
@@ -92,14 +92,7 @@ class UI {
 
     // Manages the Game's functionality
     void run() {
-        King blackKing('B');
-        King whiteKing('W');
-        Queen whiteQueen('W');
-        
-        game->getBoard()->addPiece(0,0, &blackKing);
-        game->getBoard()->addPiece(2,2, &whiteKing);
-        game->getBoard()->addPiece(7,1, &whiteQueen);
-
+        game->setupBoard();
         uiBoard->loadPieces(game->getBoard());
 
         while (window->isOpen())
@@ -111,13 +104,17 @@ class UI {
                 // If we want to close this window, destroy it
                 if(event.type == sf::Event::Closed) { window->close(); }
 
-                // Handle the appropriate behavior for clicking a tile
+                // Handle the appropriate behavior for clicking
                 if (event.type == sf::Event::MouseButtonPressed) {
                     int x = event.mouseButton.x;
                     int y = event.mouseButton.y;
 
+                    // Check if we are making a move (true) or selecting a piece (false)
                     bool makeMove = uiBoard->tileClick(x,y);
+
+                    // If we are making a move...
                     if(makeMove) {
+                        // Find the source/target rank/file of this move
                         int oldFile = uiBoard->getSourceCoords().x;
                         int oldRank = uiBoard->getSourceCoords().y;
 
@@ -126,20 +123,28 @@ class UI {
 
                         bool successfulMove = game->move(oldFile,oldRank, newFile, newRank);
                         
+                        // If this move is valid...
                         if (successfulMove) {
+                            // Reload the board and text stroing past moves
                             uiBoard->loadPieces(game->getBoard());
-                            movesText->updateMovesDisplayed(game->getBoard());
+                            moveStack->updateMovesDisplayed(game->getBoard());
 
+                            // If the game has ended, display an alert to show this
                             if (game->getGameState() != '0') { displayAlert(game->getGameState(), game->getOppositeColorToMove()); }
                         }
                     }
 
+                    // Listen out for button commands
                     runButtonCommands(x,y);
 
                 }
 
+                // Handle the appropriate behavior for moving the mouse
                 if (event.type == sf::Event::MouseMoved) {
-                    updateButtonStates(event);
+                    int x = event.mouseButton.x;
+                    int y = event.mouseButton.y;
+
+                    updateButtonStates(x,y);
                 }
 
             }
@@ -148,6 +153,48 @@ class UI {
         }
     }
 
+    // Is a button currently hovered? If so, we run its command
+    void runButtonCommands(int x, int y) {
+        if (saveButton->isHovered(x,y))   { game->saveState(); }                        // Save command
+        if (loadButton->isHovered(x,y))   { game->loadState(); }                        // Load command
+        if (drawButton->isHovered(x,y))   { displayAlert('A',game->getColorToMove()); } // Draw command
+        if (resignButton->isHovered(x,y)) { displayAlert('R',game->getColorToMove()); } // Resign command
+        
+        // If our alert is displayed, we can interact with its buttons
+        if (isAlertDisplayed) {
+
+            // Primary button command   (play again) 
+            if (alert->primaryButton->isHovered(x,y)) {  
+                game->setupBoard(); 
+                uiBoard->loadPieces(game->getBoard());
+                isAlertDisplayed = false; 
+            }
+
+            if (alert->secondaryButton->isHovered(x,y)) { window->close(); } // Secondary button command (quit)
+        }
+    }
+
+    // Is a button currently hovered? If so, invert its colors
+    void updateButtonStates(int x, int y) {
+        saveButton->updateButtonColors(x,y);
+        loadButton->updateButtonColors(x,y);
+        drawButton->updateButtonColors(x,y);
+        resignButton->updateButtonColors(x,y);
+
+        alert->primaryButton->updateButtonColors(x,y);
+        alert->secondaryButton->updateButtonColors(x,y);
+    }
+
+    // Resets the UI: including the gameboard, material/time advantage/disadvantage and past moves display
+    void resetControls() {
+        game->setupBoard();
+        uiBoard->loadPieces(game->getBoard());
+        moveStack->updateMovesDisplayed(game->getBoard());
+        isAlertDisplayed = false; 
+    }
+
+
+    // Displays the alert control, with its appropriate message
     void displayAlert(char stateCode, char playerColor) {
         switch (stateCode) {
             case 'C':
@@ -184,34 +231,12 @@ class UI {
         isAlertDisplayed = true;
     }
 
+    // Converts from a player color into a string, describing who has won
     string color2WinnerString(char color) {
         return color == 'W' ? "White Wins" : "Black Wins";
     }
 
-    // Is a button currently hovered? If so, we run its command
-    void runButtonCommands(int x, int y) {
-        if (saveButton->isHovered(x,y))   { game->saveState(); }                        // Save command
-        if (loadButton->isHovered(x,y))   { game->loadState(); }                        // Load command
-        if (drawButton->isHovered(x,y))   { displayAlert('A',game->getColorToMove()); } // Draw command
-        if (resignButton->isHovered(x,y)) { displayAlert('R',game->getColorToMove()); } // Resign command
-        
-        // If our alert is displayed, we can interact with its buttons
-        if (isAlertDisplayed) {
-            if (alert->secondaryButton->isHovered(x,y)) { window->close(); }         // Primary button command   (play again) 
-            if (alert->secondaryButton->isHovered(x,y)) { window->close(); }         // Secondary button command (quit)
-        }
-    }
-
-    void updateButtonStates(sf::Event event) {
-        saveButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
-        loadButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
-        drawButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
-        resignButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
-
-        alert->primaryButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
-        alert->secondaryButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
-    }
-
+    // Draws the UIs controls
     void drawControls() {
         // Make the UI a dark grey
         window->clear(Color{ 0x151515FF });
@@ -225,7 +250,7 @@ class UI {
         window->draw(*matchText);
 
         // Draw the move-tracking text
-        window->draw(*movesText);
+        window->draw(*moveStack);
 
         // Draw the buttons
         window->draw(*saveButton);
