@@ -41,6 +41,7 @@ class Game{
         return successfulMove;
     }
 
+<<<<<<< HEAD
     void saveState() {
         /* 
         To be added.
@@ -83,6 +84,9 @@ class Game{
         colorToMove = 'W';
 
         // Add pieces to the game board
+=======
+    void setupBoard(){
+>>>>>>> e140f72976989a861026df9d6164dc85d14ee08f
         Pawn* whiteAPawn = new Pawn('W');       gameboard->addPiece(0,1,whiteAPawn);
         Pawn* whiteBPawn = new Pawn('W');       gameboard->addPiece(1,1,whiteBPawn);
         Pawn* whiteCPawn = new Pawn('W');       gameboard->addPiece(2,1,whiteCPawn);
