@@ -1,6 +1,12 @@
 #include <string>
 // #include "player.h"
 #include "../include/Gameboard.h"
+#include "../include/Bishop.h"
+#include "../include/Rook.h"
+#include "../include/Knight.h"
+#include "../include/Pawn.h"
+#include "../include/King.h"
+#include "../include/Queen.h"
 
 
 class Game{
