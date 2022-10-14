@@ -92,9 +92,7 @@ class UI {
 
     // Manages the Game's functionality
     void run() {
-
         game->setupBoard();
-
         uiBoard->loadPieces(game->getBoard());
 
         while (window->isOpen())
