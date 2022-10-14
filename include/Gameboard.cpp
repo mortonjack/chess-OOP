@@ -258,7 +258,7 @@ bool Gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
     // Check castle
     if (isCastling(oldFile, oldRank, newFile, newRank)) {
         castle(oldFile, newFile, newRank);
-        prevMove->addMove(oldFile, oldRank, newFile, newRank, false, nullptr);
+        prevMove->addMove(oldFile, oldRank, newFile, newRank, false, false, nullptr);
         return true;
     }
 
@@ -282,18 +282,20 @@ bool Gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
     removePiece(oldFile, oldRank);
     addPiece(newFile, newRank, sourcePiece);
 
+    bool promote = false;
 
-    // Report successful move
-    prevMove->addMove(oldFile, oldRank, newFile, newRank, enPassant, targetPiece);
-
-      if(sourcePiece->getType()=='p'&&
+    if(sourcePiece->getType()=='p'&&
         ((newRank==7 && sourcePiece->getColor()=='W')||(newRank==0 && sourcePiece->getColor()=='B'))){
         Queen* promotePiece = new Queen(sourcePiece->getColor());
         removePiece(newFile,newRank);
         addPiece(newFile,newRank,promotePiece);
+        promote = true;
     }
-    
 
+    // Report successful move
+    prevMove->addMove(oldFile, oldRank, newFile, newRank, enPassant, promote, targetPiece);
+
+    
     return true;
 }
 

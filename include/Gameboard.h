@@ -5,7 +5,7 @@
 #include "MoveNode.h"
 
 class Gameboard {
-    private:
+    public:
         Piece* board[8][8]; // Gameboard, stores Piece locations
         MoveNode* prevMove;
     

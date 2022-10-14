@@ -13,7 +13,7 @@ MoveNode::MoveNode() {
 }
 
 MoveNode::MoveNode(int oldFile, int oldRank, int newFile, int newRank, 
-                    bool enPassant, Piece* capturedPiece) {
+                    bool enPassant, bool promote, Piece* capturedPiece) {
     _oldFile = oldFile;
     _oldRank = oldRank;
     _newFile = newFile;
@@ -24,7 +24,7 @@ MoveNode::MoveNode(int oldFile, int oldRank, int newFile, int newRank,
 }
 
 MoveNode::MoveNode(int oldFile, int oldRank, int newFile, int newRank, 
-                    bool enPassant, Piece* capturedPiece, MoveNode* prevNode) {
+                    bool enPassant, bool promote, Piece* capturedPiece, MoveNode* prevNode) {
     _oldFile = oldFile;
     _oldRank = oldRank;
     _newFile = newFile;
@@ -36,15 +36,16 @@ MoveNode::MoveNode(int oldFile, int oldRank, int newFile, int newRank,
 
 // Add move
 void MoveNode::addMove(int oldFile, int oldRank, int newFile, int newRank,
-                    bool enPassant, Piece* capturedPiece) {
+                    bool enPassant, bool promote, Piece* capturedPiece) {
     MoveNode* prevMove = new MoveNode(_oldFile, _oldRank, _newFile, _newRank,
-                                    _enPassant, _capturedPiece, _prevNode);
+                                    _enPassant, promote, _capturedPiece, _prevNode);
     _prevNode = prevMove;
     _oldFile = oldFile;
     _oldRank = oldRank;
     _newFile = newFile;
     _newRank = newRank;
     _enPassant = enPassant;
+    _promote = promote;
     _capturedPiece = capturedPiece;
 }
 
@@ -70,6 +71,7 @@ int MoveNode::getNewFile() {return _newFile;}
 int MoveNode::getNewRank() {return _newRank;}
 Piece* MoveNode::getCapturedPiece() {return _capturedPiece;}
 bool MoveNode::enPassant() {return _enPassant;}
+bool MoveNode::promoted() {return _promote;}
 
 // Reverse 
 void MoveNode::reverseBoard(Piece* board[8][8], int moves) {

@@ -36,12 +36,26 @@ class UIMoveStack : public Drawable, public Transformable
         // Get the rank, file and piece type of the most recent move
         MoveNode* move = gameboard->getPrevMove();
 
-        int file = move->getNewFile();
-        int rank = move->getNewRank();
-        char pieceType = gameboard->getPiece(file, rank)->getType();
+        // If it is the first move in the game, break out of the function
+        if (move->getOldFile() == -1) return;
 
-        // Create a string describing the move recent move
-        string moveString = pieceType2String(pieceType) + file2String(file) + rank2String(rank);
+        int newFile = move->getNewFile();
+        int newRank = move->getNewRank();
+        char pieceType = gameboard->getPiece(newFile, newRank)->getType();
+        pieceType = move->promoted() ? 'p' : pieceType;
+
+        string moveString;
+
+        moveString += pieceType2String(pieceType);
+
+        if (move->getCapturedPiece() != nullptr) moveString += 'x';
+
+        moveString += file2String(newFile) + rank2String(newRank);
+
+        if (move->promoted()) moveString += "=Q";
+
+        if (gameboard->isInCheckmate('W') || gameboard->isInCheckmate('B') || gameboard->isInStalemate('W') || gameboard->isInStalemate('B')) moveString += '#';
+        else if (gameboard->isInCheck('W') || gameboard->isInCheck('B')) moveString += '+';
 
         // If our move histroy is overflowing, remove the first element
         if((int)_moveHistory.size() > _moveCapacity) {
