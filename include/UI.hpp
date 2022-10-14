@@ -87,18 +87,18 @@ class UI {
         drawButton = new UIButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*2),"Offer Draw",BUTTON_DIMENSIONS);
         resignButton = new UIButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*3),"Resign",BUTTON_DIMENSIONS);
 
-        alert = new UIAlert(Vector2f(PADDING+80,GUTTER_HEIGHT+120), "White wins!", "By checkmate", "Play Again","Quit");
+        alert = new UIAlert(Vector2f(PADDING+80,GUTTER_HEIGHT+120), "Play Again", "Quit");
     }
 
     // Manages the Game's functionality
     void run() {
         King blackKing('B');
-        Rook whiteRook('W');
+        King whiteKing('W');
         Queen whiteQueen('W');
         
         game->getBoard()->addPiece(0,0, &blackKing);
-        game->getBoard()->addPiece(7,0, &whiteRook);
-        game->getBoard()->addPiece(7,7, &whiteQueen);
+        game->getBoard()->addPiece(2,2, &whiteKing);
+        game->getBoard()->addPiece(7,1, &whiteQueen);
 
         uiBoard->loadPieces(game->getBoard());
 
@@ -129,19 +129,12 @@ class UI {
                         if (successfulMove) {
                             uiBoard->loadPieces(game->getBoard());
                             movesText->updateMovesDisplayed(game->getBoard());
+
+                            if (game->getGameState() != '0') { displayAlert(game->getGameState(), game->getOppositeColorToMove()); }
                         }
                     }
 
-                    /* Button commands
-
-                    saveButton->isHovered(event.mouseButton.x, event.mouseButton.y) { Game->saveState(); }
-                    loadButton->isHovered(event.mouseButton.x, event.mouseButton.y) { Game->loadState(); }
-                    drawButton->isHovered(event.mouseButton.x, event.mouseButton.y) { Game->displayDraw(); }
-                    resignButton->isHovered(event.mouseButton.x, event.mouseButton.y) { Game->displayWin(Game->oppositeColor); }
-
-                    */
-
-                   // If the Game alert is displayed...
+                    runButtonCommands(x,y);
 
                 }
 
@@ -155,8 +148,58 @@ class UI {
         }
     }
 
-    void displayWin() {
+    void displayAlert(char stateCode, char playerColor) {
+        switch (stateCode) {
+            case 'C':
+                alert->setTitleText(color2WinnerString(playerColor));
+                alert->setSubtitleText("By checkmate");
+                break;
+
+            case 'R':
+                alert->setTitleText(color2WinnerString(playerColor));
+                alert->setSubtitleText("By resignation");
+                break;
+
+            case 'S':
+                alert->setTitleText("Draw");
+                alert->setSubtitleText("By stalemate");
+                break;
+
+            case '3':
+                alert->setTitleText("Draw");
+                alert->setSubtitleText("By threefold repetition");
+                break;
+
+            case '5':
+                alert->setTitleText("Draw");
+                alert->setSubtitleText("By the 50-move rule");
+                break;
+
+            case 'A':
+                alert->setTitleText("Draw");
+                alert->setSubtitleText("By agreement");
+                break;
+        }
+
+        isAlertDisplayed = true;
+    }
+
+    string color2WinnerString(char color) {
+        return color == 'W' ? "White Wins" : "Black Wins";
+    }
+
+    // Is a button currently hovered? If so, we run its command
+    void runButtonCommands(int x, int y) {
+        if (saveButton->isHovered(x,y))   { game->saveState(); }                        // Save command
+        if (loadButton->isHovered(x,y))   { game->loadState(); }                        // Load command
+        if (drawButton->isHovered(x,y))   { displayAlert('A',game->getColorToMove()); } // Draw command
+        if (resignButton->isHovered(x,y)) { displayAlert('R',game->getColorToMove()); } // Resign command
         
+        // If our alert is displayed, we can interact with its buttons
+        if (isAlertDisplayed) {
+            if (alert->secondaryButton->isHovered(x,y)) { window->close(); }         // Primary button command   (play again) 
+            if (alert->secondaryButton->isHovered(x,y)) { window->close(); }         // Secondary button command (quit)
+        }
     }
 
     void updateButtonStates(sf::Event event) {
@@ -167,10 +210,6 @@ class UI {
 
         alert->primaryButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
         alert->secondaryButton->updateButtonColors(event.mouseMove.x, event.mouseMove.y);
-
-        if (isAlertDisplayed) {
-            if (alert->secondaryButton->isHovered(event.mouseMove.x,event.mouseMove.y)) { window->close(); }
-        }
     }
 
     void drawControls() {

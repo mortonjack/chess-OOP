@@ -22,7 +22,7 @@ class UIAlert : public Drawable, public Transformable
         UIButton* secondaryButton;
         RectangleShape* alertComponent;
 
-        UIAlert(Vector2f position, string titleText, string subtitleText, string primaryButtonText, string secondaryButtonText, Color alertColor = Color{ 0x151515FF }, Color buttonColor = Color{ 0x454545FF }, Color fontColor = Color{ 0xF5F5F5FF }) {
+        UIAlert(Vector2f position, string primaryButtonText, string secondaryButtonText, string titleText = "", string subtitleText = "",  Color alertColor = Color{ 0x151515FF }, Color buttonColor = Color{ 0x454545FF }, Color fontColor = Color{ 0xF5F5F5FF }) {
             // Alerts are a hard-coded 480x320px size
             alertComponent = new RectangleShape(Vector2f(480,400));
             alertComponent->setPosition(position);
@@ -45,6 +45,27 @@ class UIAlert : public Drawable, public Transformable
             secondaryButton = new UIButton(Vector2f(position.x+25, position.y+400-70-25), secondaryButtonText, Vector2f(430,70));    
         }
 
+        void setTitleText(string text) {
+            titleComponent->element.setString(text);
+        
+            const sf::FloatRect titleBounds(titleComponent->element.getLocalBounds());
+            const sf::FloatRect subtitleBounds(subtitleComponent->element.getLocalBounds());
+            const sf::Vector2f box(alertComponent->getSize());
+
+            titleComponent->element.setOrigin((int)((titleBounds.width - box.x) / 2 + titleBounds.left), ((int)(titleBounds.height - box.y) / 2 + titleBounds.top));
+            subtitleComponent->element.setOrigin((int)((subtitleBounds.width - box.x) / 2 + subtitleBounds.left), ((int)(subtitleBounds.height - box.y) / 2 + subtitleBounds.top));             
+        }
+
+        void setSubtitleText(string text) {
+            subtitleComponent->element.setString(text);
+
+            const sf::FloatRect titleBounds(titleComponent->element.getLocalBounds());
+            const sf::FloatRect subtitleBounds(subtitleComponent->element.getLocalBounds());
+            const sf::Vector2f box(alertComponent->getSize());
+
+            titleComponent->element.setOrigin((int)((titleBounds.width - box.x) / 2 + titleBounds.left), ((int)(titleBounds.height - box.y) / 2 + titleBounds.top));
+            subtitleComponent->element.setOrigin((int)((subtitleBounds.width - box.x) / 2 + subtitleBounds.left), ((int)(subtitleBounds.height - box.y) / 2 + subtitleBounds.top)); 
+        }
 
     // DRAW FUNCTION
     virtual void draw(RenderTarget& target, RenderStates states) const

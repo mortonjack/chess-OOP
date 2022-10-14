@@ -86,6 +86,7 @@ Piece* Gameboard::targetWithEnPassant(int oldFile, int oldRank, int newFile, int
 bool Gameboard::isCastling(int oldFile, int oldRank, int newFile, int newRank) {
     Piece* sourcePiece = board[oldFile][oldRank];
 
+    if (sourcePiece == nullptr) return false;
     if (!(sourcePiece->getType() == 'k')) return false; // Castling can only happen to kings
     if (!(sourcePiece->getMoveCount() == 0)) return false; // Kings lose castling rights when they move
     if (!((oldRank == newRank) && (newFile == oldFile + 2 || newFile == oldFile - 2))) return false; // Castling only moves the King 2 tiles to the left/right
@@ -471,6 +472,7 @@ bool Gameboard::threefoldRepetition() {
     int oldPieceCount = 0;
     int pieceCount = 0;
     int depth = 0;
+
     bool blackLongCastle = isCastling(4,7,2,7);
     bool blackShortCastle = isCastling(4,7,6,7);
     bool whiteLongCastle = isCastling(4,0,2,0);
