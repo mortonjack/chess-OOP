@@ -82,7 +82,6 @@ Piece* Gameboard::targetWithEnPassant(int oldFile, int oldRank, int newFile, int
 }
 
 
-
 bool Gameboard::isCastling(int oldFile, int oldRank, int newFile, int newRank) {
     Piece* sourcePiece = board[oldFile][oldRank];
 
@@ -530,10 +529,12 @@ bool Gameboard::threefoldRepetition() {
 
 
                     // En Passant Check
-                    if (targetWithEnPassant(i,j, i+1,j+1, oldBoard, node) != oldBoard[i+1][j+1]
-                    || targetWithEnPassant(i,j, i-1,j+1, oldBoard, node) != oldBoard[i-1][j+1]
-                    || targetWithEnPassant(i,j, i-1,j-1, oldBoard, node) != oldBoard[i-1][j-1]
-                    || targetWithEnPassant(i,j, i+1,j-1, oldBoard, node) != oldBoard[i+1][j-1]) {
+                    bool whiteEnPassantRight = (i+1 < 8 && j+1 < 8) && (targetWithEnPassant(i,j, i+1,j+1, oldBoard, node) != oldBoard[i+1][j+1]);
+                    bool whiteEnPassantLeft = (i-1 > -1 && j+1 < 8) && (targetWithEnPassant(i,j, i-1,j+1, oldBoard, node) != oldBoard[i-1][j+1]);
+                    bool blackEnPassantRight = (i+1 < 8 && j+1 > -1) && (targetWithEnPassant(i,j, i+1,j-1, oldBoard, node) != oldBoard[i+1][j-1]);
+                    bool blackEnPassantLeft = (i+1 > -1 && j+1 > -1) && (targetWithEnPassant(i,j, i+1,j+1, oldBoard, node) != oldBoard[i-1][j-1]);
+
+                    if (whiteEnPassantRight || whiteEnPassantLeft || blackEnPassantRight || blackEnPassantLeft) {
                         possibleThreefold = false;
                         prevMove->unreverseBoard(oldBoard, depth);
                         return false;
