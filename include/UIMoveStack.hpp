@@ -83,6 +83,10 @@ class UIMoveStack : public Drawable, public Transformable
         }
     }
 
+    void resetMoveStack() {
+        //vector<string>.clear();
+    }
+
     private:
     // Converts from a rank's array number to its string value
     string rank2String(int rank) { return to_string(rank + 1); }
