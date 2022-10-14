@@ -88,6 +88,11 @@ class UI {
         resignButton = new UIButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*3),"Resign",BUTTON_DIMENSIONS);
 
         alert = new UIAlert(Vector2f(PADDING+80,GUTTER_HEIGHT+120), "Play Again", "Quit");
+
+        // Set window icon
+        Image image = Image();
+        image.loadFromFile("./assets/logo.png");
+        window->setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
     }
 
     // Manages the Game's functionality
