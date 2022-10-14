@@ -15,13 +15,34 @@ bool SaveTest::directTest(bool display) {
     bool success = false;
 
     // Initialise objects
+    Gameboard board;
+    Pawn whitePawnOne('W');
+    Pawn whitePawnTwo('W');
+    Pawn blackPawn('B');
+    Rook blackRook('B');
+    King blackKing('B');
+    King whiteKing('W');
 
     // Place pieces
+    board.addPiece(5,6, &whitePawnOne);
+    board.addPiece(6,1, &whitePawnTwo);
+    board.addPiece(3,6, &blackPawn);
+    board.addPiece(7,7, &blackKing);
+    board.addPiece(0,7, &blackRook);
+    board.addPiece(3,0, &whiteKing);
+    if (display) board.visualiseTextBoard();
 
     // Make moves
+    board.movePiece(3,6, 3,5);
+    board.movePiece(5,6, 5,7);
+    if (display) board.visualiseTextBoard();
+    board.movePiece(0,7, 5,7);
+    board.movePiece(6,1, 6,3);
+    board.movePiece(3,5, 3,4);
+    if (display) board.visualiseTextBoard();
 
     // Save game state
-    State savestate();
+    State savestate;
 
     // Destroy existing objects
 
