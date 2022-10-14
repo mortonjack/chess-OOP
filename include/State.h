@@ -8,13 +8,14 @@
 #include "Rook.h"
 #include "Bishop.h"
 #include "MoveNode.h"
-#include <string>
+#include <fstream>
+using std::ofstream;
 
 class State {
     private:
-        string file;
-        Piece* currentBoard()[8][8];
-        MoveNode* _prevMove();
+        Piece* currentBoard[8][8];
+        MoveNode* _prevMove;
+        ofstream _file;
     public:
         // Constructors
         State();
@@ -29,6 +30,6 @@ class State {
         void saveBoard();
         void saveMoves();
 
-}
+};
 
-#endif STATE_H
+#endif//STATE_H

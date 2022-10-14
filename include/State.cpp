@@ -1,9 +1,7 @@
 #include "State.h"
+using std::ofstream;
 
 State::State() {
-    // Set save file
-    file = "./build/save.txt";
-    
     // Load board from save file
     loadCurrentBoard();
     loadPrevMoves();
@@ -18,24 +16,33 @@ State::State(Piece* board[8][8], MoveNode* prevMove) {
     }
     // Copy prev move
     _prevMove = prevMove;
-    // Set save file
-    file = "./build/save.txt";
 }
 
-void loadCurrentBoard() {
-
-}
-
-void loadPrevMoves() {
+void State::loadCurrentBoard() {
 
 }
 
-void saveState() {
-    // Step One: Clear File
+void State::loadPrevMoves() {
+
+}
+
+void State::saveState() {
+    // Step One: Create Object
+    _file.open("./build/save.txt", ofstream::app);
+    _file << "Test";
 
     // Step One: Save Board
     saveBoard();
     
     // Step Two: Save Moves
     saveMoves();
+}
+
+
+void State::saveBoard() {
+
+}
+
+void State::saveMoves() {
+
 }
