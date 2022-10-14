@@ -155,10 +155,10 @@ class UI {
 
     // Is a button currently hovered? If so, we run its command
     void runButtonCommands(int x, int y) {
-        if (saveButton->isHovered(x,y))   { game->saveState(); }                        // Save command
-        if (loadButton->isHovered(x,y))   { game->loadState(); }                        // Load command
-        if (drawButton->isHovered(x,y))   { displayAlert('A',game->getColorToMove()); } // Draw command
-        if (resignButton->isHovered(x,y)) { displayAlert('R',game->getColorToMove()); } // Resign command
+        if (saveButton->isHovered(x,y))   { game->saveState(); }                                // Save command
+        if (loadButton->isHovered(x,y))   { game->loadState(); }                                // Load command
+        if (drawButton->isHovered(x,y))   { displayAlert('A',game->getOppositeColorToMove()); } // Draw command
+        if (resignButton->isHovered(x,y)) { displayAlert('R',game->getColorToMove()); }         // Resign command
         
         // If our alert is displayed, we can interact with its buttons
         if (isAlertDisplayed) {
