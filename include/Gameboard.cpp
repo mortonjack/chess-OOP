@@ -529,7 +529,7 @@ bool Gameboard::threefoldRepetition() {
                     }
 
 
-                    // En Passant Check
+                    /* En Passant Check
                     if (targetWithEnPassant(i,j, i+1,j+1, oldBoard, node) != oldBoard[i+1][j+1]
                     || targetWithEnPassant(i,j, i-1,j+1, oldBoard, node) != oldBoard[i-1][j+1]
                     || targetWithEnPassant(i,j, i-1,j-1, oldBoard, node) != oldBoard[i-1][j-1]
@@ -537,7 +537,7 @@ bool Gameboard::threefoldRepetition() {
                         possibleThreefold = false;
                         prevMove->unreverseBoard(oldBoard, depth);
                         return false;
-                    } 
+                    } */
 
                     // Castle Check
                     if (blackLongCastle != isCastling(4,7,2,7)

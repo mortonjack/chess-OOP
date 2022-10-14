@@ -84,7 +84,7 @@ class UIMoveStack : public Drawable, public Transformable
     }
 
     void resetMoveStack() {
-        //vector<string>.clear();
+        //fvector<string>.clear();
     }
 
     private:
