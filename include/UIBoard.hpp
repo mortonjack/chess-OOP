@@ -54,10 +54,10 @@ class UIBoard : public Drawable, public Transformable
                     Vertex* tile = coords2TilePointer(coords);
 
                     // define its 4 corners
-                    tile[0].position = Vector2f(file * _tileLength + offsetX, rank * _tileWidth + offsetY);
-                    tile[1].position = Vector2f((file + 1) * _tileLength + offsetX, rank * _tileWidth + offsetY);
-                    tile[2].position = Vector2f((file + 1) * _tileLength + offsetX, (rank + 1) * _tileWidth + offsetY);
-                    tile[3].position = Vector2f(file * _tileLength + offsetX, (rank + 1) * _tileWidth + offsetY);
+                    tile[0].position = Vector2f(file * _tileLength + offsetX, (7 - rank) * _tileWidth + offsetY);
+                    tile[1].position = Vector2f((file + 1) * _tileLength + offsetX, (7 - rank) * _tileWidth + offsetY);
+                    tile[2].position = Vector2f((file + 1) * _tileLength + offsetX, ((7 -rank) + 1) * _tileWidth + offsetY);
+                    tile[3].position = Vector2f(file * _tileLength + offsetX, ((7 - rank) + 1) * _tileWidth + offsetY);
 
                     // Determine whether the square is light or dark
                     colorTile(coords, coords2TileColor(coords));
