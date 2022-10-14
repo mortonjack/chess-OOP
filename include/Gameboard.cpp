@@ -176,12 +176,6 @@ bool Gameboard::validMove(int oldFile, int oldRank, int newFile, int newRank) {
     removePiece(newFile, newRank);
     addPiece(oldFile, oldRank, sourcePiece);
 
-    if(newFile==8 && sourcePiece->getType()=='p'){
-        removePiece(newFile,newRank);
-        Queen* promotePiece = new Queen(sourcePiece->getColor());
-        addPiece(newFile,newRank,promotePiece);
-    }
-
     return true;
 }
 
@@ -288,8 +282,18 @@ bool Gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
     removePiece(oldFile, oldRank);
     addPiece(newFile, newRank, sourcePiece);
 
+
     // Report successful move
     prevMove->addMove(oldFile, oldRank, newFile, newRank, enPassant, targetPiece);
+
+      if(sourcePiece->getType()=='p'&&
+        ((newRank==7 && sourcePiece->getColor()=='W')||(newRank==0 && sourcePiece->getColor()=='B'))){
+        Queen* promotePiece = new Queen(sourcePiece->getColor());
+        removePiece(newFile,newRank);
+        addPiece(newFile,newRank,promotePiece);
+    }
+    
+
     return true;
 }
 

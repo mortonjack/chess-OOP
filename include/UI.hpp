@@ -92,13 +92,15 @@ class UI {
 
     // Manages the Game's functionality
     void run() {
-        King blackKing('B');
-        Rook whiteRook('W');
-        Queen whiteQueen('W');
+        // King blackKing('B');
+        // Rook whiteRook('W');
+        // Queen whiteQueen('W');
         
-        game->getBoard()->addPiece(0,0, &blackKing);
-        game->getBoard()->addPiece(7,0, &whiteRook);
-        game->getBoard()->addPiece(7,7, &whiteQueen);
+        // game->getBoard()->addPiece(0,0, &blackKing);
+        // game->getBoard()->addPiece(7,0, &whiteRook);
+        // game->getBoard()->addPiece(7,7, &whiteQueen);
+
+        game->setupBoard();
 
         uiBoard->loadPieces(game->getBoard());
 
