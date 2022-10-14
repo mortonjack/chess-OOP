@@ -114,28 +114,31 @@ class UI {
                     int x = event.mouseButton.x;
                     int y = event.mouseButton.y;
 
-                    // Check if we are making a move (true) or selecting a piece (false)
-                    bool makeMove = uiBoard->tileClick(x,y);
+                    // If there is currently no active alert, and the mouse is hovering over the game board...
+                    if (isAlertDisplayed == false && uiBoard->isHovered(x,y) == true) {
+                        // Check if we are making a move (true) or selecting a piece (false)
+                        bool makeMove = uiBoard->tileClick(x,y);
 
-                    // If we are making a move...
-                    if(makeMove) {
-                        // Find the source/target rank/file of this move
-                        int oldFile = uiBoard->getSourceCoords().x;
-                        int oldRank = uiBoard->getSourceCoords().y;
+                        // If we are making a move...
+                        if(makeMove) {
+                            // Find the source/target rank/file of this move
+                            int oldFile = uiBoard->getSourceCoords().x;
+                            int oldRank = uiBoard->getSourceCoords().y;
 
-                        int newFile = uiBoard->getTargetCoords().x;
-                        int newRank = uiBoard->getTargetCoords().y;
+                            int newFile = uiBoard->getTargetCoords().x;
+                            int newRank = uiBoard->getTargetCoords().y;
 
-                        bool successfulMove = game->move(oldFile,oldRank, newFile, newRank);
-                        
-                        // If this move is valid...
-                        if (successfulMove) {
-                            // Reload the board and text stroing past moves
-                            uiBoard->loadPieces(game->getBoard());
-                            moveStack->updateMovesDisplayed(game->getBoard());
+                            bool successfulMove = game->move(oldFile,oldRank, newFile, newRank);
+                            
+                            // If this move is valid...
+                            if (successfulMove) {
+                                // Reload the board and text stroing past moves
+                                uiBoard->loadPieces(game->getBoard());
+                                moveStack->updateMovesDisplayed(game->getBoard());
 
-                            // If the game has ended, display an alert to show this
-                            if (game->getGameState() != '0') { displayAlert(game->getGameState(), game->getOppositeColorToMove()); }
+                                // If the game has ended, display an alert to show this
+                                if (game->getGameState() != '0') { displayAlert(game->getGameState(), game->getOppositeColorToMove()); }
+                            }
                         }
                     }
 
