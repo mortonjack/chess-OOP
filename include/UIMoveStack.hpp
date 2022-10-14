@@ -19,8 +19,8 @@ class UIMoveStack : public Drawable, public Transformable
 
     private:
         int _moveCapacity;
-        int _pastMoves = 0;
         vector<string> _moveHistory;
+        int _pastMoves = 0;
 
     public:
     // Constructor
@@ -81,6 +81,13 @@ class UIMoveStack : public Drawable, public Transformable
             // Increment the move number being counted
             moveNumber++;
         }
+    }
+
+    // Clears and resets the move stack
+    void resetMoveStack() {
+        textComponent->element.setString("");
+        _moveHistory.clear();
+        _pastMoves = 0;
     }
 
     private:

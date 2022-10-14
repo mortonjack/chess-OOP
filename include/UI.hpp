@@ -162,14 +162,7 @@ class UI {
         
         // If our alert is displayed, we can interact with its buttons
         if (isAlertDisplayed) {
-
-            // Primary button command   (play again) 
-            if (alert->primaryButton->isHovered(x,y)) {  
-                game->setupBoard(); 
-                uiBoard->loadPieces(game->getBoard());
-                isAlertDisplayed = false; 
-            }
-
+            if (alert->primaryButton->isHovered(x,y)) { resetControls(); } // Primary button command (play again) 
             if (alert->secondaryButton->isHovered(x,y)) { window->close(); } // Secondary button command (quit)
         }
     }
@@ -189,7 +182,7 @@ class UI {
     void resetControls() {
         game->setupBoard();
         uiBoard->loadPieces(game->getBoard());
-        moveStack->updateMovesDisplayed(game->getBoard());
+        moveStack->resetMoveStack();
         isAlertDisplayed = false; 
     }
 
