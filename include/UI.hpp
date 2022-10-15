@@ -166,7 +166,7 @@ class UI {
         if (saveButton->isHovered(x,y))   { game->saveState(); }                                // Save command
         if (loadButton->isHovered(x,y))   { game->loadState(); }                                // Load command
         if (drawButton->isHovered(x,y))   { displayAlert('A',game->getOppositeColorToMove()); } // Draw command
-        if (resignButton->isHovered(x,y)) { displayAlert('R',game->getColorToMove()); }         // Resign command
+        if (resignButton->isHovered(x,y)) { displayAlert('R',game->getOppositeColorToMove()); }         // Resign command
         
         // If our alert is displayed, we can interact with its buttons
         if (isAlertDisplayed) {
