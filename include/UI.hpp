@@ -19,39 +19,42 @@
 
 class UI {
     private:
-        RenderWindow* window;
+        RenderWindow* window;           // The app's main window
 
-        Game* game;
+        Game* game;                     // The app's game logic
 
-        UIBoard* uiBoard;
+        UIBoard* uiBoard;               // The visual board, and its pieces
         
-        UIText* whiteText;
-        UIText* blackText;
-        UIText* matchText;
+        UIText* whiteText;              // Text indicating white's name
+        UIText* blackText;              // Text indicating black's name
+        UIText* matchText;              // Text indicating the matchup between players
 
-        UIMoveStack* moveStack;
+        UIMoveStack* moveStack;         // Text storing the players' past moves
 
-        UIButton* saveButton;
-        UIButton* loadButton;
-        UIButton* drawButton;
-        UIButton* resignButton;
+        UIButton* saveButton;           // The button to save the game
+        UIButton* loadButton;           // The button to load the game
+        UIButton* drawButton;           // The button to offer a draw
+        UIButton* resignButton;         // The button to resign
 
-        UIAlert* alert;
+        UIAlert* alert;                 // The alert pop-up that appears when the game is over
 
-        bool isAlertDisplayed = false;
-
-        bool drawOffered = false;
-        bool resignOffered = false;
+        bool drawOffered = false;       // Whether a draw has been offered
+        bool resignOffered = false;     // Whether a resignation has been offered
+        bool isAlertDisplayed = false;  // Whether the alert is displayed
 
     public:
+        // Constructor
         UI() {
+            // Create a new instance of the game logic
             game = new Game();
-            setupControls();
+
+            // Set up the game's controls and begin handing its interaction logic
             run();
         }
 
         // Sets up the controls on the UI
         void setupControls() {
+            // Create position constants
             const int PADDING = 25;  // Space between each element
 
             const int TEXT_HEIGHT = 40; // Height of UIText
@@ -65,16 +68,15 @@ class UI {
 
             const int CONTROL_LENGTH = WINDOW_LENGTH - 3*PADDING - BOARD_LENGTH;                    // Length of non-board UI
             const int GUTTER_HEIGHT = 2*PADDING + TEXT_HEIGHT;                                      // Height above/below board
-            const int MOVES_HEIGHT = WINDOW_HEIGHT - 4*PADDING - 4*BUTTON_HEIGHT - 2*GUTTER_HEIGHT; // Height of uimovesstack
+            const int MOVES_HEIGHT = WINDOW_HEIGHT - 4*PADDING - 4*BUTTON_HEIGHT - 2*GUTTER_HEIGHT; // Height of the move stack
 
             const int TOP_TEXT_Y = PADDING - 5;                                 // Y position of white player name
             const int BOTTOM_TEXT_Y = GUTTER_HEIGHT + BOARD_HEIGHT + PADDING;   // Y position of black player name
-
             const int CONTROL_X = PADDING*2 + BOARD_LENGTH;                     // X position of non-board UI
 
             const Vector2f BUTTON_DIMENSIONS = Vector2f(CONTROL_LENGTH,BUTTON_HEIGHT); // Dimensions of UIButton
 
-
+            // Create each control with the desired position, text and dimensions
             window = new RenderWindow(sf::VideoMode(WINDOW_LENGTH, WINDOW_HEIGHT), "Chess-OOP");
 
             uiBoard = new UIBoard(BOARD_LENGTH,BOARD_HEIGHT,Vector2i(PADDING,GUTTER_HEIGHT));
@@ -92,7 +94,7 @@ class UI {
 
             alert = new UIAlert(Vector2f(PADDING+80,GUTTER_HEIGHT+120), "Play Again", "Quit");
 
-            // Set window icon
+            // Set the app's icon
             Image image = Image();
             image.loadFromFile("./assets/logo.png");
             window->setIcon(image.getSize().x, image.getSize().y, image.getPixelsPtr());
@@ -100,9 +102,14 @@ class UI {
 
         // Operates the Game's functionality
         void run() {
+            // Setup the UI's controls
+            setupControls();
+
+            // Setup the game's logic
             game->setupBoard();
             uiBoard->loadPieces(game->getBoard());
 
+            // While the app is open...
             while (window->isOpen())
             {
                 // Handle window events
@@ -112,8 +119,9 @@ class UI {
                     // If we want to close this window, destroy it
                     if(event.type == sf::Event::Closed) { window->close(); }
 
-                    // Handle the appropriate behavior for clicking
+                    // If we clicked on the window...
                     if (event.type == sf::Event::MouseButtonPressed) {
+                        // Store the co-ordinates of the click
                         int x = event.mouseButton.x;
                         int y = event.mouseButton.y;
 
@@ -131,18 +139,19 @@ class UI {
                                 int newFile = uiBoard->getTargetCoords().x;
                                 int newRank = uiBoard->getTargetCoords().y;
 
+                                // Attempt to make the move, and store whether it is successful
                                 bool successfulMove = game->move(oldFile,oldRank, newFile, newRank);
                                 
                                 // If this move is valid...
                                 if (successfulMove) {
-                                    // Reload the board and text stroing past moves
+                                    // Reload the board and text storing past moves
                                     uiBoard->loadPieces(game->getBoard());
                                     moveStack->updateMovesDisplayed(game->getBoard());
 
                                     // If the game has ended, display an alert to show this
                                     if (game->getGameState() != '0') { displayAlert(game->getGameState(), game->getOppositeColorToMove()); }
 
-                                    // Reset the draw button, if it was not accepted
+                                    // Reset the draw and resign buttons, since they were not accepted
                                     resetButtonStates();
                                 }
                             }
@@ -153,32 +162,40 @@ class UI {
 
                     }
 
-                    // Handle the appropriate behavior for moving the mouse
+                    // If the mouse is moved...
                     if (event.type == sf::Event::MouseMoved) {
+                        // Store the co-ordinates of the mouse
                         int x = event.mouseMove.x;
                         int y = event.mouseMove.y;
 
+                        // Handle the roll-over logic
                         updateButtonColors(x,y);
                     }
 
                 }
 
+                // Draw up the controls
                 drawControls();
             }
         }
 
-        // Is a button currently hovered? If so, we run its command
+        // Is a button currently hovered? If so, run its command
         void runButtonCommands(int x, int y) {
+            
+            // If an alert is not displayed, we can only interact with buttons on the right menu
             if (!isAlertDisplayed) {
-                if (loadButton->isHovered(x,y))   { game->loadState(); }                        // Load command
-                if (drawButton->isHovered(x,y))   { drawButtonClick(); }                        // Draw command
+                if (loadButton->isHovered(x,y))   { game->loadState(); }   // Load command
+                if (drawButton->isHovered(x,y))   { drawButtonClick(); }   // Draw command
                 if (resignButton->isHovered(x,y)) { resignButtonClick(); } // Resign command
+
+            // Otherwise, we can only interact with buttons on the alert
             } else {
                 if (alert->primaryButton->isHovered(x,y)) { resetControls(); } // Primary button command (play again) 
                 if (alert->secondaryButton->isHovered(x,y)) { window->close(); } // Secondary button command (quit)
             }
         }
 
+        // If a draw or resignation has not been accepted, revert the draw/resign buttons to their initial states
         void resetButtonStates() {
             drawButton->setButtonText("Offer Draw");
             resignButton->setButtonText("Resign");
@@ -186,6 +203,7 @@ class UI {
             resignOffered = false;
         }
 
+        // If the draw button has is clicked, offer a draw. If it is clicked again, accept the draw
         void drawButtonClick() {
             if (!drawOffered) {
                 drawButton->setButtonText("Accept Draw");
@@ -196,6 +214,7 @@ class UI {
             }
         }
 
+        // If the draw button has is clicked, offer a resignation. If it is clicked again, accept the resignation
         void resignButtonClick() {
             if (!resignOffered) {
                 resignButton->setButtonText("Accept Resignation");
@@ -222,44 +241,52 @@ class UI {
             game->setupBoard();
             uiBoard->loadPieces(game->getBoard());
             moveStack->resetMoveStack();
+            resetButtonStates();
             isAlertDisplayed = false; 
         }
 
 
-        // Displays the alert control, with its appropriate message
+        // Displays the alert control, with its appropriate message, depending on how the game ended
         void displayAlert(char stateCode, char playerColor) {
             switch (stateCode) {
+                // If a player is checkmated...
                 case 'C':
                     alert->setTitleText(color2WinnerString(playerColor));
                     alert->setSubtitleText("By checkmate");
                     break;
 
+                // If a player resigns...
                 case 'R':
                     alert->setTitleText(color2WinnerString(playerColor));
                     alert->setSubtitleText("By resignation");
                     break;
 
+                // If a player is stalemated...
                 case 'S':
                     alert->setTitleText("Draw");
                     alert->setSubtitleText("By stalemate");
                     break;
 
+                // If three-fold repetition occurs...
                 case '3':
                     alert->setTitleText("Draw");
                     alert->setSubtitleText("By threefold repetition");
                     break;
 
+                // If the 50-move rule is invoked...
                 case '5':
                     alert->setTitleText("Draw");
                     alert->setSubtitleText("By the 50-move rule");
                     break;
 
+                // If the players agree to a draw...
                 case 'A':
                     alert->setTitleText("Draw");
                     alert->setSubtitleText("By agreement");
                     break;
             }
 
+            // Show the alert
             isAlertDisplayed = true;
         }
 
