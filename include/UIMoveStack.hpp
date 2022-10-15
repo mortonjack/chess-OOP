@@ -97,7 +97,7 @@ class UIMoveStack : public Drawable, public Transformable
         int newFile = move->getNewFile();
         int newRank = move->getNewRank();
         char pieceType = gameboard->getPiece(newFile, newRank)->getType();
-        pieceType = move->promoted() ? 'p' : pieceType;
+        pieceType = move->getPromotedPiece() != nullptr ? 'p' : pieceType;
 
         // If a king moved > 1 tile left (we castled short...)
         if (pieceType == 'k' && (newFile - oldFile) > 1) {
@@ -110,7 +110,7 @@ class UIMoveStack : public Drawable, public Transformable
             moveString += pieceType2String(pieceType);                  // Append piece type
             if (move->getCapturedPiece() != nullptr) moveString += 'x'; // Append capture symbol (if applicable)
             moveString += file2String(newFile) + rank2String(newRank);  // Append target coordinates
-            if (move->promoted()) moveString += "=Q";                   // Append promotion (if appliable)
+            if (move->getPromotedPiece() != nullptr) moveString += "=Q";                   // Append promotion (if appliable)
         }
 
         if (gameboard->isInMate('W') || gameboard->isInMate('B')) moveString += '#'; // Append mate symbol (if applicable)
