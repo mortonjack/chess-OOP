@@ -95,7 +95,9 @@ void SaveTest::delPieces(Piece* board[8][8], MoveNode* node) {
             delete node->getCapturedPiece();
         }
         // Delete promoted piece
-        cout << "PROMOTE DELETE PIECE\n";
+        if (node->getPromotedPiece() != nullptr) {
+            delete node->getPromotedPiece();
+        }
 
         // Next node
         node = node->prev();

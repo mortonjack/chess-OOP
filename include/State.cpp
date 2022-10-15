@@ -203,10 +203,10 @@ void State::loadPrevMoves() {
             newPiece += thisLine[i];
             i++;
         }
-        //promotePiece = makePiece(newPiece);
+        promotePiece = makePiece(newPiece);
 
         // Add node to moveNode
-        _prevMove->addMove(oldFile, oldRank, newFile, newRank, enPassant, false, capturePiece);
+        _prevMove->addMove(oldFile, oldRank, newFile, newRank, enPassant, promotePiece, capturePiece);
 
         // Go to next line
         _file.getline(thisLine, 39);
