@@ -8,6 +8,7 @@ MoveNode::MoveNode() {
     _oldRank = -1;
     _newRank = -1;
     _enPassant = false;
+    _promote = false;
     _capturedPiece = nullptr;
     _prevNode = nullptr;
 }
@@ -19,6 +20,7 @@ MoveNode::MoveNode(int oldFile, int oldRank, int newFile, int newRank,
     _newFile = newFile;
     _newRank = newRank;
     _enPassant = enPassant;
+    _promote = promote;
     _capturedPiece = capturedPiece;
     _prevNode = nullptr;
 }
@@ -30,6 +32,7 @@ MoveNode::MoveNode(int oldFile, int oldRank, int newFile, int newRank,
     _newFile = newFile;
     _newRank = newRank;
     _enPassant = enPassant;
+    _promote = promote;
     _capturedPiece = capturedPiece;
     _prevNode = prevNode;
 }
