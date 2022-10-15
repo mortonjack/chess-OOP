@@ -2,9 +2,9 @@
 
 int main()
 {
-    // Create a new instance of the game
+    // Create a new instance of the app
     UI UI;
 
-    // Return that the game ran successfully
+    // Return that the game finished executing successfully
     return 0;
 }
