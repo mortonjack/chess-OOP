@@ -42,10 +42,16 @@ bool SaveTest::directTest(bool display) {
     if (display) board.visualiseTextBoard();
 
     // Save game state
-    State savestate;
+    Piece* currBoard[8][8];
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            currBoard[i][j] = board.getPiece(i, j);
+        }
+    }
+    State save(currBoard, board.getPrevMove());
+    save.saveState();
 
     // Destroy existing objects
-
 
     // Load game state
 

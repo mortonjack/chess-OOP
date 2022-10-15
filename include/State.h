@@ -9,13 +9,19 @@
 #include "Bishop.h"
 #include "MoveNode.h"
 #include <fstream>
+#include <string>
 using std::ofstream;
+using std::string;
 
 class State {
     private:
         Piece* currentBoard[8][8];
         MoveNode* _prevMove;
         ofstream _file;
+
+        // Piece Methods
+        Piece* makePiece(string pieceStr);
+        string storePiece(Piece* piece);
     public:
         // Constructors
         State();
@@ -29,7 +35,6 @@ class State {
         void saveState();
         void saveBoard();
         void saveMoves();
-
 };
 
 #endif//STATE_H
