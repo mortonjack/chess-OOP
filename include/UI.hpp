@@ -79,8 +79,8 @@ class UI {
 
         uiBoard = new UIBoard(BOARD_LENGTH,BOARD_HEIGHT,Vector2i(PADDING,GUTTER_HEIGHT));
 
-        whiteText = new UIText(Vector2f(PADDING,TOP_TEXT_Y),"White");
-        blackText = new UIText(Vector2f(PADDING,BOTTOM_TEXT_Y),"Black");
+        whiteText = new UIText(Vector2f(PADDING,BOTTOM_TEXT_Y),"White");
+        blackText = new UIText(Vector2f(PADDING,TOP_TEXT_Y),"Black");
         matchText = new UIText(Vector2f(CONTROL_X,TOP_TEXT_Y),"White vs. Black");
 
         moveStack = new UIMoveStack(Vector2f(CONTROL_X,GUTTER_HEIGHT),10);
