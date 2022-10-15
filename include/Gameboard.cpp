@@ -532,8 +532,8 @@ bool Gameboard::threefoldRepetition() {
                     // En Passant Check
                     bool whiteEnPassantRight = (i+1 < 8 && j+1 < 8) && (targetWithEnPassant(i,j, i+1,j+1, oldBoard, node) != oldBoard[i+1][j+1]);
                     bool whiteEnPassantLeft = (i-1 > -1 && j+1 < 8) && (targetWithEnPassant(i,j, i-1,j+1, oldBoard, node) != oldBoard[i-1][j+1]);
-                    bool blackEnPassantRight = (i+1 < 8 && j+1 > -1) && (targetWithEnPassant(i,j, i+1,j-1, oldBoard, node) != oldBoard[i+1][j-1]);
-                    bool blackEnPassantLeft = (i+1 > -1 && j+1 > -1) && (targetWithEnPassant(i,j, i-1,j-1, oldBoard, node) != oldBoard[i-1][j-1]);
+                    bool blackEnPassantRight = (i+1 < 8 && j-1 > -1) && (targetWithEnPassant(i,j, i+1,j-1, oldBoard, node) != oldBoard[i+1][j-1]);
+                    bool blackEnPassantLeft = (i-1 > -1 && j-1 > -1) && (targetWithEnPassant(i,j, i-1,j-1, oldBoard, node) != oldBoard[i-1][j-1]);
 
                     if (whiteEnPassantRight || whiteEnPassantLeft || blackEnPassantRight || blackEnPassantLeft) {
                         possibleThreefold = false;
