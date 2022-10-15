@@ -82,10 +82,10 @@ Piece* Gameboard::targetWithEnPassant(int oldFile, int oldRank, int newFile, int
 }
 
 
-
 bool Gameboard::isCastling(int oldFile, int oldRank, int newFile, int newRank) {
     Piece* sourcePiece = board[oldFile][oldRank];
 
+    if (sourcePiece == nullptr) return false;
     if (!(sourcePiece->getType() == 'k')) return false; // Castling can only happen to kings
     if (!(sourcePiece->getMoveCount() == 0)) return false; // Kings lose castling rights when they move
     if (!((oldRank == newRank) && (newFile == oldFile + 2 || newFile == oldFile - 2))) return false; // Castling only moves the King 2 tiles to the left/right
@@ -258,7 +258,7 @@ bool Gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
     // Check castle
     if (isCastling(oldFile, oldRank, newFile, newRank)) {
         castle(oldFile, newFile, newRank);
-        prevMove->addMove(oldFile, oldRank, newFile, newRank, false, nullptr);
+        prevMove->addMove(oldFile, oldRank, newFile, newRank, false, false, nullptr);
         return true;
     }
 
@@ -282,18 +282,20 @@ bool Gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
     removePiece(oldFile, oldRank);
     addPiece(newFile, newRank, sourcePiece);
 
+    bool promote = false;
 
-    // Report successful move
-    prevMove->addMove(oldFile, oldRank, newFile, newRank, enPassant, targetPiece);
-
-      if(sourcePiece->getType()=='p'&&
+    if(sourcePiece->getType()=='p'&&
         ((newRank==7 && sourcePiece->getColor()=='W')||(newRank==0 && sourcePiece->getColor()=='B'))){
         Queen* promotePiece = new Queen(sourcePiece->getColor());
         removePiece(newFile,newRank);
         addPiece(newFile,newRank,promotePiece);
+        promote = true;
     }
-    
 
+    // Report successful move
+    prevMove->addMove(oldFile, oldRank, newFile, newRank, enPassant, promote, targetPiece);
+
+    
     return true;
 }
 
@@ -475,6 +477,7 @@ bool Gameboard::threefoldRepetition() {
     int oldPieceCount = 0;
     int pieceCount = 0;
     int depth = 0;
+
     bool blackLongCastle = isCastling(4,7,2,7);
     bool blackShortCastle = isCastling(4,7,6,7);
     bool whiteLongCastle = isCastling(4,0,2,0);
@@ -499,6 +502,7 @@ bool Gameboard::threefoldRepetition() {
             prevMove->unreverseBoard(oldBoard, depth);
             return false;
         }
+
         node->reverseBoard(oldBoard, 2);
         depth += 2;
         node = prevMove->prev(depth);
@@ -526,10 +530,12 @@ bool Gameboard::threefoldRepetition() {
                     }
 
                     // En Passant Check
-                    if (targetWithEnPassant(i,j, i+1,j+1, oldBoard, node) != oldBoard[i+1][j+1]
-                    || targetWithEnPassant(i,j, i-1,j+1, oldBoard, node) != oldBoard[i-1][j+1]
-                    || targetWithEnPassant(i,j, i-1,j-1, oldBoard, node) != oldBoard[i-1][j-1]
-                    || targetWithEnPassant(i,j, i+1,j-1, oldBoard, node) != oldBoard[i+1][j-1]) {
+                    bool whiteEnPassantRight = (i+1 < 8 && j+1 < 8) && (targetWithEnPassant(i,j, i+1,j+1, oldBoard, node) != oldBoard[i+1][j+1]);
+                    bool whiteEnPassantLeft = (i-1 > -1 && j+1 < 8) && (targetWithEnPassant(i,j, i-1,j+1, oldBoard, node) != oldBoard[i-1][j+1]);
+                    bool blackEnPassantRight = (i+1 < 8 && j-1 > -1) && (targetWithEnPassant(i,j, i+1,j-1, oldBoard, node) != oldBoard[i+1][j-1]);
+                    bool blackEnPassantLeft = (i-1 > -1 && j-1 > -1) && (targetWithEnPassant(i,j, i-1,j-1, oldBoard, node) != oldBoard[i-1][j-1]);
+
+                    if (whiteEnPassantRight || whiteEnPassantLeft || blackEnPassantRight || blackEnPassantLeft) {
                         possibleThreefold = false;
                         prevMove->unreverseBoard(oldBoard, depth);
                         return false;
@@ -543,7 +549,7 @@ bool Gameboard::threefoldRepetition() {
                         possibleThreefold = false;
                         prevMove->unreverseBoard(oldBoard, depth);
                         return false;
-                    }
+                    } 
                 }
             }
         }

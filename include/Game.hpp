@@ -1,5 +1,4 @@
 #include <string>
-// #include "player.h"
 #include "../include/Gameboard.h"
 #include "../include/Bishop.h"
 #include "../include/Rook.h"
@@ -13,19 +12,14 @@ class Game{
     private:
     // Add list of pieces, give the pieces to player classes and then add to board
     Gameboard* gameboard;
-    char colorToMove = 'W';
+    char colorToMove;
 
     // Convereter between colors
     char color2OpponentColor(char color) { return color == 'W' ? 'B' : 'W'; } 
 
     public:
-    Game() {
-        // Create a new game board
-        gameboard = new Gameboard();
-    }
-    
-    void startGame() {} //!! VERY IMPORTANT: make all the pieces
-    void resetGame() {} //!! VERY IMPORTANT: use clearBoard(), then call startGame again
+    // Constructor
+    Game() { }
 
     // Attempt to make a move, returning true is the move is successful and false if it is unsuccessful
     bool move(int oldFile, int oldRank, int newFile, int newRank) {
@@ -47,7 +41,48 @@ class Game{
         return successfulMove;
     }
 
+    void saveState() {
+        /* 
+        To be added.
+        */
+    }
+
+    void loadState() {
+        /* 
+        To be added.
+        */
+    }
+
+    char getGameState() {
+        // Winning conidtions
+        if (gameboard->isInCheckmate(colorToMove))  return 'C';
+
+        // Drawing coniditions
+        if (gameboard->isInStalemate(colorToMove)) return 'S';
+        if (gameboard->threefoldRepetition())       return '3';
+        if (gameboard->fiftyMoveRule())             return '5';
+
+        // Otherwise, the game is not over. Return the null character
+        return '0';
+    }
+
+    char getColorToMove() {
+        return colorToMove;
+    }
+
+    char getOppositeColorToMove() {
+        return color2OpponentColor(colorToMove);
+    }
+
+    // Returns this game's game board
     void setupBoard(){
+        // Create a new game board
+        gameboard = new Gameboard();
+
+        // To start, it is white-to-move
+        colorToMove = 'W';
+
+        // Add pieces to the game board
         Pawn* whiteAPawn = new Pawn('W');       gameboard->addPiece(0,1,whiteAPawn);
         Pawn* whiteBPawn = new Pawn('W');       gameboard->addPiece(1,1,whiteBPawn);
         Pawn* whiteCPawn = new Pawn('W');       gameboard->addPiece(2,1,whiteCPawn);
@@ -89,6 +124,7 @@ class Game{
         return this->gameboard;
     }
 
+    // Destructor
     ~Game() {
         delete gameboard;
     }

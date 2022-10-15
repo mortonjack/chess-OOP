@@ -19,8 +19,8 @@ class UIMoveStack : public Drawable, public Transformable
 
     private:
         int _moveCapacity;
-        int _pastMoves = 0;
         vector<string> _moveHistory;
+        int _pastMoves = 0;
 
     public:
     // Constructor
@@ -31,18 +31,10 @@ class UIMoveStack : public Drawable, public Transformable
         // Store the number of moves this stack can hold
         _moveCapacity = capacity;
     }
-
-        
+ 
+    // Updates the moves displayed with the most recent one
     void updateMovesDisplayed(Gameboard* gameboard) {
-        // Get the rank, file and piece type of the most recent move
-        MoveNode* move = gameboard->getPrevMove();
-
-        int file = move->getNewFile();
-        int rank = move->getNewRank();
-        char pieceType = gameboard->getPiece(file, rank)->getType();
-
-        // Create a string describing the move recent move
-        string moveString = pieceType2String(pieceType) + file2String(file) + rank2String(rank);
+        string moveString = gameboard2MoveString(gameboard);
 
         // If our move histroy is overflowing, remove the first element
         if((int)_moveHistory.size() > _moveCapacity) {
@@ -84,7 +76,49 @@ class UIMoveStack : public Drawable, public Transformable
         }
     }
 
+    // Clears and resets the move stack
+    void resetMoveStack() {
+        textComponent->element.setString("");
+        _moveHistory.clear();
+        _pastMoves = 0;
+    }
+
     private:
+    // Converts a gameboard to a string describing its most recent move (in PGN form)
+    string gameboard2MoveString(Gameboard* gameboard) {
+        // Get the rank, file and piece type of the most recent move
+        MoveNode* move = gameboard->getPrevMove();
+
+        // The move string
+        string moveString;
+
+        // Derive attibutes of the most recent move
+        int oldFile = move->getOldFile();
+        int newFile = move->getNewFile();
+        int newRank = move->getNewRank();
+        char pieceType = gameboard->getPiece(newFile, newRank)->getType();
+        pieceType = move->promoted() ? 'p' : pieceType;
+
+        // If a king moved > 1 tile left (we castled short...)
+        if (pieceType == 'k' && (newFile - oldFile) > 1) {
+            moveString += "O-O";                                        // Append short-castle symbol
+        // If a king moved > 1 tile right (we castled) long...
+        } else if (pieceType == 'k' && (newFile - oldFile) < -1) {
+            moveString += "O-O-O";                                      // Append long-castle symbol
+        // Otherwise...
+        } else {
+            moveString += pieceType2String(pieceType);                  // Append piece type
+            if (move->getCapturedPiece() != nullptr) moveString += 'x'; // Append capture symbol (if applicable)
+            moveString += file2String(newFile) + rank2String(newRank);  // Append target coordinates
+            if (move->promoted()) moveString += "=Q";                   // Append promotion (if appliable)
+        }
+
+        if (gameboard->isInMate('W') || gameboard->isInMate('B')) moveString += '#'; // Append mate symbol (if applicable)
+        else if (gameboard->isInCheck('W') || gameboard->isInCheck('B')) moveString += '+'; // Otherwise, append check symbol (if applicable)
+
+        return moveString;
+    }
+
     // Converts from a rank's array number to its string value
     string rank2String(int rank) { return to_string(rank + 1); }
 
