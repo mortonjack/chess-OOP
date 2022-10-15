@@ -87,6 +87,12 @@ class UIButton : public Drawable, public Transformable
         target.draw(*buttonComponent);
         target.draw(*textComponent);
     }
+
+    // Destroys the control and all its dynamically-allocated parts
+    ~UIButton() {
+        delete buttonComponent;
+        delete textComponent;
+    }
 };
 
 #endif

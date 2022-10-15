@@ -129,7 +129,6 @@ class UIMoveStack : public Drawable, public Transformable
     string pieceType2String(char type) { return (type == 'p') ? "" : string(1,toupper(type)); }
 
     public:
-
     // Draws the UI move stack
     virtual void draw(RenderTarget& target, RenderStates states) const
     {
@@ -138,6 +137,11 @@ class UIMoveStack : public Drawable, public Transformable
 
         // draw the vertex array
         target.draw(*textComponent);
+    }
+
+    // Destroys the control and all its dynamically allocated parts
+    ~UIMoveStack() {
+        delete textComponent;
     }
 };
 

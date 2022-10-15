@@ -32,252 +32,259 @@ class UIBoard : public Drawable, public Transformable
         VertexArray vertices;
 
     public:
-        UIBoard(int length, int width, Vector2i offset) {
-            _length = length;
-            _width = width;
+    UIBoard(int length, int width, Vector2i offset) {
+        _length = length;
+        _width = width;
 
-            int tileLength = length/8;
-            int tileWidth = width/8;
+        int tileLength = length/8;
+        int tileWidth = width/8;
 
-            _offsetX = offset.x;
-            _offsetY = offset.y;
+        _offsetX = offset.x;
+        _offsetY = offset.y;
 
-            // resize the vertex array to fit the level size
-            vertices.setPrimitiveType(Quads);
-            vertices.resize(8 * 8 * 4);
+        // resize the vertex array to fit the level size
+        vertices.setPrimitiveType(Quads);
+        vertices.resize(8 * 8 * 4);
 
-            // populate the vertex array, with one tile per tile
-            for (unsigned int file = 0; file < 8; ++file) {
-                for (unsigned int rank = 0; rank < 8; ++rank)
-                {
-                    // Vectorise the rank and file
-                    Vector2i coords = Vector2i(file,rank);
+        // populate the vertex array, with one tile per tile
+        for (unsigned int file = 0; file < 8; ++file) {
+            for (unsigned int rank = 0; rank < 8; ++rank)
+            {
+                // Vectorise the rank and file
+                Vector2i coords = Vector2i(file,rank);
 
-                    // get a pointer to the current tile's tile
-                    Vertex* tile = coords2TilePointer(coords);
+                // get a pointer to the current tile's tile
+                Vertex* tile = coords2TilePointer(coords);
 
-                    // define its 4 corners
-                    tile[0].position = Vector2f(file * tileLength + _offsetX, (7 - rank) * tileWidth + _offsetY);
-                    tile[1].position = Vector2f((file + 1) * tileLength + _offsetX, (7 - rank) * tileWidth + _offsetY);
-                    tile[2].position = Vector2f((file + 1) * tileLength + _offsetX, ((7 -rank) + 1) * tileWidth + _offsetY);
-                    tile[3].position = Vector2f(file * tileLength + _offsetX, ((7 - rank) + 1) * tileWidth + _offsetY);
+                // define its 4 corners
+                tile[0].position = Vector2f(file * tileLength + _offsetX, (7 - rank) * tileWidth + _offsetY);
+                tile[1].position = Vector2f((file + 1) * tileLength + _offsetX, (7 - rank) * tileWidth + _offsetY);
+                tile[2].position = Vector2f((file + 1) * tileLength + _offsetX, ((7 -rank) + 1) * tileWidth + _offsetY);
+                tile[3].position = Vector2f(file * tileLength + _offsetX, ((7 - rank) + 1) * tileWidth + _offsetY);
 
-                    // Determine whether the square is light or dark
-                    colorTile(coords, coords2TileColor(coords));
+                // Determine whether the square is light or dark
+                colorTile(coords, coords2TileColor(coords));
+            }
+        }
+    }
+
+    bool loadPieces(Gameboard* gameboard) {
+        pieceCount = 0;
+
+        for (int file = 0; file < 8; file++) {
+            for (int rank = 0; rank < 8; rank++) {
+                if (gameboard->getPiece(file,rank) != nullptr) {
+                    Sprite* sprite = piece2Sprite(gameboard->getPiece(file,rank));
+                    sprite->setPosition(coords2Position(Vector2i(file,rank)));
+
+                    pieces[pieceCount] = sprite;
+                    pieceCount++;
                 }
             }
         }
 
-        bool loadPieces(Gameboard* gameboard) {
-            pieceCount = 0;
+        return true;
+    }
 
-            for (int file = 0; file < 8; file++) {
-                for (int rank = 0; rank < 8; rank++) {
-                    if (gameboard->getPiece(file,rank) != nullptr) {
-                        Sprite* sprite = piece2Sprite(gameboard->getPiece(file,rank));
-                        sprite->setPosition(coords2Position(Vector2i(file,rank)));
+    bool tileClick(int x, int y) {
+        Vector2i coords = position2coords(x,y);
 
-                        pieces[pieceCount] = sprite;
-                        pieceCount++;
-                    }
-                }
-            }
-
+        if (!_sourceSelected) {
+            setSourceCoords(coords);
+            return false;
+        } else {
+            setTargetCoords(coords);
             return true;
         }
 
-        bool tileClick(int x, int y) {
-            Vector2i coords = position2coords(x,y);
+    }
 
-            if (!_sourceSelected) {
-                setSourceCoords(coords);
-                return false;
-            } else {
-                setTargetCoords(coords);
-                return true;
+    // REtruns whether the board is howvered over
+    bool isHovered(int x, int y) {
+        return ((x > _offsetX && x < _offsetX + _length) && 
+                (y > _offsetY && y < _offsetY + _width));
+    }
+
+    Vector2i getSourceCoords() { return _sourceCoords; }
+    Vector2i getTargetCoords() { return _targetCoords; }
+
+    void setSourceCoords(Vector2i coords) {
+        // Indicate that a source tile has been selected
+        _sourceSelected = true;
+
+        // Store the clicked socation as the source coordiantes
+        _sourceCoords = coords;
+
+        // Color the tile red
+        colorTile(_sourceCoords, _redColor);
+    }
+    void setTargetCoords(Vector2i coords) {
+        // Indicate that a source tile is no longer selected
+        _sourceSelected = false;
+
+        _targetCoords = coords;
+
+        // Remove the color of the previously selected tile
+        colorTile(_sourceCoords, coords2TileColor(_sourceCoords));
+    }
+
+    // Destroys the control and all its dynamically-allocated sprites
+    ~UIBoard() {
+        for (int i = 0; i < 32; i++) {
+            if (pieces[i] != nullptr) delete pieces[i];
+        }
+    }
+
+private:
+    Sprite* piece2Sprite(Piece* Piece) {
+        Sprite* sprite = new Sprite;
+        sprite->setTexture(*pieceName2Texture(Piece->getName()));
+        sprite->setOrigin(32,32);
+        return sprite;
+    }
+
+    // POSITION-COORDS CONVERTERS
+    Vector2i position2coords(int x, int y) {  
+        int file = 0;
+        int rank = 0;
+
+        Vertex* farQuad = coords2TilePointer(Vector2i(7,7));
+
+        int minXDiff = getTileX(farQuad);
+        int minYDiff = getTileY(farQuad);
+
+        // Calculate the file the user is clicking
+        for (int f = 0; f < 8; f++) {
+            // Find the x-position of the current tile
+            int tileX = getTileX(coords2TilePointer(Vector2i(f,0)));
+
+            // Calculate the horizontal distance between the mouse and the tile
+            int xDiff = abs(x - tileX);
+
+            // If this distance is the smallest so far, store this value and target the current file
+            if (xDiff < minXDiff) {
+                minXDiff = xDiff;
+                file = f;
             }
-
         }
 
-        // REtruns whether the board is howvered over
-        bool isHovered(int x, int y) {
-            return ((x > _offsetX && x < _offsetX + _length) && 
-                    (y > _offsetY && y < _offsetY + _width));
-        }
+        // Calculate the rank the user is clicking
+        for (int r = 0; r < 8; r++) {
+            // Find the y-position of the current tile
+            int tileY = getTileY(coords2TilePointer(Vector2i(0,r)));
 
-        Vector2i getSourceCoords() { return _sourceCoords; }
-        Vector2i getTargetCoords() { return _targetCoords; }
+            // Calculate the vertical distance between the mouse and the tile
+            int yDiff = abs(y - tileY);
 
-        void setSourceCoords(Vector2i coords) {
-            // Indicate that a source tile has been selected
-            _sourceSelected = true;
-
-            // Store the clicked socation as the source coordiantes
-            _sourceCoords = coords;
-
-            // Color the tile red
-            colorTile(_sourceCoords, _redColor);
-        }
-        void setTargetCoords(Vector2i coords) {
-            // Indicate that a source tile is no longer selected
-            _sourceSelected = false;
-
-            _targetCoords = coords;
-
-            // Remove the color of the previously selected tile
-            colorTile(_sourceCoords, coords2TileColor(_sourceCoords));
-        }
-
-    private:
-        Sprite* piece2Sprite(Piece* Piece) {
-            Sprite* sprite = new Sprite;
-            sprite->setTexture(*pieceName2Texture(Piece->getName()));
-            sprite->setOrigin(32,32);
-            return sprite;
-        }
-
-        // POSITION-COORDS CONVERTERS
-        Vector2i position2coords(int x, int y) {  
-            int file = 0;
-            int rank = 0;
-
-            Vertex* farQuad = coords2TilePointer(Vector2i(7,7));
-
-            int minXDiff = getTileX(farQuad);
-            int minYDiff = getTileY(farQuad);
-
-            // Calculate the file the user is clicking
-            for (int f = 0; f < 8; f++) {
-                // Find the x-position of the current tile
-                int tileX = getTileX(coords2TilePointer(Vector2i(f,0)));
-
-                // Calculate the horizontal distance between the mouse and the tile
-                int xDiff = abs(x - tileX);
-
-                // If this distance is the smallest so far, store this value and target the current file
-                if (xDiff < minXDiff) {
-                    minXDiff = xDiff;
-                    file = f;
-                }
+            // If this distance is the smallest so far, store this value and target the current rank
+            if (yDiff < minYDiff) {
+                minYDiff = yDiff;
+                rank = r;
             }
-
-            // Calculate the rank the user is clicking
-            for (int r = 0; r < 8; r++) {
-                // Find the y-position of the current tile
-                int tileY = getTileY(coords2TilePointer(Vector2i(0,r)));
-
-                // Calculate the vertical distance between the mouse and the tile
-                int yDiff = abs(y - tileY);
-
-                // If this distance is the smallest so far, store this value and target the current rank
-                if (yDiff < minYDiff) {
-                    minYDiff = yDiff;
-                    rank = r;
-                }
-            }
-
-            return Vector2i(file,rank);
-        }
-        Vector2f coords2Position(Vector2i coords) {
-            Vertex* tile = coords2TilePointer(coords);
-
-            float vectorX = getTileX(tile);
-            float vectorY = getTileY(tile);
-
-            return Vector2f(vectorX, vectorY);
         }
 
+        return Vector2i(file,rank);
+    }
+    Vector2f coords2Position(Vector2i coords) {
+        Vertex* tile = coords2TilePointer(coords);
 
-        // Piece STYLE MANAGEMENT
+        float vectorX = getTileX(tile);
+        float vectorY = getTileY(tile);
 
-        Texture* pieceName2Texture(char name) {
-
-            Texture* texture = new Texture;
-
-            switch (name) {
-                case 'P':
-                    texture->loadFromFile("./assets/whitePawn.png");
-                    break;
-
-                case 'N':
-                    texture->loadFromFile("./assets/whiteKnight.png");
-                    break;
-
-                case 'B':
-                    texture->loadFromFile("./assets/whiteBishop.png");
-                    break;
-
-                case 'R':
-                    texture->loadFromFile("./assets/whiteRook.png");
-                    break;
-
-                case 'Q':
-                    texture->loadFromFile("./assets/whiteQueen.png");
-                    break;
-
-                case 'K':
-                    texture->loadFromFile("./assets/whiteKing.png");
-                    break;
+        return Vector2f(vectorX, vectorY);
+    }
 
 
-                case 'p':
-                    texture->loadFromFile("./assets/blackPawn.png");
-                    break;
+    // Piece STYLE MANAGEMENT
 
-                case 'n':
-                    texture->loadFromFile("./assets/blackKnight.png");
-                    break;
+    Texture* pieceName2Texture(char name) {
+        Texture* texture = new Texture;
 
-                case 'b':
-                    texture->loadFromFile("./assets/blackBishop.png");
-                    break;
+        switch (name) {
+            case 'P':
+                texture->loadFromFile("./assets/whitePawn.png");
+                break;
 
-                case 'r':
-                     texture->loadFromFile("./assets/blackRook.png");
-                    break;
+            case 'N':
+                texture->loadFromFile("./assets/whiteKnight.png");
+                break;
 
-                case 'q':
-                    texture->loadFromFile("./assets/blackQueen.png");
-                    break;
+            case 'B':
+                texture->loadFromFile("./assets/whiteBishop.png");
+                break;
 
-                case 'k':
-                    texture->loadFromFile("./assets/blackKing.png");
-                    break;
+            case 'R':
+                texture->loadFromFile("./assets/whiteRook.png");
+                break;
 
-            }
+            case 'Q':
+                texture->loadFromFile("./assets/whiteQueen.png");
+                break;
 
-            return texture;
-        }
-        
-        // TILE STYLE MANAGEMENT
+            case 'K':
+                texture->loadFromFile("./assets/whiteKing.png");
+                break;
 
-        // Calculates the natural color of a tile, based on its rank and file
-        Color coords2TileColor(Vector2i coords)  { return (coords.x + coords.y) % 2 == 0 ? _lightColor : _darkColor; }
 
-        // Colors a tile a passed color
-        void colorTile(Vector2i coords, Color color)  {
-            Vertex* tile = coords2TilePointer(coords);
-            tile[0].color = tile[1].color = tile[2].color = tile[3].color = color;
+            case 'p':
+                texture->loadFromFile("./assets/blackPawn.png");
+                break;
+
+            case 'n':
+                texture->loadFromFile("./assets/blackKnight.png");
+                break;
+
+            case 'b':
+                texture->loadFromFile("./assets/blackBishop.png");
+                break;
+
+            case 'r':
+                texture->loadFromFile("./assets/blackRook.png");
+                break;
+
+            case 'q':
+                texture->loadFromFile("./assets/blackQueen.png");
+                break;
+
+            case 'k':
+                texture->loadFromFile("./assets/blackKing.png");
+                break;
+
         }
 
+        return texture;
+    }
+    
+    // TILE STYLE MANAGEMENT
 
-        // TILE POSITION FUNCTIONS
-        float getTileX(Vertex* tile) { return (tile[0].position.x + tile[2].position.x) / 2; }
-        float getTileY(Vertex* tile) { return (tile[0].position.y + tile[2].position.y) / 2; }
+    // Calculates the natural color of a tile, based on its rank and file
+    Color coords2TileColor(Vector2i coords)  { return (coords.x + coords.y) % 2 == 0 ? _lightColor : _darkColor; }
 
-        // Converts rank and file into a tile pointer
-        Vertex* coords2TilePointer(Vector2i coords) { return &vertices[(coords.x + coords.y * 8) * 4]; }
+    // Colors a tile a passed color
+    void colorTile(Vector2i coords, Color color)  {
+        Vertex* tile = coords2TilePointer(coords);
+        tile[0].color = tile[1].color = tile[2].color = tile[3].color = color;
+    }
+
+
+    // TILE POSITION FUNCTIONS
+    float getTileX(Vertex* tile) { return (tile[0].position.x + tile[2].position.x) / 2; }
+    float getTileY(Vertex* tile) { return (tile[0].position.y + tile[2].position.y) / 2; }
+
+    // Converts rank and file into a tile pointer
+    Vertex* coords2TilePointer(Vector2i coords) { return &vertices[(coords.x + coords.y * 8) * 4]; }
 
 
     // DRAW FUNCTION
     virtual void draw(RenderTarget& target, RenderStates states) const
     {
-        // apply the transform
+        // Apply any transfoirmations
         states.transform *= getTransform();
 
-        // draw the vertex array
+        // Draw the board
         target.draw(vertices, states);
 
+        // Draw the piece sprites
         for (int i = 0; i < pieceCount; i++) {
             if (pieces[i] != nullptr) target.draw(*pieces[i]);
         }
