@@ -7,6 +7,8 @@
 class SaveTest : public TestCase {
     public:
         SaveTest();
+        bool testBoard(Piece* board1[8][8], Piece* board2[8][8]);
+        bool testMoveNode(MoveNode* node1, MoveNode* node2);
         bool directTest(bool display);
         bool gameTest(bool display);
         bool runTests(bool display);

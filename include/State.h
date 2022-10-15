@@ -43,6 +43,9 @@ class State {
         // Save to file
         void saveState();
         void saveState(Piece* board[8][8]);
+
+        // Load 
+        void loadGame(Piece* board[8][8], MoveNode** node);
 };
 
 #endif//STATE_H

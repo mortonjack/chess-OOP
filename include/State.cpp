@@ -2,9 +2,6 @@
 using std::ofstream;
 using std::string;
 
-#include <iostream>
-using std::cout; using std::endl;
-
 State::State() {
     // Load board from save file
     loadCurrentBoard();
@@ -131,11 +128,23 @@ string State::storePiece(Piece* piece) {
 }
 
 void State::loadCurrentBoard() {
-
+    // Load board saved at ./build/board.txt to currentBoard
+    _file.open("./build/board.txt", ofstream::out);
 }
 
 void State::loadPrevMoves() {
 
+}
+
+void State::loadGame(Piece* board[8][8], MoveNode** node) {
+    // Load game from State to input pointers
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            board[i][j] = currentBoard[i][j];
+        }
+    }
+    *node = this->_prevMove;
+    return;
 }
 
 void State::saveState() {
