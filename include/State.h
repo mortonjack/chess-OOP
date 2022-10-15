@@ -10,14 +10,14 @@
 #include "MoveNode.h"
 #include <fstream>
 #include <string>
-using std::ofstream;
+using std::fstream;
 using std::string;
 
 class State {
     private:
         Piece* currentBoard[8][8];
         MoveNode* _prevMove;
-        ofstream _file;
+        fstream _file;
 
         // Piece Methods
         Piece* makePiece(string pieceStr);

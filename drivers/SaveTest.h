@@ -12,6 +12,8 @@ class SaveTest : public TestCase {
         bool directTest(bool display);
         bool gameTest(bool display);
         bool runTests(bool display);
+        void visualiseBoard(Piece* board[8][8]);
+        void delPieces(Piece* board[8][8], MoveNode* node);
 };
 
 #endif//SAVETEST_H

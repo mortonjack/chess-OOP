@@ -1,5 +1,5 @@
 #include "State.h"
-using std::ofstream;
+using std::fstream;
 using std::string;
 
 State::State() {
@@ -16,9 +16,9 @@ State::State(Piece* board[8][8], MoveNode* prevMove) {
     _prevMove = prevMove;
 
     // Clear files
-    _file.open("./build/board.txt", ofstream::trunc);
+    _file.open("./build/board.txt", fstream::out | fstream::trunc);
     _file.close();
-    _file.open("./build/moves.txt", ofstream::trunc);
+    _file.open("./build/moves.txt", fstream::out | fstream::trunc);
     _file.close();
 }
 
@@ -29,7 +29,6 @@ void State::updateBoard(Piece* board[8][8]) {
         }
     }
 }
-
 
 Piece* State::makePiece(string pieceStr) {
     /* 
@@ -129,15 +128,97 @@ string State::storePiece(Piece* piece) {
 
 void State::loadCurrentBoard() {
     // Load board saved at ./build/board.txt to currentBoard
-    _file.open("./build/board.txt", ofstream::out);
+    _file.open("./build/board.txt", fstream::in);
+    char thisLine[82];
+    int thisChar = 0;
+    string thisPiece;
+    for (int rank = 7; rank >= 0; rank--) {
+        _file.getline(thisLine, 81);
+        thisChar = 0;
+        for (int file = 0; file < 8; file++) {
+            thisPiece = "";
+            // Export character data to string
+            while (thisLine[thisChar] != '{') {
+                thisChar++;
+            }
+            while (thisLine[thisChar] != '}') {
+                thisChar++;
+                thisPiece += thisLine[thisChar];
+            }
+            // Make piece
+            currentBoard[file][rank] = makePiece(thisPiece);
+        }
+    }
+    _file.close();
 }
 
 void State::loadPrevMoves() {
+    // Load Previous Moves saved at ./build/board.txt to _prevMove
+    _file.open("./build/moves.txt", fstream::in);
 
+    // Declare vars
+    int oldFile, oldRank, newFile, newRank;
+    bool enPassant;
+    Piece *capturePiece, *promotePiece;
+    _prevMove = new MoveNode();
+
+    char thisLine[40];
+    int i = 1;
+    _file.getline(thisLine, 39);
+    while (thisLine[0] == '{') {
+        i = 1;
+        // Get Moves
+        while (thisLine[i] == ',' || thisLine[i] == ' ') i++;
+        oldFile = (int)thisLine[i] - '0';
+        i++;
+        while (thisLine[i] == ',' || thisLine[i] == ' ') i++;
+        oldRank = (int)thisLine[i] - '0';
+        i++;
+        while (thisLine[i] == ',' || thisLine[i] == ' ') i++;
+        newFile = (int)thisLine[i] - '0';
+        i++;
+        while (thisLine[i] == ',' || thisLine[i] == ' ') i++;
+        newRank = (int)thisLine[i] - '0';
+
+        // Get capture piece
+        while (thisLine[i] != '{') i++;
+        string newPiece = "";
+        i++;
+        while (thisLine[i] != '}') {
+            newPiece += thisLine[i];
+            i++;
+        }
+        capturePiece = makePiece(newPiece);
+
+        // Get en passant
+        while (thisLine[i] == ',' || thisLine[i] == ' ') i++;
+        enPassant = thisLine[i] == 'T' ? true : false;
+        i++;
+
+        // Get promotion piece
+        while (thisLine[i] != '{') i++;
+        newPiece = "";
+        i++;
+        while (thisLine[i] != '}') {
+            newPiece += thisLine[i];
+            i++;
+        }
+        //promotePiece = makePiece(newPiece);
+
+        // Add node to moveNode
+        _prevMove->addMove(oldFile, oldRank, newFile, newRank, enPassant, false, capturePiece);
+
+        // Go to next line
+        _file.getline(thisLine, 39);
+    }
 }
 
 void State::loadGame(Piece* board[8][8], MoveNode** node) {
-    // Load game from State to input pointers
+    // Load from files
+    loadCurrentBoard();
+    loadPrevMoves();
+
+    // Output loaded game to input variables
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             board[i][j] = currentBoard[i][j];
@@ -152,7 +233,7 @@ void State::saveState() {
     saveBoard();
 
     // Step Two: Save Moves
-    _file.open("./build/moves.txt", ofstream::trunc);
+    _file.open("./build/moves.txt", fstream::out | fstream::trunc);
     _file.close();
     saveAllMoves(_prevMove);
 }
@@ -166,16 +247,15 @@ void State::saveState(Piece* board[8][8]) {
     saveMove(_prevMove);
 }
 
-
 void State::saveBoard() {
     // Save board (re-write board save)
 
     // Clear board save file
-    _file.open("./build/board.txt", ofstream::trunc);
+    _file.open("./build/board.txt", fstream::out | fstream::trunc);
     _file.close();
 
     // Open file
-    _file.open("./build/board.txt", ofstream::app);
+    _file.open("./build/board.txt", fstream::app);
     
     // Write to file
     for (int rank = 7; rank >= 0; rank--) {
@@ -188,6 +268,7 @@ void State::saveBoard() {
         }
         _file << "\n"; // new line
     }
+    _file.close();
 }
 
 void State::saveAllMoves(MoveNode* node) {
@@ -211,7 +292,7 @@ void State::saveMove(MoveNode* node) {
     char enPassant = node->enPassant() ? 'T' : 'F';
 
     // Open Moves Save
-    _file.open("./build/moves.txt", ofstream::app);
+    _file.open("./build/moves.txt", fstream::app);
     
     // Append Most Recent Move
     _file << "{";
