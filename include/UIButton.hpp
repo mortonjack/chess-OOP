@@ -63,6 +63,16 @@ class UIButton : public Drawable, public Transformable
             textComponent->element.setFillColor(_standardColor);            
         }
     }
+    
+    // Sets the button's text content
+    void setButtonText(string text) {
+        textComponent->element.setString(text);
+
+        // Center text in button
+        const sf::FloatRect bounds(textComponent->element.getLocalBounds());
+        const sf::Vector2f box(buttonComponent->getSize());
+        textComponent->element.setOrigin((int)((bounds.width - box.x) / 2 + bounds.left), textComponent->element.getOrigin().y);
+    }
 
     // Draws the button
     virtual void draw(RenderTarget& target, RenderStates states) const

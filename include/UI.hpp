@@ -40,6 +40,8 @@ class UI {
 
         bool isAlertDisplayed = false;
 
+        bool drawOffered = false;
+
     public:
     UI() {
         game = new Game();
@@ -138,6 +140,9 @@ class UI {
 
                                 // If the game has ended, display an alert to show this
                                 if (game->getGameState() != '0') { displayAlert(game->getGameState(), game->getOppositeColorToMove()); }
+
+                                // Reset the draw button, if it was not accepted
+                                resetDrawButton();
                             }
                         }
                     }
@@ -163,9 +168,8 @@ class UI {
 
     // Is a button currently hovered? If so, we run its command
     void runButtonCommands(int x, int y) {
-        if (saveButton->isHovered(x,y))   { game->saveState(); }                                // Save command
         if (loadButton->isHovered(x,y))   { game->loadState(); }                                // Load command
-        if (drawButton->isHovered(x,y))   { displayAlert('A',game->getOppositeColorToMove()); } // Draw command
+        if (drawButton->isHovered(x,y))   { drawButtonClick(); } // Draw command
         if (resignButton->isHovered(x,y)) { displayAlert('R',game->getColorToMove()); }         // Resign command
         
         // If our alert is displayed, we can interact with its buttons
@@ -173,6 +177,23 @@ class UI {
             if (alert->primaryButton->isHovered(x,y)) { resetControls(); } // Primary button command (play again) 
             if (alert->secondaryButton->isHovered(x,y)) { window->close(); } // Secondary button command (quit)
         }
+    }
+
+    void resetDrawButton () {
+        drawButton->setButtonText("Offer Draw");
+        drawOffered = false;
+    }
+
+    void drawButtonClick() {
+        if (!drawOffered) {
+            drawButton->setButtonText("Accept Draw");
+            drawOffered = true;
+        } else {
+            displayAlert('A',game->getOppositeColorToMove()); 
+            resetDrawButton();
+            drawOffered = false;
+        }
+
     }
 
     // Is a button currently hovered? If so, invert its colors
