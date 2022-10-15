@@ -41,6 +41,7 @@ class UI {
         bool isAlertDisplayed = false;
 
         bool drawOffered = false;
+        bool resignOffered = false;
 
     public:
     UI() {
@@ -142,7 +143,7 @@ class UI {
                                 if (game->getGameState() != '0') { displayAlert(game->getGameState(), game->getOppositeColorToMove()); }
 
                                 // Reset the draw button, if it was not accepted
-                                resetDrawButton();
+                                resetButtonStates();
                             }
                         }
                     }
@@ -157,7 +158,7 @@ class UI {
                     int x = event.mouseMove.x;
                     int y = event.mouseMove.y;
 
-                    updateButtonStates(x,y);
+                    updateButtonColors(x,y);
                 }
 
             }
@@ -171,16 +172,18 @@ class UI {
         if (!isAlertDisplayed) {
             if (loadButton->isHovered(x,y))   { game->loadState(); }                        // Load command
             if (drawButton->isHovered(x,y))   { drawButtonClick(); }                        // Draw command
-            if (resignButton->isHovered(x,y)) { displayAlert('R',game->getColorToMove()); } // Resign command
+            if (resignButton->isHovered(x,y)) { resignButtonClick(); } // Resign command
         } else {
             if (alert->primaryButton->isHovered(x,y)) { resetControls(); } // Primary button command (play again) 
             if (alert->secondaryButton->isHovered(x,y)) { window->close(); } // Secondary button command (quit)
         }
     }
 
-    void resetDrawButton () {
+    void resetButtonStates() {
         drawButton->setButtonText("Offer Draw");
+        resignButton->setButtonText("Resign");
         drawOffered = false;
+        resignOffered = false;
     }
 
     void drawButtonClick() {
@@ -189,14 +192,22 @@ class UI {
             drawOffered = true;
         } else {
             displayAlert('A',game->getOppositeColorToMove()); 
-            resetDrawButton();
-            drawOffered = false;
+            resetButtonStates();
         }
+    }
 
+    void resignButtonClick() {
+        if (!resignOffered) {
+            resignButton->setButtonText("Accept Resignation");
+            resignOffered = true;
+        } else {
+            displayAlert('R',game->getColorToMove()); 
+            resetButtonStates();
+        }
     }
 
     // Is a button currently hovered? If so, invert its colors
-    void updateButtonStates(int x, int y) {
+    void updateButtonColors(int x, int y) {
         saveButton->updateButtonColors(x,y);
         loadButton->updateButtonColors(x,y);
         drawButton->updateButtonColors(x,y);

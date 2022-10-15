@@ -33,13 +33,16 @@ class UIButton : public Drawable, public Transformable
         buttonComponent->setPosition(position);
         buttonComponent->setFillColor(buttonColor);
 
-        // Create text component
-        textComponent = new UIText(position, text, fontSize, fontColor);
+        // Create text component (filled with "Level" to make sure any text is rendered at the same height)
+        textComponent = new UIText(position, "Level", fontSize, fontColor);
 
         // Center text in button
         const sf::FloatRect bounds(textComponent->element.getLocalBounds());
         const sf::Vector2f box(buttonComponent->getSize());
         textComponent->element.setOrigin((bounds.width - box.x) / 2 + bounds.left, (bounds.height - box.y) / 2 + bounds.top);
+
+        // Set the button text without modifying the height
+        setButtonText(text);
     }
 
     // Returns whether the button is hovered over
