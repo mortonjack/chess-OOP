@@ -201,7 +201,7 @@ class UI {
             resignButton->setButtonText("Accept Resignation");
             resignOffered = true;
         } else {
-            displayAlert('R',game->getColorToMove()); 
+            displayAlert('R',game->getOppositeColorToMove()); 
             resetButtonStates();
         }
     }
