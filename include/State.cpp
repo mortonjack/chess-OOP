@@ -13,17 +13,24 @@ State::State() {
 
 State::State(Piece* board[8][8], MoveNode* prevMove) {
     // Copy board pieces
+    updateBoard(board);
+
+    // Copy prev move
+    _prevMove = prevMove;
+
+    // Clear files
+    _file.open("./build/board.txt", ofstream::trunc);
+    _file.close();
+    _file.open("./build/moves.txt", ofstream::trunc);
+    _file.close();
+}
+
+void State::updateBoard(Piece* board[8][8]) {
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 8; j++) {
             currentBoard[i][j] = board[i][j];
         }
     }
-    // Copy prev move
-    _prevMove = prevMove;
-
-    // Clear file
-    _file.open("./build/save.txt", ofstream::trunc);
-    _file.close();
 }
 
 
@@ -91,22 +98,33 @@ Piece* State::makePiece(string pieceStr) {
 }
 
 string State::storePiece(Piece* piece) {
+    // Store a piece as a string
     string returnStr = "";
+    if (piece == nullptr) return returnStr;
+
+    // Get piece type
     returnStr += piece->getType();
     returnStr += ", ";
+
     // Calculate move count
     int moveCount = piece->getMoveCount();
     string moveString = "";
+    if (moveCount == 0) moveString += '0';
+
     while (moveCount > 0) {
+        // Get each multiple of 10
         moveString += (char)(moveCount % 10) + '0';
         moveCount -= moveCount % 10;
         moveCount /= 10;
     }
+
     while (!moveString.empty()) {
+        // Reverse string
         returnStr += moveString.back();
         moveString.pop_back();
     }
 
+    // Store color
     returnStr += ", ";
     returnStr += piece->getColor();
     return returnStr;
@@ -121,22 +139,78 @@ void State::loadPrevMoves() {
 }
 
 void State::saveState() {
-    // Step One: Create Object
-    _file.open("./build/save.txt", ofstream::app);
-    _file << "Test";
-
     // Step One: Save Board
     saveBoard();
-    
+
     // Step Two: Save Moves
-    saveMoves();
+    _file.open("./build/moves.txt", ofstream::trunc);
+    _file.close();
+    saveAllMoves(_prevMove);
+}
+
+void State::saveState(Piece* board[8][8]) {
+    // Step One: Save Board
+    updateBoard(board);
+    saveBoard();
+    
+    // Step Two: Save Previous Move
+    saveMove(_prevMove);
 }
 
 
 void State::saveBoard() {
+    // Save board (re-write board save)
 
+    // Clear board save file
+    _file.open("./build/board.txt", ofstream::trunc);
+    _file.close();
+
+    // Open file
+    _file.open("./build/board.txt", ofstream::app);
+    
+    // Write to file
+    for (int rank = 7; rank >= 0; rank--) {
+        for (int file = 0; file < 8; file++) {
+            _file << "{"; // begin piece
+            
+            _file << storePiece(currentBoard[file][rank]);
+
+            _file << "} "; // end piece
+        }
+        _file << "\n"; // new line
+    }
 }
 
-void State::saveMoves() {
+void State::saveAllMoves(MoveNode* node) {
+    // Save all moves (re-write moves save)
 
+    // Recursively call function until the final node
+    if (node->prev() == nullptr) {
+        return;
+    } else {
+        saveAllMoves(node->prev());
+    }
+
+    // Save this node
+    saveMove(node);
+
+    return;
+}
+
+void State::saveMove(MoveNode* node) {
+    // Save the most recent move
+    char enPassant = node->enPassant() ? 'T' : 'F';
+
+    // Open Moves Save
+    _file.open("./build/moves.txt", ofstream::app);
+    
+    // Append Most Recent Move
+    _file << "{";
+    _file << node->getOldFile() << ", " << node->getOldRank() << ", ";
+    _file << node->getNewFile() << ", " << node->getNewRank() << ", ";
+    _file << '{' << storePiece(node->getCapturedPiece()) << "}, ";
+    _file << enPassant << ", {" << "}}\n";
+
+    // Close file
+    _file.close();
 }

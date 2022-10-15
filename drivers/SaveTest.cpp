@@ -51,9 +51,8 @@ bool SaveTest::directTest(bool display) {
     State save(currBoard, board.getPrevMove());
     save.saveState();
 
-    // Destroy existing objects
-
     // Load game state
+
 
 
     return success;

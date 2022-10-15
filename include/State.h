@@ -22,19 +22,27 @@ class State {
         // Piece Methods
         Piece* makePiece(string pieceStr);
         string storePiece(Piece* piece);
-    public:
-        // Constructors
-        State();
-        State(Piece* board[8][8], MoveNode* prevMove);
+
+        // Update Board
+        void updateBoard(Piece* board[8][8]);
 
         // Load from file
         void loadCurrentBoard();
         void loadPrevMoves();
 
         // Save to file
-        void saveState();
         void saveBoard();
-        void saveMoves();
+        void saveMove(MoveNode* node);
+        void saveAllMoves(MoveNode* node);
+
+    public:
+        // Constructors
+        State();
+        State(Piece* board[8][8], MoveNode* prevMove);
+
+        // Save to file
+        void saveState();
+        void saveState(Piece* board[8][8]);
 };
 
 #endif//STATE_H
