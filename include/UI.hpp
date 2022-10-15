@@ -154,8 +154,8 @@ class UI {
 
                 // Handle the appropriate behavior for moving the mouse
                 if (event.type == sf::Event::MouseMoved) {
-                    int x = event.mouseButton.x;
-                    int y = event.mouseButton.y;
+                    int x = event.mouseMove.x;
+                    int y = event.mouseMove.y;
 
                     updateButtonStates(x,y);
                 }
@@ -168,12 +168,11 @@ class UI {
 
     // Is a button currently hovered? If so, we run its command
     void runButtonCommands(int x, int y) {
-        if (loadButton->isHovered(x,y))   { game->loadState(); }                                // Load command
-        if (drawButton->isHovered(x,y))   { drawButtonClick(); } // Draw command
-        if (resignButton->isHovered(x,y)) { displayAlert('R',game->getColorToMove()); }         // Resign command
-        
-        // If our alert is displayed, we can interact with its buttons
-        if (isAlertDisplayed) {
+        if (!isAlertDisplayed) {
+            if (loadButton->isHovered(x,y))   { game->loadState(); }                        // Load command
+            if (drawButton->isHovered(x,y))   { drawButtonClick(); }                        // Draw command
+            if (resignButton->isHovered(x,y)) { displayAlert('R',game->getColorToMove()); } // Resign command
+        } else {
             if (alert->primaryButton->isHovered(x,y)) { resetControls(); } // Primary button command (play again) 
             if (alert->secondaryButton->isHovered(x,y)) { window->close(); } // Secondary button command (quit)
         }

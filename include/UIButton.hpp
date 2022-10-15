@@ -51,7 +51,7 @@ class UIButton : public Drawable, public Transformable
     // Updates a button's colors depending on whether it is hovered over
     void updateButtonColors(int x, int y) { 
         bool invert = isHovered(x,y);
-        
+
         // If the button is not hovered, color it in the standard fashion
         if (!invert) {
             buttonComponent->setFillColor(_standardColor);
@@ -60,7 +60,7 @@ class UIButton : public Drawable, public Transformable
         // Otherwise, invert its colors
         } else {
             buttonComponent->setFillColor(_inverseColor);   
-            textComponent->element.setFillColor(_standardColor);            
+            textComponent->element.setFillColor(_standardColor);         
         }
     }
     
