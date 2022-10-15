@@ -77,8 +77,7 @@ class UIButton : public Drawable, public Transformable
         }
 
         // Draws the control
-        virtual void draw(RenderTarget& target, RenderStates states) const
-        {
+        virtual void draw(RenderTarget& target, RenderStates states) const {
             // Apply any transformation
             states.transform *= getTransform();
 
