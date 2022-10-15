@@ -45,7 +45,7 @@ class UIMoveStack : public Drawable, public Transformable
         string moveString = pieceType2String(pieceType) + file2String(file) + rank2String(rank);
 
         // If our move histroy is overflowing, remove the first element
-        if(_moveHistory.size() > _moveCapacity) {
+        if((int)_moveHistory.size() > _moveCapacity) {
             _moveHistory.erase(_moveHistory.begin());
             _moveHistory.erase(_moveHistory.begin() + 1);
             _pastMoves++;
@@ -59,12 +59,12 @@ class UIMoveStack : public Drawable, public Transformable
         int moveNumber = 1;
 
         // For each pair of moves
-        for (int i = 0; i < _moveHistory.size(); i += 2) {
+        for (int i = 0; i < (int)_moveHistory.size(); i += 2) {
             // Determine the move made by white and black, making the black move blank if it has not been made yet
             string whiteMove;
             string blackMove;
 
-            if (i == _moveHistory.size() - 1) {
+            if (i == (int)_moveHistory.size() - 1) {
                 whiteMove = _moveHistory[i];
                 blackMove = "";
             } else {
