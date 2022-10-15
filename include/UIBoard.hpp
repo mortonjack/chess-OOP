@@ -10,6 +10,9 @@ class UIBoard : public Drawable, public Transformable
         int _length;
         int _width;
 
+        int _offsetX;
+        int _offsetY;
+
         // Color constants
         const Color _whiteColor = Color{ 0xF5F5F5FF };
         const Color _blackColor = Color{ 0x454545FF };
@@ -33,11 +36,11 @@ class UIBoard : public Drawable, public Transformable
             _length = length;
             _width = width;
 
-            int _tileLength = length/8;
-            int _tileWidth = width/8;
+            int tileLength = length/8;
+            int tileWidth = width/8;
 
-            int offsetX = offset.x;
-            int offsetY = offset.y;
+            _offsetX = offset.x;
+            _offsetY = offset.y;
 
             // resize the vertex array to fit the level size
             vertices.setPrimitiveType(Quads);
@@ -54,10 +57,10 @@ class UIBoard : public Drawable, public Transformable
                     Vertex* tile = coords2TilePointer(coords);
 
                     // define its 4 corners
-                    tile[0].position = Vector2f(file * _tileLength + offsetX, rank * _tileWidth + offsetY);
-                    tile[1].position = Vector2f((file + 1) * _tileLength + offsetX, rank * _tileWidth + offsetY);
-                    tile[2].position = Vector2f((file + 1) * _tileLength + offsetX, (rank + 1) * _tileWidth + offsetY);
-                    tile[3].position = Vector2f(file * _tileLength + offsetX, (rank + 1) * _tileWidth + offsetY);
+                    tile[0].position = Vector2f(file * tileLength + _offsetX, (7 - rank) * tileWidth + _offsetY);
+                    tile[1].position = Vector2f((file + 1) * tileLength + _offsetX, (7 - rank) * tileWidth + _offsetY);
+                    tile[2].position = Vector2f((file + 1) * tileLength + _offsetX, ((7 -rank) + 1) * tileWidth + _offsetY);
+                    tile[3].position = Vector2f(file * tileLength + _offsetX, ((7 - rank) + 1) * tileWidth + _offsetY);
 
                     // Determine whether the square is light or dark
                     colorTile(coords, coords2TileColor(coords));
@@ -94,6 +97,12 @@ class UIBoard : public Drawable, public Transformable
                 return true;
             }
 
+        }
+
+        // REtruns whether the board is howvered over
+        bool isHovered(int x, int y) {
+            return ((x > _offsetX && x < _offsetX + _length) && 
+                    (y > _offsetY && y < _offsetY + _width));
         }
 
         Vector2i getSourceCoords() { return _sourceCoords; }
