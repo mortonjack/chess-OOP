@@ -76,7 +76,7 @@ class UIButton : public Drawable, public Transformable
             textComponent->element.setOrigin((int)((bounds.width - box.x) / 2 + bounds.left), textComponent->element.getOrigin().y);
         }
 
-        // Draws the button
+        // Draws the control
         virtual void draw(RenderTarget& target, RenderStates states) const
         {
             // Apply any transformation

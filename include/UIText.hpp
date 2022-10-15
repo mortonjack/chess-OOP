@@ -37,7 +37,7 @@ class UIText : public Drawable, public Transformable
             element.setPosition((int)position.x,(int)(position.y));
         }
             
-        // Draws the text
+        // Draws the control
         virtual void draw(RenderTarget& target, RenderStates states) const
         {
             // Apply any transformation
