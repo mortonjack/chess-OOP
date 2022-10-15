@@ -76,8 +76,8 @@ class UI {
 
         uiBoard = new UIBoard(BOARD_LENGTH,BOARD_HEIGHT,Vector2i(PADDING,GUTTER_HEIGHT));
 
-        whiteText = new UIText(Vector2f(PADDING,TOP_TEXT_Y),"White");
-        blackText = new UIText(Vector2f(PADDING,BOTTOM_TEXT_Y),"Black");
+        whiteText = new UIText(Vector2f(PADDING,BOTTOM_TEXT_Y),"White");
+        blackText = new UIText(Vector2f(PADDING,TOP_TEXT_Y),"Black");
         matchText = new UIText(Vector2f(CONTROL_X,TOP_TEXT_Y),"White vs. Black");
 
         moveStack = new UIMoveStack(Vector2f(CONTROL_X,GUTTER_HEIGHT),10);
@@ -166,7 +166,7 @@ class UI {
         if (saveButton->isHovered(x,y))   { game->saveState(); }                                // Save command
         if (loadButton->isHovered(x,y))   { game->loadState(); }                                // Load command
         if (drawButton->isHovered(x,y))   { displayAlert('A',game->getOppositeColorToMove()); } // Draw command
-        if (resignButton->isHovered(x,y)) { displayAlert('R',game->getColorToMove()); }         // Resign command
+        if (resignButton->isHovered(x,y)) { displayAlert('R',game->getOppositeColorToMove()); }         // Resign command
         
         // If our alert is displayed, we can interact with its buttons
         if (isAlertDisplayed) {
