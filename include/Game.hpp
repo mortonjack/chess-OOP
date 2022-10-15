@@ -7,7 +7,6 @@
 #include "../include/King.h"
 #include "../include/Queen.h"
 
-
 class Game{
     private:
     // Add list of pieces, give the pieces to player classes and then add to board
@@ -19,7 +18,10 @@ class Game{
 
     public:
     // Constructor
-    Game() { }
+    Game() { 
+        // Create a new game board
+        gameboard = new Gameboard();
+    }
 
     // Attempt to make a move, returning true is the move is successful and false if it is unsuccessful
     bool move(int oldFile, int oldRank, int newFile, int newRank) {
@@ -35,6 +37,7 @@ class Game{
         // If the move is successful...
         if (successfulMove) {
             colorToMove = color2OpponentColor(colorToMove); // Change the player-to-move
+            gameboard->updateSave(); // Update save file
         }
 
         // Return whether the move was successful
@@ -42,15 +45,16 @@ class Game{
     }
 
     void saveState() {
-        /* 
-        To be added.
-        */
+        gameboard->save();
     }
 
     void loadState() {
-        /* 
-        To be added.
-        */
+        gameboard->load();
+        MoveNode* prevMove = gameboard->getPrevMove();
+        if (prevMove != nullptr) {
+            colorToMove = gameboard->getPiece(prevMove->getNewFile(), prevMove->getNewRank())->getColor();
+            colorToMove = color2OpponentColor(colorToMove);
+        } else colorToMove = 'W';
     }
 
     char getGameState() {
@@ -76,8 +80,8 @@ class Game{
 
     // Returns this game's game board
     void setupBoard(){
-        // Create a new game board
-        gameboard = new Gameboard();
+        // Create a new save state
+        gameboard->newSave();
 
         // To start, it is white-to-move
         colorToMove = 'W';
@@ -126,6 +130,31 @@ class Game{
 
     // Destructor
     ~Game() {
+        // Delete pieces
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                if (gameboard->getPiece(i, j) != nullptr) {
+                    delete gameboard->getPiece(i, j);
+                }
+            }
+        }
+        // Delete captured/promoted pieces
+        MoveNode* node = gameboard->getPrevMove();
+        while (node->prev() != nullptr) {
+        // Delete captured piece
+        if (node->getCapturedPiece() != nullptr) {
+            delete node->getCapturedPiece();
+        }
+        // Delete promoted piece
+        if (node->getPromotedPiece() != nullptr) {
+            delete node->getPromotedPiece();
+        }
+
+        // Next node
+        node = node->prev();
+    }
+
+        // Delete gameboard
         delete gameboard;
     }
 

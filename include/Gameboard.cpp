@@ -627,6 +627,28 @@ bool Gameboard::fiftyMoveRule() {
     return !(pawnMove || pieceCount < oldPieceCount);
 }
 
+void Gameboard::newSave() {
+    _save = new State(board, prevMove);
+    save();
+}
+
+void Gameboard::save() {
+    _save->saveState();
+}
+
+void Gameboard::delSave() {
+    delete _save;
+}
+
+void Gameboard::load() {
+    _save = new State();
+    _save->loadGame(board, &prevMove);
+}
+
+void Gameboard::updateSave() {
+    _save->saveState(board);
+}
+
 bool Gameboard::testDriver(Piece* pieces[], int* coords, int length) {
     /* 
         Test the board is set up correctly.
@@ -666,4 +688,8 @@ bool Gameboard::testDriver(Piece* pieces[], int* coords, int length) {
     }
 
     return true;
+}
+
+Gameboard::~Gameboard() {
+    delete prevMove;
 }

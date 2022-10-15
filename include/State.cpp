@@ -2,11 +2,7 @@
 using std::fstream;
 using std::string;
 
-State::State() {
-    // Load board from save file
-    loadCurrentBoard();
-    loadPrevMoves();
-}
+State::State() {}
 
 State::State(Piece* board[8][8], MoveNode* prevMove) {
     // Copy board pieces
@@ -86,9 +82,7 @@ Piece* State::makePiece(string pieceStr) {
     }
 
     // Make moves
-    for (int i = 0; i < moveCount; i++) {
-        piece->move();
-    }
+    if (piece != nullptr) piece->setMoveCount(moveCount);
 
     return piece;
 }
@@ -230,6 +224,8 @@ void State::loadGame(Piece* board[8][8], MoveNode** node) {
 
 void State::saveState() {
     // Step One: Save Board
+    _file.open("./build/board.txt", fstream::out | fstream::trunc);
+    _file.close();
     saveBoard();
 
     // Step Two: Save Moves

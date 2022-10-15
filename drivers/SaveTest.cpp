@@ -153,6 +153,21 @@ bool SaveTest::directTest(bool display) {
     if (display) visualiseBoard(board1);
 
     delPieces(board1, moveHistory1);
+
+    if (display) {
+        if (test1) {
+            cout << "Test passed: Successfully saved board" << endl;
+        } else {
+            cout << "Test failed: Improperly saved board" << endl;
+        }
+
+        if (test2) {
+            cout << "Test passed: Successfuly saved move history" << endl;
+        } else {
+            cout << "Test failed: Improperly saved move history" << endl;
+        }
+    }
+
     success = test1 && test2;
     return success;
 }
