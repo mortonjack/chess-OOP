@@ -41,7 +41,7 @@ MoveNode::MoveNode(int oldFile, int oldRank, int newFile, int newRank,
 void MoveNode::addMove(int oldFile, int oldRank, int newFile, int newRank,
                     bool enPassant, bool promote, Piece* capturedPiece) {
     MoveNode* prevMove = new MoveNode(_oldFile, _oldRank, _newFile, _newRank,
-                                    _enPassant, promote, _capturedPiece, _prevNode);
+                                    _enPassant, _promote, _capturedPiece, _prevNode);
     _prevNode = prevMove;
     _oldFile = oldFile;
     _oldRank = oldRank;
