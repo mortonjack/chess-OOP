@@ -15,19 +15,19 @@ using namespace std;
 class UIAlert : public Drawable, public Transformable
 {
     private:
-        RectangleShape* alertComponent; // Alert body
+        RectangleShape* _alertComponent; // Alert body
 
-        UIText* titleComponent;         // Title text
-        UIText* subtitleComponent;      // Subtitle text
+        UIText* _titleComponent;         // Title text
+        UIText* _subtitleComponent;      // Subtitle text
 
         // Centers the title and subtitle in the alert
         void centerTextControls() {
-            const sf::FloatRect titleBounds(titleComponent->element.getLocalBounds());
-            const sf::FloatRect subtitleBounds(subtitleComponent->element.getLocalBounds());
-            const sf::Vector2f box(alertComponent->getSize());
+            const sf::FloatRect titleBounds(_titleComponent->element.getLocalBounds());
+            const sf::FloatRect subtitleBounds(_subtitleComponent->element.getLocalBounds());
+            const sf::Vector2f box(_alertComponent->getSize());
 
-            titleComponent->element.setOrigin((int)((titleBounds.width - box.x) / 2 + titleBounds.left), ((int)(titleBounds.height - box.y) / 2 + titleBounds.top));
-            subtitleComponent->element.setOrigin((int)((subtitleBounds.width - box.x) / 2 + subtitleBounds.left), ((int)(subtitleBounds.height - box.y) / 2 + subtitleBounds.top)); 
+            _titleComponent->element.setOrigin((int)((titleBounds.width - box.x) / 2 + titleBounds.left), ((int)(titleBounds.height - box.y) / 2 + titleBounds.top));
+            _subtitleComponent->element.setOrigin((int)((subtitleBounds.width - box.x) / 2 + subtitleBounds.left), ((int)(subtitleBounds.height - box.y) / 2 + subtitleBounds.top)); 
         }
 
     public:
@@ -37,13 +37,13 @@ class UIAlert : public Drawable, public Transformable
         // Constructor
         UIAlert(Vector2f position, string primaryButtonText, string secondaryButtonText, string titleText = "", string subtitleText = "",  Color alertColor = Color{ 0x151515FF }, Color buttonColor = Color{ 0x454545FF }, Color fontColor = Color{ 0xF5F5F5FF }) {
             // Alerts are a hard-coded 480x320px size
-            alertComponent = new RectangleShape(Vector2f(480,400));
-            alertComponent->setPosition(position);
-            alertComponent->setFillColor(alertColor);
+            _alertComponent = new RectangleShape(Vector2f(480,400));
+            _alertComponent->setPosition(position);
+            _alertComponent->setFillColor(alertColor);
 
             // Create text components
-            titleComponent = new UIText(Vector2f(position.x, position.y-140), titleText, 58, fontColor);
-            subtitleComponent = new UIText(Vector2f(position.x, position.y-85), subtitleText, 25, fontColor);
+            _titleComponent = new UIText(Vector2f(position.x, position.y-140), titleText, 58, fontColor);
+            _subtitleComponent = new UIText(Vector2f(position.x, position.y-85), subtitleText, 25, fontColor);
 
             // Center text controls
             centerTextControls();
@@ -55,13 +55,13 @@ class UIAlert : public Drawable, public Transformable
 
         // Sets the title text to the passed string
         void setTitleText(string text) {
-            titleComponent->element.setString(text);
+            _titleComponent->element.setString(text);
             centerTextControls();     
         }
 
         // Sets the subtitle text to the passed string 
         void setSubtitleText(string text) {
-            subtitleComponent->element.setString(text);
+            _subtitleComponent->element.setString(text);
             centerTextControls();
         }
 
@@ -71,18 +71,18 @@ class UIAlert : public Drawable, public Transformable
             states.transform *= getTransform();
 
             // Draw the title, subtitle and buttons
-            target.draw(*alertComponent);
-            target.draw(*titleComponent);
-            target.draw(*subtitleComponent);
+            target.draw(*_alertComponent);
+            target.draw(*_titleComponent);
+            target.draw(*_subtitleComponent);
             target.draw(*primaryButton);
             target.draw(*secondaryButton);
         }
 
         // Destroys the control and all its dynamically allocated parts
         ~UIAlert() {
-            delete alertComponent;
-            delete titleComponent;
-            delete subtitleComponent;
+            delete _alertComponent;
+            delete _titleComponent;
+            delete _subtitleComponent;
             delete primaryButton;
             delete secondaryButton;
         }
