@@ -65,7 +65,7 @@ class Game{
             colorToMove = gameboard->getPiece(prevMove->getNewFile(), prevMove->getNewRank())->getColor();
             colorToMove = color2OpponentColor(colorToMove);
         } else colorToMove = 'W';
-        firstMove = false;
+        firstMove = true;
     }
 
     char getGameState() {

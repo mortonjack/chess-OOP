@@ -31,19 +31,41 @@ class UIMoveStack : public Drawable, public Transformable
         // Store the number of moves this stack can hold
         _moveCapacity = capacity;
     }
+
+    // Resets & recalculates move stack
+    void updateAllMoves(Gameboard* gameboard) {
+        resetMoveStack();
+        _pastMoves = gameboard->getMoveCount();
+        bool blackMove = _pastMoves % 2 == 1;
+        _pastMoves /= 2;
+        _pastMoves -= 6;
+
+        // Update moves 12 times
+        for (int i = blackMove ? 12 : 11; i > 0; i--) {
+            if (_pastMoves >= 0) {
+                gameboard->reverseBoard(i);
+                updateMovesDisplayed(gameboard);
+                gameboard->unreverseBoard(i);
+            } else if ((blackMove && i % 2 == 1) || (!blackMove && i % 2 != 1)) {
+                _pastMoves++;
+            }
+        }
+        // Update previous move
+        updateMovesDisplayed(gameboard);
+    }
  
     // Updates the moves displayed with the most recent one
     void updateMovesDisplayed(Gameboard* gameboard) {
         string moveString = gameboard2MoveString(gameboard);
 
-        // If our move histroy is overflowing, remove the first element
+        // If our move history is overflowing, remove the first element
         if((int)_moveHistory.size() > _moveCapacity) {
             _moveHistory.erase(_moveHistory.begin());
             _moveHistory.erase(_moveHistory.begin() + 1);
             _pastMoves++;
         }
 
-        // Add the most recent move to our move histroy
+        // Add the most recent move to our move history
         _moveHistory.push_back(moveString);
 
         // Reset text stack and move number counter

@@ -176,8 +176,7 @@ class UI {
                 game = new Game();
                 game->loadState();
                 uiBoard->loadPieces(game->getBoard());
-                moveStack->resetMoveStack();
-                moveStack->updateMovesDisplayed(game->getBoard());
+                moveStack->updateAllMoves(game->getBoard());
             }
             if (drawButton->isHovered(x,y))   { drawButtonClick(); }    // Draw command
             if (resignButton->isHovered(x,y)) { resignButtonClick(); }  // Resign command

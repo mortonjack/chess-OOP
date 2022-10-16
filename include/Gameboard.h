@@ -9,6 +9,7 @@ class Gameboard {
     private:
         Piece* board[8][8]; // Gameboard, stores Piece locations
         MoveNode* prevMove;
+        MoveNode* originalPrevMove;
         State* _save;
     public:
         Gameboard(); // initialise empty board
@@ -66,6 +67,11 @@ class Gameboard {
         void save();
         void updateSave();
         void load();
+
+        // Previous board states
+        int getMoveCount();
+        void reverseBoard(int moves);
+        void unreverseBoard(int moves);
 
         // Destructor
         ~Gameboard();

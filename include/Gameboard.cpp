@@ -690,6 +690,27 @@ bool Gameboard::testDriver(Piece* pieces[], int* coords, int length) {
     return true;
 }
 
+int Gameboard::getMoveCount() {
+    MoveNode* node = prevMove;
+    int moveCount = 0;
+    while (node->prev() != nullptr) {
+        moveCount++;
+        node = node->prev();
+    }
+    return moveCount;
+}
+
+void Gameboard::reverseBoard(int moves) {
+    prevMove->reverseBoard(board, moves);
+    originalPrevMove = prevMove;
+    prevMove = prevMove->prev(moves);
+}
+
+void Gameboard::unreverseBoard(int moves) {
+    prevMove = originalPrevMove;
+    prevMove->unreverseBoard(board, moves);
+}
+
 Gameboard::~Gameboard() {
     delete prevMove;
 }
