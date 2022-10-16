@@ -41,12 +41,6 @@ class Game{
         return successfulMove;
     }
 
-    void saveState() {
-        /* 
-        To be added.
-        */
-    }
-
     void loadState() {
         /* 
         To be added.
