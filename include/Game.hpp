@@ -16,15 +16,25 @@ class Game{
     // Convereter between colors
     char color2OpponentColor(char color) { return color == 'W' ? 'B' : 'W'; } 
 
+    // Detect first move
+    bool firstMove;
+
     public:
     // Constructor
     Game() { 
         // Create a new game board
         gameboard = new Gameboard();
+        firstMove = true;
     }
 
     // Attempt to make a move, returning true is the move is successful and false if it is unsuccessful
     bool move(int oldFile, int oldRank, int newFile, int newRank) {
+        // Create a new save state on first move
+        if (firstMove) {
+            gameboard->newSave();
+            firstMove = false;
+        }
+
         // If the player not trying to move a piece, return false
         if (gameboard->getPiece(oldFile,oldRank) == nullptr) return false;
 
@@ -55,6 +65,7 @@ class Game{
             colorToMove = gameboard->getPiece(prevMove->getNewFile(), prevMove->getNewRank())->getColor();
             colorToMove = color2OpponentColor(colorToMove);
         } else colorToMove = 'W';
+        firstMove = false;
     }
 
     char getGameState() {
@@ -80,9 +91,6 @@ class Game{
 
     // Returns this game's game board
     void setupBoard(){
-        // Create a new save state
-        gameboard->newSave();
-
         // To start, it is white-to-move
         colorToMove = 'W';
 
