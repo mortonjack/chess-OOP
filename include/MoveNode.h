@@ -12,19 +12,19 @@ class MoveNode {
         int _newRank;
         Piece* _capturedPiece;
         bool _enPassant;
-        bool _promote;
+        Piece* _promotedPiece;
         MoveNode* _prevNode;
     public:
         // Constructors
         MoveNode();
         MoveNode(int oldFile, int oldRank, int newFile, int newRank, 
-                bool enPassant, bool promote, Piece* capturedPiece);
+                bool enPassant, Piece* promotedPiece, Piece* capturedPiece);
         MoveNode(int oldFile, int oldRank, int newFile, int newRank, 
-                bool enPassant, bool promote, Piece* capturedPiece, MoveNode*);
+                bool enPassant, Piece* promotedPiece, Piece* capturedPiece, MoveNode*);
 
         // Add move to list
         void addMove(int oldFile, int oldRank, int newFile, int newRank, 
-                bool enPassant, bool promote, Piece* capturedPiece);
+                bool enPassant, Piece* promotedPiece, Piece* capturedPiece);
 
         // Access previous node
         MoveNode* prev();
@@ -37,7 +37,7 @@ class MoveNode {
         int getNewRank();
         Piece* getCapturedPiece();
         bool enPassant();
-        bool promoted();
+        Piece* getPromotedPiece();
 
         // Reverse
         void reverseBoard(Piece* board[8][8], int moves);

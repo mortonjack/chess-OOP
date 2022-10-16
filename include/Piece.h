@@ -31,6 +31,10 @@ class Piece {
         void reverseMove();
         void reset();
         void swapColor();
+        void setMoveCount(int moves);
+
+        // Virtual Destructor
+        virtual ~Piece() = default;
 };
 
 #endif//PIECE_H
