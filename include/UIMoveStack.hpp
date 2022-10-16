@@ -68,7 +68,7 @@ class UIMoveStack : public Drawable, public Transformable
         _moveHistory.push_back(moveString);
 
         // Reset text stack and move number counter
-        textComponent->element.setString("");
+        textComponent->getElement()->setString("");
         int moveNumber = 1;
 
         // For each pair of moves
@@ -87,10 +87,10 @@ class UIMoveStack : public Drawable, public Transformable
             
             // Create a string describing the most recent move pair
             string moveString = to_string(moveNumber+_pastMoves) + ". " + whiteMove + " " + blackMove + "\n";
-            string newString = textComponent->element.getString().toAnsiString() + moveString;
+            string newString = textComponent->getElement()->getString().toAnsiString() + moveString;
             
             // Update the move stack string
-            textComponent->element.setString(newString);
+            textComponent->getElement()->setString(newString);
 
             // Increment the move number being counted
             moveNumber++;
@@ -99,7 +99,7 @@ class UIMoveStack : public Drawable, public Transformable
 
     // Clears and resets the move stack
     void resetMoveStack() {
-        textComponent->element.setString("");
+        textComponent->getElement()->setString("");
         _moveHistory.clear();
         _pastMoves = 0;
     }

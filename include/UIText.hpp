@@ -11,10 +11,9 @@ class UIText : public Drawable, public Transformable
 {
     private:
         Font _font;  // The text's font
-
-    public:
         Text element; // The text element storing the text
 
+    public:
         // Default constructor
         UIText(): UIText(Vector2f(0,0), "") {}
 
@@ -35,6 +34,11 @@ class UIText : public Drawable, public Transformable
 
             // Set text position (rounded to the nearest pixel)
             element.setPosition((int)position.x,(int)(position.y));
+        }
+
+        // Access the text's element
+        Text* getElement() {
+            return &element;
         }
             
         // Draws the control

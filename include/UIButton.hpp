@@ -14,10 +14,10 @@ class UIButton : public Drawable, public Transformable
         Color _standardColor;   // The button's background (body) color
         Color _inverseColor;    // The button's foreground (text) color
 
-    public:
         UIText* textComponent;              // The button's text
         RectangleShape* buttonComponent;    // The button's body
 
+    public:
         // Constructor
         UIButton(Vector2f position, string text, Vector2f dimensions, Color buttonColor = Color{ 0x454545FF }, int fontSize = 35, Color fontColor = Color{ 0xF5F5F5FF }) {
             // Setup button colors
@@ -34,9 +34,9 @@ class UIButton : public Drawable, public Transformable
             textComponent = new UIText(position, "Level", fontSize, fontColor);
 
             // Center text in button
-            const sf::FloatRect bounds(textComponent->element.getLocalBounds());
+            const sf::FloatRect bounds(textComponent->getElement()->getLocalBounds());
             const sf::Vector2f box(buttonComponent->getSize());
-            textComponent->element.setOrigin((bounds.width - box.x) / 2 + bounds.left, (bounds.height - box.y) / 2 + bounds.top);
+            textComponent->getElement()->setOrigin((bounds.width - box.x) / 2 + bounds.left, (bounds.height - box.y) / 2 + bounds.top);
 
             // Set the button text without modifying its vertical position
             setButtonText(text);
@@ -55,24 +55,24 @@ class UIButton : public Drawable, public Transformable
             // If the button is not hovered, color it in the standard fashion
             if (!invert) {
                 buttonComponent->setFillColor(_standardColor);
-                textComponent->element.setFillColor(_inverseColor);
+                textComponent->getElement()->setFillColor(_inverseColor);
 
             // Otherwise, invert its colors
             } else {
                 buttonComponent->setFillColor(_inverseColor);   
-                textComponent->element.setFillColor(_standardColor);         
+                textComponent->getElement()->setFillColor(_standardColor);         
             }
         }
         
         // Sets the button's text content
         void setButtonText(string text) {
             // Sets the button's text to the passed string
-            textComponent->element.setString(text);
+            textComponent->getElement()->setString(text);
 
             // Center text in button
-            const sf::FloatRect bounds(textComponent->element.getLocalBounds());
+            const sf::FloatRect bounds(textComponent->getElement()->getLocalBounds());
             const sf::Vector2f box(buttonComponent->getSize());
-            textComponent->element.setOrigin((int)((bounds.width - box.x) / 2 + bounds.left), textComponent->element.getOrigin().y);
+            textComponent->getElement()->setOrigin((int)((bounds.width - box.x) / 2 + bounds.left), textComponent->getElement()->getOrigin().y);
         }
 
         // Draws the control

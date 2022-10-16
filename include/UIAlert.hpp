@@ -21,17 +21,18 @@ class UIAlert : public Drawable, public Transformable
 
         // Centers the title and subtitle in the alert
         void centerTextControls() {
-            const sf::FloatRect titleBounds(_titleComponent->element.getLocalBounds());
-            const sf::FloatRect subtitleBounds(_subtitleComponent->element.getLocalBounds());
+            const sf::FloatRect titleBounds(_titleComponent->getElement()->getLocalBounds());
+            const sf::FloatRect subtitleBounds(_subtitleComponent->getElement()->getLocalBounds());
             const sf::Vector2f box(_alertComponent->getSize());
 
-            _titleComponent->element.setOrigin((int)((titleBounds.width - box.x) / 2 + titleBounds.left), ((int)(titleBounds.height - box.y) / 2 + titleBounds.top));
-            _subtitleComponent->element.setOrigin((int)((subtitleBounds.width - box.x) / 2 + subtitleBounds.left), ((int)(subtitleBounds.height - box.y) / 2 + subtitleBounds.top)); 
+            _titleComponent->getElement()->setOrigin((int)((titleBounds.width - box.x) / 2 + titleBounds.left), ((int)(titleBounds.height - box.y) / 2 + titleBounds.top));
+            _subtitleComponent->getElement()->setOrigin((int)((subtitleBounds.width - box.x) / 2 + subtitleBounds.left), ((int)(subtitleBounds.height - box.y) / 2 + subtitleBounds.top)); 
         }
 
-    public:
         UIButton* primaryButton;        // Left button
         UIButton* secondaryButton;      // Right button
+
+    public:
 
         // Constructor
         UIAlert(Vector2f position, string primaryButtonText, string secondaryButtonText, string titleText = "", string subtitleText = "",  Color alertColor = Color{ 0x151515FF }, Color buttonColor = Color{ 0x454545FF }, Color fontColor = Color{ 0xF5F5F5FF }) {
@@ -52,15 +53,23 @@ class UIAlert : public Drawable, public Transformable
             secondaryButton = new UIButton(Vector2f(position.x+25, position.y+400-70-25), secondaryButtonText, Vector2f(430,70));    
         }
 
+        // Access buttons
+        UIButton* getPrimaryButton() {
+            return primaryButton;
+        }
+        UIButton* getSecondaryButton() {
+            return secondaryButton;
+        }
+
         // Sets the title text to the passed string
         void setTitleText(string text) {
-            _titleComponent->element.setString(text);
+            _titleComponent->getElement()->setString(text);
             centerTextControls();     
         }
 
         // Sets the subtitle text to the passed string 
         void setSubtitleText(string text) {
-            _subtitleComponent->element.setString(text);
+            _subtitleComponent->getElement()->setString(text);
             centerTextControls();
         }
 
