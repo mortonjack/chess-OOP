@@ -2,13 +2,12 @@
 #define UIALERT_H
 
 #include <SFML/Graphics.hpp>
-#include <iostream>
 #include <string>
-#include <cctype>
-#include <vector>
+
 #include "UIText.hpp"
 #include "UIButton.hpp"
 #include "Gameboard.h"
+
 using namespace sf;
 using namespace std;
 

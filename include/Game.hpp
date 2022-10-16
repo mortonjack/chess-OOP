@@ -1,4 +1,3 @@
-#include <string>
 #include "../include/Gameboard.h"
 #include "../include/Bishop.h"
 #include "../include/Rook.h"

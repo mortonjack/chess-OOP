@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
-#include <iostream>
+
 #include "../include/Piece.h"
+
 using namespace sf;
 
 class UIBoard : public Drawable, public Transformable
