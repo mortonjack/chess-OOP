@@ -29,9 +29,10 @@ class UIAlert : public Drawable, public Transformable
             _subtitleComponent->element.setOrigin((int)((subtitleBounds.width - box.x) / 2 + subtitleBounds.left), ((int)(subtitleBounds.height - box.y) / 2 + subtitleBounds.top)); 
         }
 
-    public:
         UIButton* primaryButton;        // Left button
         UIButton* secondaryButton;      // Right button
+
+    public:
 
         // Constructor
         UIAlert(Vector2f position, string primaryButtonText, string secondaryButtonText, string titleText = "", string subtitleText = "",  Color alertColor = Color{ 0x151515FF }, Color buttonColor = Color{ 0x454545FF }, Color fontColor = Color{ 0xF5F5F5FF }) {
@@ -50,6 +51,14 @@ class UIAlert : public Drawable, public Transformable
             // Create button components
             primaryButton = new UIButton(Vector2f(position.x+25, position.y+400-50-70-70), primaryButtonText, Vector2f(430,70));
             secondaryButton = new UIButton(Vector2f(position.x+25, position.y+400-70-25), secondaryButtonText, Vector2f(430,70));    
+        }
+
+        // Access buttons
+        UIButton* getPrimaryButton() {
+            return primaryButton;
+        }
+        UIButton* getSecondaryButton() {
+            return secondaryButton;
         }
 
         // Sets the title text to the passed string

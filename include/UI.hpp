@@ -181,8 +181,8 @@ class UI {
             if (drawButton->isHovered(x,y))   { drawButtonClick(); }    // Draw command
             if (resignButton->isHovered(x,y)) { resignButtonClick(); }  // Resign command
         } else {
-            if (alert->primaryButton->isHovered(x,y)) { resetControls(); }   // Primary button command (play again) 
-            if (alert->secondaryButton->isHovered(x,y)) { window->close(); } // Secondary button command (quit)
+            if (alert->getPrimaryButton()->isHovered(x,y)) { resetControls(); }   // Primary button command (play again) 
+            if (alert->getSecondaryButton()->isHovered(x,y)) { window->close(); } // Secondary button command (quit)
         }
     }
 
@@ -220,8 +220,8 @@ class UI {
         drawButton->updateButtonColors(x,y);
         resignButton->updateButtonColors(x,y);
 
-        alert->primaryButton->updateButtonColors(x,y);
-        alert->secondaryButton->updateButtonColors(x,y);
+        alert->getPrimaryButton()->updateButtonColors(x,y);
+        alert->getSecondaryButton()->updateButtonColors(x,y);
     }
 
     // Resets the UI: including the gameboard, material/time advantage/disadvantage and past moves display
