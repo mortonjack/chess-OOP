@@ -150,9 +150,9 @@ void MoveNode::unreverseBoard(Piece* board[8][8], int moves) {
                 board[7][_oldRank] = nullptr;
                 board[_newFile-1][_oldRank]->move();
             } else { // castling long
-                board[_newFile+1][_oldFile] = board[7][_oldRank];
-                board[7][_oldRank] = nullptr;
-                board[_newFile+1][_oldFile]->move();
+                board[_newFile+1][_oldRank] = board[0][_oldRank];
+                board[0][_oldRank] = nullptr;
+                board[_newFile+1][_oldRank]->move();
             }
         }
     }
