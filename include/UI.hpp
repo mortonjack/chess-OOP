@@ -227,6 +227,11 @@ class UI {
                 alert->setTitleText("Draw");
                 alert->setSubtitleText("By agreement");
                 break;
+
+            case 'I':
+                alert->setTitleText("Draw");
+                alert->setSubtitleText("By insufficient material");
+                break;
         }
 
         isAlertDisplayed = true;

@@ -627,6 +627,37 @@ bool Gameboard::fiftyMoveRule() {
     return !(pawnMove || pieceCount < oldPieceCount);
 }
 
+bool Gameboard::insufficientMaterial() {
+    // Returns true if neither player has enough material to win the game
+
+    int whiteLightPiece = false; // Stores if we have seen a white or black knight/bishop, respectively.
+    int blackLightPiece = false; // Once we see two light pieces of the same colour, checkmate becomes possible.
+
+    for (int i = 0; i < 8; i++) {
+        for (int j = 0; j < 8; j++) {
+            if (board[i][j] != nullptr) {
+                switch(board[i][j]->getName()) {
+                    // If we detect a pawn or any heavy piece, checkmate is possible
+                    case 'p': case 'r': case 'q': case 'P': case 'R': case 'Q':
+                        return false;
+
+                    case 'N': case 'B':
+                        if (!whiteLightPiece) { whiteLightPiece = true; }
+                        else return false;
+
+                    case 'n': case 'b':
+                        if (!blackLightPiece) { blackLightPiece = true; }
+                        else return false;
+                }
+            }
+        }
+    }
+
+    // If we have scanned through the entire board, and there is still insufficient material to checkmate, we return true
+    return true;
+}
+
+
 bool Gameboard::testDriver(Piece* pieces[], int* coords, int length) {
     /* 
         Test the board is set up correctly.

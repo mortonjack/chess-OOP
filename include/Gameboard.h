@@ -55,6 +55,7 @@ class Gameboard {
         bool isInStalemate(char color);
         bool threefoldRepetition();
         bool fiftyMoveRule();
+        bool insufficientMaterial();
 
         // For drivers: ensure board is set up correctly
         bool testDriver(Piece* pieces[], int* coords, int length); 
