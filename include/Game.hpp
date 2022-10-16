@@ -73,9 +73,10 @@ class Game{
         if (gameboard->isInCheckmate(colorToMove))  return 'C';
 
         // Drawing coniditions
-        if (gameboard->isInStalemate(colorToMove)) return 'S';
+        if (gameboard->isInStalemate(colorToMove))  return 'S';
         if (gameboard->threefoldRepetition())       return '3';
         if (gameboard->fiftyMoveRule())             return '5';
+        if (gameboard->insufficientMaterial())      return 'I';
 
         // Otherwise, the game is not over. Return the null character
         return '0';

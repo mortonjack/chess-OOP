@@ -10,7 +10,7 @@
 using namespace std;
 
 DrawTest::DrawTest() {
-    this->_length = 5;
+    this->_length = 4;
     this->_failMessage = "Draw test failed";
     this->_passMessage = "Draw test succeeded";
     initialiseResults();
@@ -362,20 +362,134 @@ bool DrawTest::fiftyMoveTest(bool display) {
     return success;
 }
 
-bool DrawTest::mutualTest(bool display) {
-    // If both players mutually agree to draw,
-    // the Game will result in a draw
-    bool success = true;
+bool DrawTest::insufficientTest(bool display) {
+    // Tests the insuffient material function
+    // Returns true if some player has enough pieces
+    // to force checkmate
+    bool success = false;
 
-    return success;
-}
+    // Initialise objects
+    Gameboard board;
+    King whiteKing('W');
+    King blackKing('B');
+    Knight whiteKnightOne('W');
+    Knight whiteKnightTwo('W');
+    Bishop whiteBishopOne('W');
+    Bishop whiteBishopTwo('W');
+    Pawn whitePawn('W');
+    Knight blackKnightOne('B');
 
-bool DrawTest::deadTest(bool display) {
-    // If no player can legally checkmate the opponent's King,
-    // the Game automatically ends in a draw
-    bool success = true;
+    // Place pieces
+    board.addPiece(0,0,&whiteKing);
+    board.addPiece(7,0,&blackKing);
 
-    return success;
+    // Make sure it is insufficient material, when there are just two kings
+    if (display) board.visualiseTextBoard();
+    bool test1 = board.insufficientMaterial();
+
+    // Place single knight
+    board.addPiece(0,2,&whiteKnightOne);
+
+    // Make sure the material is still insufficient
+    if (display) board.visualiseTextBoard();
+    bool test2 = board.insufficientMaterial();
+
+    // Place the other knight
+    board.addPiece(0,3,&whiteKnightOne);
+
+    // Make sure the material is no longer insufficient
+    if (display) board.visualiseTextBoard();
+    bool test3 = !board.insufficientMaterial();
+
+    // Remove a knight, replace with a bishop
+    board.removePiece(0,2);
+    board.addPiece(0,2,&whiteBishopOne);
+
+    // Make sure that material is still sufficient
+    if (display) board.visualiseTextBoard();
+    bool test4 = !board.insufficientMaterial();
+
+    // Remove the other knight, replace with a bishop
+    board.removePiece(0,3);
+    board.addPiece(0,3,&whiteBishopTwo);
+
+    // Make sure that material is still sufficient
+    if (display) board.visualiseTextBoard();
+    bool test5 = !board.insufficientMaterial();
+
+    // Remove a bishop
+    board.removePiece(0,3);
+
+    // Make sure that material is no longer sufficient
+    if (display) board.visualiseTextBoard();
+    bool test6 = board.insufficientMaterial();
+
+    // Add an opposite-colored knight
+    board.addPiece(0,4,&blackKnightOne);
+
+    // Make sure that material is still insufficient
+    if (display) board.visualiseTextBoard();
+    bool test7 = board.insufficientMaterial();
+
+    // Add a pawn
+    board.addPiece(7,7,&whitePawn);
+
+    // Make sure that material is no longer insufficient
+    if (display) board.visualiseTextBoard();
+    bool test8 = !board.insufficientMaterial();
+
+    // Display results
+    if (display) {
+        if (test1) {
+            cout << "Test passed: True with two kings" << endl;
+        } else {
+            cout << "Test failed: False with two kings" << endl;
+        }
+
+        if (test2) {
+            cout << "Test passed: True with lone knight" << endl;
+        } else {
+            cout << "Test failed: False with lone knight" << endl;
+        }
+
+        if (test3) {
+            cout << "Test passed: False with two knights" << endl;
+        } else {
+            cout << "Test failed: True with two knights" << endl;
+        }
+
+        if (test4) {
+            cout << "Test passed: False with a knight and bishop" << endl;
+        } else {
+            cout << "Test failed: True with a knight and bishop" << endl;
+        }
+
+        if (test5) {
+            cout << "Test passed: False with two bishops" << endl;
+        } else {
+            cout << "Test failed: True with two bishops" << endl;
+        }
+
+        if (test6) {
+            cout << "Test passed: True with lone bishop" << endl;
+        } else {
+            cout << "Test failed: False with lone bishop" << endl;
+        }
+
+        if (test7) {
+            cout << "Test passed: True with opposite-colored pieces" << endl;
+        } else {
+            cout << "Test failed: False with opposite-colored pieces" << endl;
+        }
+
+        if (test8) {
+            cout << "Test passed: False with pawn" << endl;
+        } else {
+            cout << "Test failed: True with pawn" << endl;
+        }
+    }
+
+    return success = test1 && test2 && test3 && test4 && test5 && test6 && test7 && test8;
 }
 
 bool DrawTest::runTests(bool display) {
@@ -383,8 +497,7 @@ bool DrawTest::runTests(bool display) {
     _results[0] = stalemateTest(display && !_results[0]);
     _results[1] = threefoldTest(display && !_results[1]);
     _results[2] = fiftyMoveTest(display && !_results[2]);
-    _results[3] = mutualTest(display && !_results[3]);
-    _results[4] = deadTest(display && !_results[4]);
+    _results[3] = insufficientTest(display && !_results[3]);
 
     return result();
 }
