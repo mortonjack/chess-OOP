@@ -308,6 +308,4 @@ class UIBoard : public Drawable, public Transformable
             }
         }
 
-private:
-
 };
