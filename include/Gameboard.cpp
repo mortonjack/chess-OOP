@@ -258,7 +258,7 @@ bool Gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
     // Check castle
     if (isCastling(oldFile, oldRank, newFile, newRank)) {
         castle(oldFile, newFile, newRank);
-        prevMove->addMove(oldFile, oldRank, newFile, newRank, false, false, nullptr);
+        prevMove->addMove(oldFile, oldRank, newFile, newRank, false, nullptr, nullptr);
         return true;
     }
 
@@ -282,19 +282,19 @@ bool Gameboard::movePiece(int oldFile, int oldRank, int newFile, int newRank) {
     removePiece(oldFile, oldRank);
     addPiece(newFile, newRank, sourcePiece);
 
-    bool promote = false;
-
+    // Promotion
+    Piece* promotePiece = nullptr;
     if(sourcePiece->getType()=='p'&&
         ((newRank==7 && sourcePiece->getColor()=='W')||(newRank==0 && sourcePiece->getColor()=='B'))){
-        Queen* promotePiece = new Queen(sourcePiece->getColor());
+        promotePiece = new Queen(sourcePiece->getColor());
         removePiece(newFile,newRank);
         addPiece(newFile,newRank,promotePiece);
-        promote = true;
+        promotePiece->setMoveCount(sourcePiece->getMoveCount());
+        promotePiece = sourcePiece;
     }
 
     // Report successful move
-    prevMove->addMove(oldFile, oldRank, newFile, newRank, enPassant, promote, targetPiece);
-
+    prevMove->addMove(oldFile, oldRank, newFile, newRank, enPassant, promotePiece, targetPiece);
     
     return true;
 }
@@ -627,6 +627,28 @@ bool Gameboard::fiftyMoveRule() {
     return !(pawnMove || pieceCount < oldPieceCount);
 }
 
+void Gameboard::newSave() {
+    _save = new State(board, prevMove);
+    save();
+}
+
+void Gameboard::save() {
+    _save->saveState();
+}
+
+void Gameboard::delSave() {
+    delete _save;
+}
+
+void Gameboard::load() {
+    _save = new State();
+    _save->loadGame(board, &prevMove);
+}
+
+void Gameboard::updateSave() {
+    _save->saveState(board);
+}
+
 bool Gameboard::testDriver(Piece* pieces[], int* coords, int length) {
     /* 
         Test the board is set up correctly.
@@ -666,4 +688,29 @@ bool Gameboard::testDriver(Piece* pieces[], int* coords, int length) {
     }
 
     return true;
+}
+
+int Gameboard::getMoveCount() {
+    MoveNode* node = prevMove;
+    int moveCount = 0;
+    while (node->prev() != nullptr) {
+        moveCount++;
+        node = node->prev();
+    }
+    return moveCount;
+}
+
+void Gameboard::reverseBoard(int moves) {
+    prevMove->reverseBoard(board, moves);
+    originalPrevMove = prevMove;
+    prevMove = prevMove->prev(moves);
+}
+
+void Gameboard::unreverseBoard(int moves) {
+    prevMove = originalPrevMove;
+    prevMove->unreverseBoard(board, moves);
+}
+
+Gameboard::~Gameboard() {
+    delete prevMove;
 }

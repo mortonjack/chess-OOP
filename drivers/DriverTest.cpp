@@ -11,9 +11,10 @@
 #include "CheckmateTest.h"
 #include "MoveNodeTest.h"
 #include "DrawTest.h"
+#include "SaveTest.h"
 
 int main() {
-    Driver tests(12);
+    Driver tests(13);
 
     // Piece tests
     BishopTest case1;
@@ -42,6 +43,8 @@ int main() {
     tests.addCase(&case11);
     DrawTest case12;
     tests.addCase(&case12);
+    SaveTest case13;
+    tests.addCase(&case13);
 
     tests.runTests();
     return 0;
