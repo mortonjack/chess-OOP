@@ -183,6 +183,7 @@ void State::loadPrevMoves() {
             i++;
         }
         capturePiece = makePiece(newPiece);
+        i++;
 
         // Get en passant
         while (thisLine[i] == ',' || thisLine[i] == ' ') i++;
