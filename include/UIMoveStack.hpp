@@ -38,10 +38,10 @@ class UIMoveStack : public Drawable, public Transformable
         _pastMoves = gameboard->getMoveCount();
         bool blackMove = _pastMoves % 2 == 1;
         _pastMoves /= 2;
-        _pastMoves -= 6;
+        _pastMoves -= _moveCapacity;
 
         // Update moves 12 times
-        for (int i = blackMove ? 12 : 11; i > 0; i--) {
+        for (int i = blackMove ? _moveCapacity*2 : _moveCapacity*2 - 1; i > 0; i--) {
             if (_pastMoves >= 0) {
                 gameboard->reverseBoard(i);
                 updateMovesDisplayed(gameboard);
