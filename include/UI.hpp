@@ -40,6 +40,9 @@ class UI {
 
         bool isAlertDisplayed = false;
 
+        bool drawOffered = false;
+        bool resignOffered = false;
+
     public:
     UI() {
         game = new Game();
@@ -138,6 +141,9 @@ class UI {
 
                                 // If the game has ended, display an alert to show this
                                 if (game->getGameState() != '0') { displayAlert(game->getGameState(), game->getOppositeColorToMove()); }
+
+                                // Reset the draw button, if it was not accepted
+                                resetButtonStates();
                             }
                         }
                     }
@@ -149,10 +155,10 @@ class UI {
 
                 // Handle the appropriate behavior for moving the mouse
                 if (event.type == sf::Event::MouseMoved) {
-                    int x = event.mouseButton.x;
-                    int y = event.mouseButton.y;
+                    int x = event.mouseMove.x;
+                    int y = event.mouseMove.y;
 
-                    updateButtonStates(x,y);
+                    updateButtonColors(x,y);
                 }
 
             }
@@ -163,20 +169,52 @@ class UI {
 
     // Is a button currently hovered? If so, we run its command
     void runButtonCommands(int x, int y) {
-        if (saveButton->isHovered(x,y))   { game->saveState(); }                                // Save command
-        if (loadButton->isHovered(x,y))   { game->loadState(); }                                // Load command
-        if (drawButton->isHovered(x,y))   { displayAlert('A',game->getOppositeColorToMove()); } // Draw command
-        if (resignButton->isHovered(x,y)) { displayAlert('R',game->getOppositeColorToMove()); }         // Resign command
-        
-        // If our alert is displayed, we can interact with its buttons
-        if (isAlertDisplayed) {
-            if (alert->primaryButton->isHovered(x,y)) { resetControls(); } // Primary button command (play again) 
+        if (!isAlertDisplayed) {
+            // Load command
+            if (loadButton->isHovered(x,y)) {
+                delete game;
+                game = new Game();
+                game->loadState();
+                uiBoard->loadPieces(game->getBoard());
+                moveStack->updateAllMoves(game->getBoard());
+            }
+            if (drawButton->isHovered(x,y))   { drawButtonClick(); }    // Draw command
+            if (resignButton->isHovered(x,y)) { resignButtonClick(); }  // Resign command
+        } else {
+            if (alert->primaryButton->isHovered(x,y)) { resetControls(); }   // Primary button command (play again) 
             if (alert->secondaryButton->isHovered(x,y)) { window->close(); } // Secondary button command (quit)
         }
     }
 
+    void resetButtonStates() {
+        drawButton->setButtonText("Offer Draw");
+        resignButton->setButtonText("Resign");
+        drawOffered = false;
+        resignOffered = false;
+    }
+
+    void drawButtonClick() {
+        if (!drawOffered) {
+            drawButton->setButtonText("Accept Draw");
+            drawOffered = true;
+        } else {
+            displayAlert('A',game->getOppositeColorToMove()); 
+            resetButtonStates();
+        }
+    }
+
+    void resignButtonClick() {
+        if (!resignOffered) {
+            resignButton->setButtonText("Accept Resignation");
+            resignOffered = true;
+        } else {
+            displayAlert('R',game->getOppositeColorToMove()); 
+            resetButtonStates();
+        }
+    }
+
     // Is a button currently hovered? If so, invert its colors
-    void updateButtonStates(int x, int y) {
+    void updateButtonColors(int x, int y) {
         saveButton->updateButtonColors(x,y);
         loadButton->updateButtonColors(x,y);
         drawButton->updateButtonColors(x,y);
@@ -188,6 +226,8 @@ class UI {
 
     // Resets the UI: including the gameboard, material/time advantage/disadvantage and past moves display
     void resetControls() {
+        delete game;
+        game = new Game();
         game->setupBoard();
         uiBoard->loadPieces(game->getBoard());
         moveStack->resetMoveStack();
@@ -269,5 +309,27 @@ class UI {
 
         // Update the window
         window->display();
+    }
+
+    // Destructor
+    ~UI() {
+        delete window;
+
+        delete game;
+
+        delete uiBoard;
+        
+        delete whiteText;
+        delete blackText;
+        delete matchText;
+
+        delete moveStack;
+
+        delete saveButton;
+        delete loadButton;
+        delete drawButton;
+        delete resignButton;
+
+        delete alert;
     }
 };

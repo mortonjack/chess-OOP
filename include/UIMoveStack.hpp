@@ -31,19 +31,41 @@ class UIMoveStack : public Drawable, public Transformable
         // Store the number of moves this stack can hold
         _moveCapacity = capacity;
     }
+
+    // Resets & recalculates move stack
+    void updateAllMoves(Gameboard* gameboard) {
+        resetMoveStack();
+        _pastMoves = gameboard->getMoveCount();
+        bool blackMove = _pastMoves % 2 == 1;
+        _pastMoves /= 2;
+        _pastMoves -= _moveCapacity;
+
+        // Update moves 12 times
+        for (int i = blackMove ? _moveCapacity*2 : _moveCapacity*2 - 1; i > 0; i--) {
+            if (_pastMoves >= 0) {
+                gameboard->reverseBoard(i);
+                updateMovesDisplayed(gameboard);
+                gameboard->unreverseBoard(i);
+            } else if ((blackMove && i % 2 == 1) || (!blackMove && i % 2 != 1)) {
+                _pastMoves++;
+            }
+        }
+        // Update previous move
+        updateMovesDisplayed(gameboard);
+    }
  
     // Updates the moves displayed with the most recent one
     void updateMovesDisplayed(Gameboard* gameboard) {
         string moveString = gameboard2MoveString(gameboard);
 
-        // If our move histroy is overflowing, remove the first element
+        // If our move history is overflowing, remove the first element
         if((int)_moveHistory.size() > _moveCapacity) {
             _moveHistory.erase(_moveHistory.begin());
             _moveHistory.erase(_moveHistory.begin() + 1);
             _pastMoves++;
         }
 
-        // Add the most recent move to our move histroy
+        // Add the most recent move to our move history
         _moveHistory.push_back(moveString);
 
         // Reset text stack and move number counter
@@ -97,7 +119,7 @@ class UIMoveStack : public Drawable, public Transformable
         int newFile = move->getNewFile();
         int newRank = move->getNewRank();
         char pieceType = gameboard->getPiece(newFile, newRank)->getType();
-        pieceType = move->promoted() ? 'p' : pieceType;
+        pieceType = move->getPromotedPiece() != nullptr ? 'p' : pieceType;
 
         // If a king moved > 1 tile left (we castled short...)
         if (pieceType == 'k' && (newFile - oldFile) > 1) {
@@ -110,7 +132,7 @@ class UIMoveStack : public Drawable, public Transformable
             moveString += pieceType2String(pieceType);                  // Append piece type
             if (move->getCapturedPiece() != nullptr) moveString += 'x'; // Append capture symbol (if applicable)
             moveString += file2String(newFile) + rank2String(newRank);  // Append target coordinates
-            if (move->promoted()) moveString += "=Q";                   // Append promotion (if appliable)
+            if (move->getPromotedPiece() != nullptr) moveString += "=Q";                   // Append promotion (if appliable)
         }
 
         if (gameboard->isInMate('W') || gameboard->isInMate('B')) moveString += '#'; // Append mate symbol (if applicable)

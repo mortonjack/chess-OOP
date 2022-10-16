@@ -59,10 +59,10 @@ bool MoveNodeTest::basicTest(bool display) {
     board[2][4] = nullptr;
     board[3][6] = nullptr;
     blackPawn.move();
-    MoveNode node(3,6, 3,4, false, false, nullptr);
+    MoveNode node(3,6, 3,4, false, nullptr, nullptr);
     whitePawn.move();
     blackPawn.capture();
-    node.addMove(2,4, 3,5, true, false, &blackPawn);
+    node.addMove(2,4, 3,5, true, nullptr, &blackPawn);
     if (display) visualiseBoard(board);
 
     // Move 2: Castle
@@ -74,7 +74,7 @@ bool MoveNodeTest::basicTest(bool display) {
     whiteRook.move();
     board[4][0] = nullptr;
     board[7][0] = nullptr;
-    node.addMove(4,0, 6,0, false, false, nullptr);
+    node.addMove(4,0, 6,0, false, nullptr, nullptr);
     if (display) visualiseBoard(board);
 
     // Move 3: Queens Take
@@ -84,7 +84,7 @@ bool MoveNodeTest::basicTest(bool display) {
     board[7][7] = nullptr;
     blackQueen.move();
     whiteQueen.capture();
-    node.addMove(7,7, 0,0, false, false, &whiteQueen);
+    node.addMove(7,7, 0,0, false, nullptr, &whiteQueen);
 
     // Save final board
     if (display) visualiseBoard(board);

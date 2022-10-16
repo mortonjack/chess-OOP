@@ -33,13 +33,16 @@ class UIButton : public Drawable, public Transformable
         buttonComponent->setPosition(position);
         buttonComponent->setFillColor(buttonColor);
 
-        // Create text component
-        textComponent = new UIText(position, text, fontSize, fontColor);
+        // Create text component (filled with "Level" to make sure any text is rendered at the same height)
+        textComponent = new UIText(position, "Level", fontSize, fontColor);
 
         // Center text in button
         const sf::FloatRect bounds(textComponent->element.getLocalBounds());
         const sf::Vector2f box(buttonComponent->getSize());
         textComponent->element.setOrigin((bounds.width - box.x) / 2 + bounds.left, (bounds.height - box.y) / 2 + bounds.top);
+
+        // Set the button text without modifying the height
+        setButtonText(text);
     }
 
     // Returns whether the button is hovered over
@@ -51,7 +54,7 @@ class UIButton : public Drawable, public Transformable
     // Updates a button's colors depending on whether it is hovered over
     void updateButtonColors(int x, int y) { 
         bool invert = isHovered(x,y);
-        
+
         // If the button is not hovered, color it in the standard fashion
         if (!invert) {
             buttonComponent->setFillColor(_standardColor);
@@ -60,8 +63,18 @@ class UIButton : public Drawable, public Transformable
         // Otherwise, invert its colors
         } else {
             buttonComponent->setFillColor(_inverseColor);   
-            textComponent->element.setFillColor(_standardColor);            
+            textComponent->element.setFillColor(_standardColor);         
         }
+    }
+    
+    // Sets the button's text content
+    void setButtonText(string text) {
+        textComponent->element.setString(text);
+
+        // Center text in button
+        const sf::FloatRect bounds(textComponent->element.getLocalBounds());
+        const sf::Vector2f box(buttonComponent->getSize());
+        textComponent->element.setOrigin((int)((bounds.width - box.x) / 2 + bounds.left), textComponent->element.getOrigin().y);
     }
 
     // Draws the button

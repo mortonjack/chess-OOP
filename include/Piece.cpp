@@ -45,3 +45,6 @@ void Piece::reset() {
 void Piece::swapColor() {
     this->_color = _color == 'W' ? 'B' : 'W';
 }
+void Piece::setMoveCount(int moves) {
+    this->_moveCount = moves;
+}

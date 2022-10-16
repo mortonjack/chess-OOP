@@ -3,12 +3,14 @@
 
 #include "Piece.h"
 #include "MoveNode.h"
+#include "State.h"
 
 class Gameboard {
     private:
         Piece* board[8][8]; // Gameboard, stores Piece locations
         MoveNode* prevMove;
-    
+        MoveNode* originalPrevMove;
+        State* _save;
     public:
         Gameboard(); // initialise empty board
         void visualiseTextBoard();
@@ -59,6 +61,21 @@ class Gameboard {
 
         // For drivers: ensure board is set up correctly
         bool testDriver(Piece* pieces[], int* coords, int length); 
+
+        // Save & Load
+        void newSave();
+        void delSave();
+        void save();
+        void updateSave();
+        void load();
+
+        // Previous board states
+        int getMoveCount();
+        void reverseBoard(int moves);
+        void unreverseBoard(int moves);
+
+        // Destructor
+        ~Gameboard();
 };
 
 #endif//GAMEBOARD_H
