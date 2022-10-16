@@ -644,10 +644,12 @@ bool Gameboard::insufficientMaterial() {
                     case 'N': case 'B':
                         if (!whiteLightPiece) { whiteLightPiece = true; }
                         else return false;
+                        break;
 
                     case 'n': case 'b':
                         if (!blackLightPiece) { blackLightPiece = true; }
                         else return false;
+                        break;
                 }
             }
         }

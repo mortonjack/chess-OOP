@@ -11,8 +11,7 @@ class DrawTest : public TestCase {
         bool stalemateTest(bool display);
         bool threefoldTest(bool display);
         bool fiftyMoveTest(bool display);
-        bool mutualTest(bool display);
-        bool deadTest(bool display);
+        bool insufficientTest(bool display);
         bool runTests(bool display); 
 };
 
