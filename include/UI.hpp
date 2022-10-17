@@ -41,7 +41,6 @@ class UI {
         bool isAlertDisplayed = false;
 
         bool drawOffered = false;
-        bool resignOffered = false;
 
     public:
     UI() {
@@ -179,18 +178,17 @@ class UI {
                 moveStack->updateAllMoves(game->getBoard());
             }
             if (drawButton->isHovered(x,y))   { drawButtonClick(); }    // Draw command
-            if (resignButton->isHovered(x,y)) { resignButtonClick(); }  // Resign command
+            if (resignButton->isHovered(x,y)) { displayAlert('R',game->getOppositeColorToMove()); }  // Resign command
         } else {
             if (alert->getPrimaryButton()->isHovered(x,y)) { resetControls(); }   // Primary button command (play again) 
             if (alert->getSecondaryButton()->isHovered(x,y)) { window->close(); } // Secondary button command (quit)
         }
     }
 
+    // Reset the draw button's state to its default, unclicked value
     void resetButtonStates() {
         drawButton->setButtonText("Offer Draw");
-        resignButton->setButtonText("Resign");
         drawOffered = false;
-        resignOffered = false;
     }
 
     void drawButtonClick() {
@@ -199,16 +197,6 @@ class UI {
             drawOffered = true;
         } else {
             displayAlert('A',game->getOppositeColorToMove()); 
-            resetButtonStates();
-        }
-    }
-
-    void resignButtonClick() {
-        if (!resignOffered) {
-            resignButton->setButtonText("Accept Resignation");
-            resignOffered = true;
-        } else {
-            displayAlert('R',game->getOppositeColorToMove()); 
             resetButtonStates();
         }
     }
