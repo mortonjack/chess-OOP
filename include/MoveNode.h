@@ -6,15 +6,26 @@
 class MoveNode {
     /* LINKED LIST */
     private:
+        // Stores move information
         int _oldFile;
         int _oldRank;
         int _newFile;
         int _newRank;
+
+        // Stores the captured piece
         Piece* _capturedPiece;
-        bool _enPassant;
+
+        // Stores the promoted piece
         Piece* _promotedPiece;
+
+        // Did this move take by en passant?
+        bool _enPassant;
+
+        // Stores a pointer to the previous node
         MoveNode* _prevNode;
+
     public:
+    
         // Constructors
         MoveNode();
         MoveNode(int oldFile, int oldRank, int newFile, int newRank, 
@@ -39,8 +50,9 @@ class MoveNode {
         bool enPassant();
         Piece* getPromotedPiece();
 
-        // Reverse
+        // Reverse the input board by input moves
         void reverseBoard(Piece* board[8][8], int moves);
+        // Undo the above function
         void unreverseBoard(Piece* board[8][8], int moves);
 
         // Destructor
