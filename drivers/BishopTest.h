@@ -5,11 +5,15 @@
 using namespace std;
 
 class BishopTest : public PieceTest {
-    public:
-        BishopTest();
+    private:
+        // Specific Tests. Display determines whether to output to stdout.
         bool movementTest(bool display);
         bool CaptureTest(bool display);
         bool checkTest(bool display);
+        
+    public:
+        // Constructor
+        BishopTest();
 };
 
 #endif//BISHOPTEST_H

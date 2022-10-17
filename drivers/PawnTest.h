@@ -5,13 +5,25 @@
 using namespace std;
 
 class PawnTest : public PieceTest {
-    public:
-        PawnTest();
+    private:
+        // Specific Tests. Display determines whether to output to stdout.
+
+        // Tests en passant
+        bool enPassantTest(bool display);
+
+        // Tests pawn promotion
+        bool promotionTest(bool display);
+
         bool movementTest(bool display);
         bool CaptureTest(bool display);
         bool checkTest(bool display);
-        bool enPassantTest(bool display);
-        bool promotionTest(bool display);
+
+    public:
+        // Constructor
+        PawnTest();
+
+        // Run tests.
+        // Display outputs previously failed tests to stdout.
         bool runTests(bool display); 
 };
 

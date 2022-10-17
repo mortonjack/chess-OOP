@@ -5,7 +5,10 @@
 
 class King : public Piece {
     public:
-        King(char color); // Colored constructor
+        // Constructor. Set color of piece
+        King(char color);
+
+        // Check whether a move is valid
         bool checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank);
 };
 

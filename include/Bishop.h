@@ -5,7 +5,10 @@
 
 class Bishop : public Piece {
     public:
-        Bishop(char color); // Colored constructor
+        // Constructor. Set color of piece
+        Bishop(char color);
+
+        // Check whether a move is valid
         bool checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank);
 };
 

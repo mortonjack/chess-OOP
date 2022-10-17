@@ -5,11 +5,15 @@
 using namespace std;
 
 class QueenTest : public PieceTest {
-    public:
-        QueenTest();
+    private:
+        // Specific Tests. Display determines whether to output to stdout.
         bool movementTest(bool display);
         bool CaptureTest(bool display);
         bool checkTest(bool display);
+        
+    public:
+        // Constructor
+        QueenTest();
 };
 
 #endif//QUEENTEST_H
