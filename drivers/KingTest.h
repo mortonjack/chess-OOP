@@ -5,13 +5,22 @@
 using namespace std;
 
 class KingTest : public PieceTest {
-    public:
-        KingTest();
-        
-        bool movementTest(bool display);
+    private:
+        // Specific Tests. Display determines whether to output to stdout.
+
+        // Tests castling
         bool castleTest(bool display);
+
+        bool movementTest(bool display);
         bool CaptureTest(bool display);
         bool checkTest(bool display);
+
+    public:
+        // Constructor
+        KingTest();
+
+        // Run tests.
+        // Display outputs previously failed tests to stdout.
         bool runTests(bool display);
 };
 
