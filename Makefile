@@ -8,3 +8,6 @@ driver:
 
 clear-drivers:
 	@rm drivers/*.out
+
+clean:
+	@rm *.out drivers/*.out
