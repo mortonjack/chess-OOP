@@ -14,9 +14,9 @@ using namespace std;
 class UIMoveStack : public Drawable, public Transformable
 {
     private:
-        int _moveCapacity;
-        vector<string> _moveHistory;
-        int _pastMoves = 0;
+        int _moveCapacity;              // The number of moves the text element can take in
+        vector<string> _moveHistory;    // A vector of strings storing the past '_moveCapacity' moves
+        int _pastMoves = 0;             // The number of past moves the text element is no longer displaying
 
         // Converts a gameboard to a string describing its most recent move (in PGN form)
         string gameboard2MoveString(Gameboard* gameboard) {
