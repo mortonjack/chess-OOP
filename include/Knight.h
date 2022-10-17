@@ -5,7 +5,10 @@
 
 class Knight : public Piece {
     public:
-        Knight(char color); 
+        // Constructor. Set color of piece
+        Knight(char color);
+
+        // Check whether a move is valid
         bool checkMoveValidity(int oldFile, int oldRank, int newFile, int newRank);
 };
 
