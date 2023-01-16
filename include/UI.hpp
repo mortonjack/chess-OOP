@@ -185,10 +185,11 @@ class UI {
                 // Load command
                 if (_loadButton->isHovered(x,y)) {
                     // Create a new game
-                    delete _game;
-                    _game = new Game();
+                    Game* load = new Game();
                     // Load state from file
-                    _game->loadState();
+                    if (!load->loadState()) return;
+                    delete _game;
+                    _game = load;
                     // Refresh display
                     _uiBoard->loadPieces(_game->getBoard());
                     _moveStack->updateAllMoves(_game->getBoard());

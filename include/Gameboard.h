@@ -108,7 +108,7 @@ class Gameboard {
         // Update save with most recent move
         void updateSave();
         // Load existing save
-        void load();
+        bool load();
 
         // Previous board states
 

@@ -54,14 +54,15 @@ class Game{
         }
 
         // Loads the game's state from board.txt and moves.txt
-        void loadState() {
-            _gameboard->load();
+        bool loadState() {
+            if (!_gameboard->load()) return false;
             MoveNode* prevMove = _gameboard->getPrevMove();
             if (prevMove != nullptr) {
                 _colorToMove = _gameboard->getPiece(prevMove->getNewFile(), prevMove->getNewRank())->getColor();
                 _colorToMove = getOppositeColorToMove();
             } else _colorToMove = 'W';
             _firstMove = true;
+            return true;
         }
 
         // Return a charcter representing the game's state
