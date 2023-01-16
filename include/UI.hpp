@@ -30,7 +30,7 @@ class UI {
 
         UIMoveStack* _moveStack;         // Text storing the players' past moves
 
-        UIButton* _saveButton;           // The button to save the game
+        //UIButton* _saveButton;           // The button to save the game
         UIButton* _loadButton;           // The button to load the game
         UIButton* _drawButton;           // The button to offer a draw
         UIButton* _resignButton;         // The button to resign
@@ -65,9 +65,10 @@ class UI {
             const int WINDOW_LENGTH = 1200; // Length of _window
             const int WINDOW_HEIGHT = BOARD_HEIGHT + 4*PADDING + 2*TEXT_HEIGHT; // Height of window
 
-            const int CONTROL_LENGTH = WINDOW_LENGTH - 3*PADDING - BOARD_LENGTH;                    // Length of non-board UI
+            const int BUTTON_COUNT = 3; // Buttons to display
+            const int CONTROL_LENGTH = WINDOW_LENGTH - BUTTON_COUNT*PADDING - BOARD_LENGTH;                    // Length of non-board UI
             const int GUTTER_HEIGHT = 2*PADDING + TEXT_HEIGHT;                                      // Height above/below board
-            const int MOVES_HEIGHT = WINDOW_HEIGHT - 4*PADDING - 4*BUTTON_HEIGHT - 2*GUTTER_HEIGHT; // Height of the move stack
+            const int MOVES_HEIGHT = WINDOW_HEIGHT - BUTTON_COUNT*(PADDING + BUTTON_HEIGHT) - 2*GUTTER_HEIGHT; // Height of the move stack
 
             const int TOP_TEXT_Y = PADDING - 5;                                 // Y position of white player name
             const int BOTTOM_TEXT_Y = GUTTER_HEIGHT + BOARD_HEIGHT + PADDING;   // Y position of black player name
@@ -76,7 +77,7 @@ class UI {
             const Vector2f BUTTON_DIMENSIONS = Vector2f(CONTROL_LENGTH,BUTTON_HEIGHT); // Dimensions of UIButton
 
             // Create each control with the desired position, text and dimensions
-            _window = new RenderWindow(sf::VideoMode(WINDOW_LENGTH, WINDOW_HEIGHT), "Chess-OOP", Style::Close);
+            _window = new RenderWindow(sf::VideoMode(WINDOW_LENGTH, WINDOW_HEIGHT), "Chess", Style::Close);
 
             _uiBoard = new UIBoard(BOARD_LENGTH,BOARD_HEIGHT,Vector2i(PADDING,GUTTER_HEIGHT));
 
@@ -84,12 +85,12 @@ class UI {
             _blackText = new UIText(Vector2f(PADDING,TOP_TEXT_Y),"Black");
             _matchText = new UIText(Vector2f(CONTROL_X,TOP_TEXT_Y),"White vs. Black");
 
-            _moveStack = new UIMoveStack(Vector2f(CONTROL_X,GUTTER_HEIGHT),10);
+            _moveStack = new UIMoveStack(Vector2f(CONTROL_X,GUTTER_HEIGHT),BUTTON_COUNT);
 
-            _saveButton = new UIButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT),"Save",BUTTON_DIMENSIONS);
-            _loadButton = new UIButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*1),"Load",BUTTON_DIMENSIONS);
-            _drawButton = new UIButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*2),"Offer Draw",BUTTON_DIMENSIONS);
-            _resignButton = new UIButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*3),"Resign",BUTTON_DIMENSIONS);
+            //_saveButton = new UIButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT),"Save",BUTTON_DIMENSIONS);
+            _loadButton = new UIButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT),"Load",BUTTON_DIMENSIONS);
+            _drawButton = new UIButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*1),"Offer Draw",BUTTON_DIMENSIONS);
+            _resignButton = new UIButton(Vector2f(CONTROL_X,GUTTER_HEIGHT+PADDING+MOVES_HEIGHT+(BUTTON_HEIGHT+PADDING)*2),"Resign",BUTTON_DIMENSIONS);
 
             _alert = new UIAlert(Vector2f(PADDING+80,GUTTER_HEIGHT+120), "Play Again", "Quit");
 
@@ -221,7 +222,7 @@ class UI {
 
         // Is a button currently hovered? If so, invert its colors
         void updateButtonColors(int x, int y) {
-            _saveButton->updateButtonColors(x,y);
+            //_saveButton->updateButtonColors(x,y);
             _loadButton->updateButtonColors(x,y);
             _drawButton->updateButtonColors(x,y);
             _resignButton->updateButtonColors(x,y);
@@ -313,7 +314,7 @@ class UI {
             _window->draw(*_moveStack);
 
             // Draw the buttons
-            _window->draw(*_saveButton);
+            //_window->draw(*_saveButton);
             _window->draw(*_loadButton);
             _window->draw(*_drawButton);
             _window->draw(*_resignButton);
@@ -339,7 +340,7 @@ class UI {
 
             delete _moveStack;
 
-            delete _saveButton;
+            //delete _saveButton;
             delete _loadButton;
             delete _drawButton;
             delete _resignButton;

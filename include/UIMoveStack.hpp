@@ -71,6 +71,7 @@ class UIMoveStack : public Drawable, public Transformable
             textComponent = new UIText(position, "", fontSize, fontColor);
 
             // Store the number of moves this stack can hold
+            capacity = 27 - capacity*4;
             _moveCapacity = capacity;
         }
 
