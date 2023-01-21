@@ -120,9 +120,11 @@ string State::storePiece(Piece* piece) {
     return returnStr;
 }
 
-void State::loadCurrentBoard() {
+bool State::loadCurrentBoard() {
     // Load board saved at ./build/board.txt to currentBoard
     _file.open("./build/board.txt", fstream::in);
+    if (!_file.is_open()) return false;
+
     char thisLine[82];
     int thisChar = 0;
     string thisPiece;
@@ -144,11 +146,13 @@ void State::loadCurrentBoard() {
         }
     }
     _file.close();
+    return true;
 }
 
-void State::loadPrevMoves() {
+bool State::loadPrevMoves() {
     // Load Previous Moves saved at ./build/board.txt to _prevMove
     _file.open("./build/moves.txt", fstream::in);
+    if (!_file.is_open()) return false;
 
     // Declare vars
     int oldFile, oldRank, newFile, newRank;
@@ -206,12 +210,14 @@ void State::loadPrevMoves() {
         // Go to next line
         _file.getline(thisLine, 39);
     }
+    _file.close();
+    return true;
 }
 
-void State::loadGame(Piece* board[8][8], MoveNode** node) {
+bool State::loadGame(Piece* board[8][8], MoveNode** node) {
     // Load from files
-    loadCurrentBoard();
-    loadPrevMoves();
+    if (!loadCurrentBoard()) return false;
+    if (!loadPrevMoves()) return false;
 
     // Output loaded game to input variables
     for (int i = 0; i < 8; i++) {
@@ -220,7 +226,7 @@ void State::loadGame(Piece* board[8][8], MoveNode** node) {
         }
     }
     *node = this->_prevMove;
-    return;
+    return true;
 }
 
 void State::saveState() {

@@ -31,9 +31,9 @@ class State {
         void updateBoard(Piece* board[8][8]);
 
         // Load currentBoard from file
-        void loadCurrentBoard();
+        bool loadCurrentBoard();
         // Load _prevMove from file
-        void loadPrevMoves();
+        bool loadPrevMoves();
 
         // Save board to file (overwrite save)
         void saveBoard();
@@ -58,7 +58,7 @@ class State {
         void saveState(Piece* board[8][8]);
 
         // Load currentBoard and _prevMove to input board & node
-        void loadGame(Piece* board[8][8], MoveNode** node);
+        bool loadGame(Piece* board[8][8], MoveNode** node);
 };
 
 #endif//STATE_H

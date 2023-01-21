@@ -672,9 +672,9 @@ void Gameboard::delSave() {
     delete _save;
 }
 
-void Gameboard::load() {
+bool Gameboard::load() {
     _save = new State();
-    _save->loadGame(board, &prevMove);
+    return _save->loadGame(board, &prevMove);
 }
 
 void Gameboard::updateSave() {
