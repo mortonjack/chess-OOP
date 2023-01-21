@@ -155,7 +155,7 @@ class UIBoard : public Drawable, public Transformable
         }
 
         // Calculates the natural color of a tile, based on its rank and file
-        Color coords2TileColor(Vector2i coords)  { return (coords.x + coords.y) % 2 == 0 ? _lightColor : _darkColor; }
+        Color coords2TileColor(Vector2i coords)  { return (coords.x + coords.y) % 2 == 0 ? _darkColor : _lightColor; }
 
         // Colors a tile a passed color
         void colorTile(Vector2i coords, Color color)  {
