@@ -1,13 +1,23 @@
-default:
-	@g++ -Wall -std=c++11 main.cpp -std=c++11 include/Piece.cpp include/Rook.cpp include/Bishop.cpp include/Knight.cpp include/Pawn.cpp include/Queen.cpp include/King.cpp include/MoveNode.cpp include/State.cpp include/Gameboard.cpp -lsfml-graphics -lsfml-window -lsfml-system -o chess.out
+CXX := g++
+CXXFLAGS := -std=c++11 -O3
+LDFLAGS := -lsfml-graphics -lsfml-window -lsfml-system
+
+# Default compilation
+default: main.cpp main.cpp include/Piece.o include/Rook.o include/Bishop.o include/Knight.o include/Pawn.o include/Queen.o include/King.o include/MoveNode.o include/State.o include/Gameboard.o
+	@$(CXX) $(CXXFLAGS) $^ $(LDFLAGS) -o chess.out
 	@./chess.out
 
-driver:
-	@g++ -Wall -std=c++11 include/Piece.cpp include/Rook.cpp include/Bishop.cpp include/Knight.cpp include/Pawn.cpp include/Queen.cpp include/King.cpp include/MoveNode.cpp include/State.cpp include/Gameboard.cpp drivers/TestCase.cpp drivers/PieceTest.cpp drivers/Driver.cpp drivers/BishopTest.cpp drivers/RookTest.cpp drivers/KnightTest.cpp drivers/PawnTest.cpp drivers/KingTest.cpp drivers/QueenTest.cpp drivers/CaptureTest.cpp drivers/CollisionTest.cpp drivers/CheckTest.cpp drivers/CheckmateTest.cpp drivers/MoveNodeTest.cpp drivers/DrawTest.cpp drivers/SaveTest.cpp drivers/DriverTest.cpp -o drivers/test.out
+# Compile & run test file
+driver: include/Piece.o include/Rook.o include/Bishop.o include/Knight.o include/Pawn.o include/Queen.o include/King.o include/MoveNode.o include/State.o include/Gameboard.o drivers/TestCase.o drivers/PieceTest.o drivers/Driver.o drivers/BishopTest.o drivers/RookTest.o drivers/KnightTest.o drivers/PawnTest.o drivers/KingTest.o drivers/QueenTest.o drivers/CaptureTest.o drivers/CollisionTest.o drivers/CheckTest.o drivers/CheckmateTest.o drivers/MoveNodeTest.o drivers/DrawTest.o drivers/SaveTest.o drivers/DriverTest.cpp
+	@$(CXX) $(CXXFLAGS) -Wall -Werror $^ -o drivers/test.out
 	@./drivers/test.out
 
-clear-drivers:
-	@rm drivers/*.out
+# Compilation rule for *.o
+%.o: %.cpp %.h
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
+# Remove compiled files
 clean:
-	@rm *.out drivers/*.out
+	@rm -f chess.out drivers/*.out drivers/*.o
+
+.PHONY: default driver clean
